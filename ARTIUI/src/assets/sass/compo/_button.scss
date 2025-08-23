@@ -1,0 +1,28 @@
+
+
+// Button styles
+.au-button {
+  background-color: $primary-base;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:hover {
+    background-color: $primary-shade-1; // darker on hover
+  }
+
+  &:active {
+    background-color: $primary-shade-2; // even darker when pressed
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    background-color: $primary-tint-3; // softer tint when disabled
+    cursor: not-allowed;
+  }
+}

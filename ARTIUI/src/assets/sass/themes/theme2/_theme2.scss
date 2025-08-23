@@ -1,0 +1,11 @@
+$primary-tint-1: map-get($color-map-v02, "primary-50");   // Lightest
+$primary-tint-2: map-get($color-map-v02, "primary-100");
+$primary-tint-3: map-get($color-map-v02, "primary-150");
+$primary-tint-4: map-get($color-map-v02, "primary-200");
+
+$primary-base:   map-get($color-map-v02, "primary-250");  // Base color
+
+$primary-shade-1: map-get($color-map-v02, "primary-300");
+$primary-shade-2: map-get($color-map-v02, "primary-350");
+$primary-shade-3: map-get($color-map-v02, "primary-400");
+$primary-shade-4: map-get($color-map-v02, "primary-450");
