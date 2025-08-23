@@ -1,0 +1,7 @@
+.underline {
+  text-decoration: underline;
+  text-decoration-color: $primary-base;   // use theme base color
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  color: $primary-base;                   // same color for text
+}

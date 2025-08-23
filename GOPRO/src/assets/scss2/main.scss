@@ -1,0 +1,9 @@
+// @import "@theme";                  // points to selected theme
+// @import "artiqui/src/assets/sass/main.scss"; // main styles from the package
+// @import "@/assets/sass/main.scss"; // your app’s overrides
+
+
+
+@import "@theme";                    // your dynamic theme
+@import "artiqui/src/assets/sass/main.scss"; // package main styles
+@import "@/assets/sass/main.scss";   // your overrides
