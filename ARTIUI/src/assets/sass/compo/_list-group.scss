@@ -1,0 +1,114 @@
+// List group styles
+.au-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.au-list-group__item {
+  border: 1px solid $primary-tint-3;
+  border-radius: 0.85rem;
+  background-color: #fff;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.au-list-group__item-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+}
+
+.au-list-group--selectable .au-list-group__item-content {
+  cursor: pointer;
+}
+
+.au-list-group__item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  color: $primary-base;
+}
+
+.au-list-group__item-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.au-list-group__item-title {
+  font-weight: 700;
+  color: $primary-shade-3;
+}
+
+.au-list-group__item-description {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: $primary-shade-2;
+}
+
+.au-list-group__item-badge {
+  background-color: $primary-base;
+  color: #fff;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.au-list-group__item-check {
+  color: $primary-base;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.au-list-group__item--selected {
+  border-color: $primary-base;
+  background-color: $primary-tint-1;
+}
+
+.au-list-group__item--disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background-color: $primary-tint-1;
+}
+
+.au-list-group__children {
+  padding-left: 1.25rem;
+  border-left: 2px solid $primary-tint-3;
+  margin-top: 0.25rem;
+}
+
+.au-list-group--empty {
+  border-color: $primary-tint-3;
+  background-color: $primary-tint-1;
+}
+
+.au-list-group__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  color: $primary-shade-2;
+}
+
+.au-list-group__empty-icon {
+  font-size: 1.5rem;
+}
+
+.au-list-group__empty-title {
+  font-weight: 700;
+  color: $primary-shade-3;
+}
+
+.au-list-group__empty-description {
+  text-align: center;
+  max-width: 18rem;
+}
+
+.au-list-group__empty-action {
+  margin-top: 0.5rem;
+}

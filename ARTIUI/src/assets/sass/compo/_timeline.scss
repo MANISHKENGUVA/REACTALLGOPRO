@@ -1,0 +1,89 @@
+// Timeline styles
+.au-timeline {
+  position: relative;
+  padding-left: 1.75rem;
+  margin: 0;
+  list-style: none;
+  border-left: 2px solid $primary-tint-3;
+}
+
+.au-timeline--horizontal {
+  display: flex;
+  padding-left: 0;
+  border-left: none;
+  gap: 1rem;
+}
+
+.au-timeline__item {
+  position: relative;
+  padding: 0.75rem 0 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.au-timeline__item:last-child {
+  margin-bottom: 0;
+}
+
+.au-timeline__indicator {
+  position: absolute;
+  left: -1.25rem;
+  top: 0.75rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.au-timeline__dot,
+.au-timeline__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background-color: $primary-base;
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.au-timeline__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.au-timeline__content {
+  padding-left: 0.25rem;
+}
+
+.au-timeline__title {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: $primary-shade-3;
+}
+
+.au-timeline__description,
+.au-timeline__timestamp {
+  color: $primary-shade-2;
+  font-size: 0.95rem;
+}
+
+.au-timeline__timestamp {
+  margin-top: 0.25rem;
+}
+
+.au-timeline__item--completed .au-timeline__dot,
+.au-timeline__item--completed .au-timeline__icon {
+  background-color: #10b981;
+}
+
+.au-timeline__item--pending .au-timeline__dot,
+.au-timeline__item--pending .au-timeline__icon {
+  background-color: #f59e0b;
+}
+
+.au-timeline__item--failed .au-timeline__dot,
+.au-timeline__item--failed .au-timeline__icon {
+  background-color: #ef4444;
+}

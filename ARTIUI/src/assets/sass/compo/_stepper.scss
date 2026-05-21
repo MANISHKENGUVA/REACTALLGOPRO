@@ -1,0 +1,75 @@
+// Stepper styles
+.au-stepper {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.au-stepper--vertical {
+  flex-direction: column;
+}
+
+.au-stepper__step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  flex: 1 1 12rem;
+}
+
+.au-stepper__indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 2px solid $primary-tint-3;
+  background-color: #fff;
+  color: $primary-base;
+  font-weight: 700;
+}
+
+.au-stepper__step--completed .au-stepper__indicator {
+  background-color: $primary-base;
+  color: #fff;
+  border-color: $primary-base;
+}
+
+.au-stepper__step--active .au-stepper__indicator {
+  border-color: $primary-base;
+}
+
+.au-stepper__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.au-stepper__title {
+  font-weight: 700;
+  color: $primary-shade-4;
+}
+
+.au-stepper__description {
+  color: $primary-shade-3;
+  font-size: 0.94rem;
+}
+
+.au-stepper__connector {
+  position: absolute;
+  top: 1.6rem;
+  left: 2.625rem;
+  height: 2px;
+  width: calc(100% - 2.625rem);
+  background-color: $primary-tint-2;
+  z-index: -1;
+}
+
+.au-stepper--vertical .au-stepper__connector {
+  top: auto;
+  left: 1.125rem;
+  width: 2px;
+  height: calc(100% - 3rem);
+}

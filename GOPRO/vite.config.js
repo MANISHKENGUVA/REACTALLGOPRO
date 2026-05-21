@@ -64,7 +64,9 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
+
 const themeName = process.env.VITE_APP_THEME || 'theme1';
+console.log('Selected theme:', themeName);
 const themePath = path.resolve(__dirname, 'node_modules/artiqui/src/assets/sass/themes', themeName);
 console.log('Using theme path:', themePath);
 

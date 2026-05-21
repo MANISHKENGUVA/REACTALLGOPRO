@@ -1,0 +1,87 @@
+// Menu styles
+.au-menu,
+.au-menu-dropdown__menu {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  background-color: #fff;
+  border: 1px solid $primary-tint-3;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
+}
+
+.au-menu__item,
+.au-menu-dropdown__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: $primary-shade-4;
+  cursor: pointer;
+  border-radius: 0.75rem;
+}
+
+.au-menu__item:hover,
+.au-menu-dropdown__item:hover {
+  background-color: $primary-tint-2;
+}
+
+.au-menu__item--active,
+.au-menu-dropdown__item--active {
+  background-color: $primary-tint-3;
+}
+
+.au-menu__divider,
+.au-menu-dropdown__divider {
+  height: 1px;
+  margin: 0.25rem 0;
+  background-color: $primary-tint-2;
+}
+
+.au-menu__item--checkbox,
+.au-menu__item--radio {
+  gap: 0.75rem;
+}
+
+.au-menu__item-icon,
+.au-menu-dropdown__item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+}
+
+.au-menu-dropdown {
+  position: relative;
+}
+
+.au-menu-dropdown__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid $primary-tint-2;
+  background: #fff;
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+
+.au-menu-dropdown__menu {
+  position: absolute;
+  margin-top: 0.5rem;
+  z-index: 10;
+  min-width: 16rem;
+}
+
+.au-menu-dropdown--open .au-menu-dropdown__menu {
+  display: flex;
+}
+
+.au-menu-dropdown__trigger-arrow {
+  margin-left: auto;
+}

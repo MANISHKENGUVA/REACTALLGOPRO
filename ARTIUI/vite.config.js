@@ -10,16 +10,23 @@ export default defineConfig({
   // Change this if your app is served from a sub-path
   // For example, if hosted at example.com/myapp => base: '/myapp/'
  build: {
-    outDir: path.resolve(__dirname, 'dist'),  // ✅ output path   outDir: path.resolve(__dirname, 'src/assets/artidist'),
-    sourcemap: true,  // ✅ generate source maps
-  
+    outDir: path.resolve(__dirname, 'dist'),
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, 'src/routerEngine.js'),
       name: 'RouterEngine',
       fileName: (format) => `router-engine.${format}.js`,
       formats: ['es', 'umd']
     },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
+    }
   }
 
-  
 })
