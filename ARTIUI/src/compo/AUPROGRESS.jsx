@@ -10,10 +10,15 @@ export default function AUPROGRESS({
   color = "primary",
   showValue = false,
   className = "",
+  style = {},
   ...rest
 }) {
   const safeVariant = VARIANTS.includes(variant) ? variant : "linear";
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+  const progressStyle = {
+    ...style,
+    "--au-progress-width": `${percentage}%`
+  };
 
   const classes = [
     "au-progress",
@@ -25,12 +30,9 @@ export default function AUPROGRESS({
 
   if (safeVariant === "linear") {
     return (
-      <div className={classes} {...rest}>
+      <div className={classes} style={progressStyle} {...rest}>
         <div className="au-progress__track">
-          <div
-            className="au-progress__bar"
-            style={{ width: `${percentage}%` }}
-          />
+          <div className="au-progress__bar" />
         </div>
         {showValue && (
           <span className="au-progress__value">{Math.round(percentage)}%</span>

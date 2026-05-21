@@ -11,6 +11,7 @@ export default function AUTOOLTIP({
   delay = 300,
   showArrow = true,
   className = "",
+  style = {},
   ...rest
 }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -78,8 +79,9 @@ export default function AUTOOLTIP({
           ref={tooltipRef}
           className={tooltipClasses}
           style={{
-            left: coords.x,
-            top: coords.y
+            ...style,
+            "--au-tooltip-left": `${coords.x}px`,
+            "--au-tooltip-top": `${coords.y}px`
           }}
           role="tooltip"
         >

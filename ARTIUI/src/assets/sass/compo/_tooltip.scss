@@ -1,0 +1,68 @@
+// Tooltip styles
+.au-tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 16rem;
+  padding: 0.55rem 0.85rem;
+  background-color: $primary-base;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  line-height: 1.25;
+  text-align: center;
+  left: var(--au-tooltip-left, 0);
+  top: var(--au-tooltip-top, 0);
+  transform: translate(-50%, -100%);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.au-tooltip--bottom {
+  transform: translate(-50%, 0.5rem);
+}
+
+.au-tooltip--left {
+  transform: translate(calc(-100% - 0.5rem), -50%);
+}
+
+.au-tooltip--right {
+  transform: translate(0.5rem, -50%);
+}
+
+.au-tooltip__arrow {
+  position: absolute;
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: inherit;
+  transform: rotate(45deg);
+}
+
+.au-tooltip--top .au-tooltip__arrow {
+  bottom: -0.28rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.au-tooltip--bottom .au-tooltip__arrow {
+  top: -0.28rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.au-tooltip--left .au-tooltip__arrow {
+  right: -0.28rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.au-tooltip--right .au-tooltip__arrow {
+  left: -0.28rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.au-tooltip-trigger {
+  cursor: default;
+  display: inline-flex;
+}

@@ -1,0 +1,79 @@
+// Aadhaar verification page styles
+.aadhar-verification-page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.aadhar-verification-page__meta {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.aadhar-verification-page__meta--secondary {
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.aadhar-verification-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.aadhar-verification-page__header {
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.aadhar-verification-page__progress-text {
+  text-align: center;
+  margin-top: 10px;
+  color: #666;
+}
+
+.aadhar-verification-page__detail-panel {
+  padding: 15px;
+  background-color: #f0f8ff;
+  border-radius: 8px;
+  border-left: 4px solid #0066cc;
+}
+
+.aadhar-verification-page__detail-panel p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.aadhar-verification-page__status-message {
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.aadhar-verification-page__status-message--success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.aadhar-verification-page__status-message--error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.aadhar-verification-page__status-title {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.aadhar-verification-page__status-text {
+  font-size: 14px;
+  margin: 0;
+}
+
+.aadhar-verification-page__actions {
+  display: flex;
+  gap: 10px;
+}

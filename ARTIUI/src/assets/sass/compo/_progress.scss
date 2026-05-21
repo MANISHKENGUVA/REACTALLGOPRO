@@ -21,6 +21,7 @@
 }
 
 .au-progress__bar {
+  width: var(--au-progress-width, 0);
   height: 100%;
   background-color: $primary-base;
   border-radius: 999px;

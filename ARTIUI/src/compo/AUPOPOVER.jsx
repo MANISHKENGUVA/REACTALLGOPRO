@@ -7,6 +7,7 @@ export default function AUPOPOVER({
   position = "bottom",
   showArrow = true,
   className = "",
+  style = {},
   ...rest
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,8 +96,9 @@ export default function AUPOPOVER({
           ref={popoverRef}
           className={popoverClasses}
           style={{
-            left: coords.x,
-            top: coords.y
+            ...style,
+            "--au-popover-left": `${coords.x}px`,
+            "--au-popover-top": `${coords.y}px`
           }}
           role="dialog"
         >
