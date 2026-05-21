@@ -1,22 +1,165 @@
 $color-map-v01: (
-  'primary-50':  #EFF6FF, // RGB(239, 246, 255) | HSL: 214, 100%, 97%
-  'primary-100': #DBEAFE, // RGB(219, 234, 254) | HSL: 214, 95%, 93%
-  'primary-150': #BFDBFE, // RGB(191, 219, 254) | HSL: 213, 97%, 87%
-  'primary-200': #93C5FD, // RGB(147, 197, 253) | HSL: 212, 96%, 78%
-  'primary-250': #60A5FA, // RGB(96, 165, 250)  | HSL: 213, 94%, 68%
-  'primary-300': #3B82F6, // RGB(59, 130, 246)  | HSL: 217, 91%, 60%
-  'primary-350': #2563EB, // RGB(37, 99, 235)   | HSL: 221, 83%, 53%
-  'primary-400': #1D4ED8, // RGB(29, 78, 216)   | HSL: 224, 76%, 48%
-  'primary-450': #1E40AF, // RGB(30, 64, 175)   | HSL: 226, 71%, 40%
+  'primary-50':  #F9FAFB,
+  'primary-100': #F3F4F6,
+  'primary-150': #E5E7EB,
+  'primary-200': #D1D5DB,
+  'primary-250': #9CA3AF,
+  'primary-300': #6B7280,
+  'primary-350': #4B5563,
+  'primary-400': #374151,
+  'primary-450': #1F2937,
 );
 $color-map-v02: (
-  'primary-50':  #FFFBEB, // RGB(255, 251, 235) | HSL: 48, 100%, 96%
-  'primary-100': #FEF3C7, // RGB(254, 243, 199) | HSL: 48, 96%, 89%
-  'primary-150': #FDE68A, // RGB(253, 230, 138) | HSL: 47, 96%, 77%
-  'primary-200': #FCD34D, // RGB(252, 211, 77)  | HSL: 45, 95%, 65%
-  'primary-250': #FBBF24, // RGB(251, 191, 36)  | HSL: 43, 96%, 56%
-  'primary-300': #F59E0B, // RGB(245, 158, 11)  | HSL: 38, 92%, 50%
-  'primary-350': #D97706, // RGB(217, 119, 6)   | HSL: 32, 94%, 44%
-  'primary-400': #B45309, // RGB(180, 83, 9)    | HSL: 28, 90%, 37%
-  'primary-450': #92400E, // RGB(146, 64, 14)   | HSL: 25, 82%, 31%
+  'primary-50':  #F8FAFC,
+  'primary-100': #F1F5F9,
+  'primary-150': #E2E8F0,
+  'primary-200': #CBD5E1,
+  'primary-250': #94A3B8,
+  'primary-300': #64748B,
+  'primary-350': #475569,
+  'primary-400': #334155,
+  'primary-450': #1E293B,
+);
+$color-map-v03: (
+  'primary-50':  #F8F4ED,
+  'primary-100': #ECE2D8,
+  'primary-150': #DCB99E,
+  'primary-200': #C49E85,
+  'primary-250': #A7846C,
+  'primary-300': #8C6C59,
+  'primary-350': #715444,
+  'primary-400': #5F463A,
+  'primary-450': #3F2F24,
+);
+$color-map-v04: (
+  'primary-50':  #FAF7F2,
+  'primary-100': #EDE6D8,
+  'primary-150': #DBC9A8,
+  'primary-200': #C8B092,
+  'primary-250': #AB906F,
+  'primary-300': #8B7359,
+  'primary-350': #6F5D49,
+  'primary-400': #584A3C,
+  'primary-450': #3F372D,
+);
+$color-map-v05: (
+  'primary-50':  #F4F5F7,
+  'primary-100': #E1E3E8,
+  'primary-150': #C7CAD4,
+  'primary-200': #AEB4C0,
+  'primary-250': #8991A3,
+  'primary-300': #6F768A,
+  'primary-350': #53586D,
+  'primary-400': #3C4253,
+  'primary-450': #242936,
+);
+$color-map-v06: (
+  'primary-50':  #F4F7F8,
+  'primary-100': #E5EBEE,
+  'primary-150': #CDD8DF,
+  'primary-200': #B0C2CB,
+  'primary-250': #8C9AA7,
+  'primary-300': #6F7C87,
+  'primary-350': #55616F,
+  'primary-400': #3F4B57,
+  'primary-450': #2B323B,
+);
+$color-map-v07: (
+  'primary-50':  #F6F6EF,
+  'primary-100': #E8E7D6,
+  'primary-150': #D8D7B9,
+  'primary-200': #C4C39A,
+  'primary-250': #A9A67D,
+  'primary-300': #87855F,
+  'primary-350': #6D6B48,
+  'primary-400': #525137,
+  'primary-450': #363520,
+);
+$color-map-v08: (
+  'primary-50':  #F2F5F6,
+  'primary-100': #DCE6E8,
+  'primary-150': #B7C9CC,
+  'primary-200': #8AAAB0,
+  'primary-250': #628994,
+  'primary-300': #506F7C,
+  'primary-350': #405A68,
+  'primary-400': #324953,
+  'primary-450': #1F3038,
+);
+$color-map-v09: (
+  'primary-50':  #F6F4F7,
+  'primary-100': #EBE7EF,
+  'primary-150': #D7CCDB,
+  'primary-200': #BFB0C5,
+  'primary-250': #9A8AA7,
+  'primary-300': #7F6F8D,
+  'primary-350': #625371,
+  'primary-400': #4D4160,
+  'primary-450': #342B44,
+);
+$color-map-v10: (
+  'primary-50':  #F7F1EE,
+  'primary-100': #EDDACC,
+  'primary-150': #D8B4A3,
+  'primary-200': #C49284,
+  'primary-250': #AA7970,
+  'primary-300': #8F625D,
+  'primary-350': #6F4D4A,
+  'primary-400': #543D39,
+  'primary-450': #3A2B29,
+);
+$color-map-v11: (
+  'primary-50':  #F1F4F1,
+  'primary-100': #DEE5DC,
+  'primary-150': #C7D0C0,
+  'primary-200': #A8B29F,
+  'primary-250': #86967F,
+  'primary-300': #6C7B60,
+  'primary-350': #56644C,
+  'primary-400': #424F3B,
+  'primary-450': #2C372A,
+);
+$color-map-v12: (
+  'primary-50':  #F4F6F7,
+  'primary-100': #E4EAED,
+  'primary-150': #C7D3D9,
+  'primary-200': #A8B8C0,
+  'primary-250': #7F8C9A,
+  'primary-300': #5E6F7F,
+  'primary-350': #485966,
+  'primary-400': #343F4C,
+  'primary-450': #1F2834,
+);
+$color-map-v13: (
+  'primary-50':  #F6F2EF,
+  'primary-100': #EBDFD6,
+  'primary-150': #D8BFB0,
+  'primary-200': #C5A496,
+  'primary-250': #A98478,
+  'primary-300': #896558,
+  'primary-350': #6B4F46,
+  'primary-400': #513F35,
+  'primary-450': #382D27,
+);
+$color-map-v14: (
+  'primary-50':  #F5F7EF,
+  'primary-100': #E7ECD6,
+  'primary-150': #D4DFA7,
+  'primary-200': #BCD075,
+  'primary-250': #98B54D,
+  'primary-300': #7C9039,
+  'primary-350': #5F6F2C,
+  'primary-400': #4D5822,
+  'primary-450': #343B18,
+);
+$color-map-v15: (
+  'primary-50':  #F5F6F8,
+  'primary-100': #E7EBF0,
+  'primary-150': #CAD5DE,
+  'primary-200': #A9BBC9,
+  'primary-250': #7F93AD,
+  'primary-300': #62758B,
+  'primary-350': #4D5F72,
+  'primary-400': #394A59,
+  'primary-450': #26333C,
 );
