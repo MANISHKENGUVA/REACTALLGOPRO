@@ -1,15 +1,96 @@
+// THEME 01 — INDIGO MODERN
 $color-map-v01: (
-  'primary-50':  #F9FAFB,
-  'primary-100': #F3F4F6,
-  'primary-150': #E5E7EB,
-  'primary-200': #D1D5DB,
-  'primary-250': #9CA3AF,
-  'primary-300': #6B7280,
-  'primary-350': #4B5563,
-  'primary-400': #374151,
-  'primary-450': #1F2937,
+  'primary-50':  #EEF2FF,
+  'primary-100': #E0E7FF,
+  'primary-150': #C7D2FE,
+  'primary-200': #A5B4FC,
+  'primary-250': #818CF8,
+  'primary-300': #6366F1,
+  'primary-350': #4F46E5,
+  'primary-400': #4338CA,
+  'primary-450': #3730A3,
 );
+
+// THEME 02 — OCEAN BLUE
 $color-map-v02: (
+  'primary-50':  #EFF6FF,
+  'primary-100': #DBEAFE,
+  'primary-150': #BFDBFE,
+  'primary-200': #93C5FD,
+  'primary-250': #60A5FA,
+  'primary-300': #3B82F6,
+  'primary-350': #2563EB,
+  'primary-400': #1D4ED8,
+  'primary-450': #1E3A8A,
+);
+
+// THEME 03 — EMERALD
+$color-map-v03: (
+  'primary-50':  #ECFDF5,
+  'primary-100': #D1FAE5,
+  'primary-150': #A7F3D0,
+  'primary-200': #6EE7B7,
+  'primary-250': #34D399,
+  'primary-300': #10B981,
+  'primary-350': #059669,
+  'primary-400': #047857,
+  'primary-450': #065F46,
+);
+
+// THEME 04 — VIOLET AI
+$color-map-v04: (
+  'primary-50':  #F5F3FF,
+  'primary-100': #EDE9FE,
+  'primary-150': #DDD6FE,
+  'primary-200': #C4B5FD,
+  'primary-250': #A78BFA,
+  'primary-300': #8B5CF6,
+  'primary-350': #7C3AED,
+  'primary-400': #6D28D9,
+  'primary-450': #5B21B6,
+);
+
+// THEME 05 — ROSE PREMIUM
+$color-map-v05: (
+  'primary-50':  #FFF1F2,
+  'primary-100': #FFE4E6,
+  'primary-150': #FECDD3,
+  'primary-200': #FDA4AF,
+  'primary-250': #FB7185,
+  'primary-300': #F43F5E,
+  'primary-350': #E11D48,
+  'primary-400': #BE123C,
+  'primary-450': #881337,
+);
+
+// THEME 06 — ORANGE ENERGY
+$color-map-v06: (
+  'primary-50':  #FFF7ED,
+  'primary-100': #FFEDD5,
+  'primary-150': #FED7AA,
+  'primary-200': #FDBA74,
+  'primary-250': #FB923C,
+  'primary-300': #F97316,
+  'primary-350': #EA580C,
+  'primary-400': #C2410C,
+  'primary-450': #9A3412,
+);
+
+// THEME 07 — CYAN TECH
+$color-map-v07: (
+  'primary-50':  #ECFEFF,
+  'primary-100': #CFFAFE,
+  'primary-150': #A5F3FC,
+  'primary-200': #67E8F9,
+  'primary-250': #22D3EE,
+  'primary-300': #06B6D4,
+  'primary-350': #0891B2,
+  'primary-400': #0E7490,
+  'primary-450': #155E75,
+);
+
+// THEME 08 — SLATE MINIMAL
+$color-map-v08: (
   'primary-50':  #F8FAFC,
   'primary-100': #F1F5F9,
   'primary-150': #E2E8F0,
@@ -20,146 +101,94 @@ $color-map-v02: (
   'primary-400': #334155,
   'primary-450': #1E293B,
 );
-$color-map-v03: (
-  'primary-50':  #F8F4ED,
-  'primary-100': #ECE2D8,
-  'primary-150': #DCB99E,
-  'primary-200': #C49E85,
-  'primary-250': #A7846C,
-  'primary-300': #8C6C59,
-  'primary-350': #715444,
-  'primary-400': #5F463A,
-  'primary-450': #3F2F24,
-);
-$color-map-v04: (
-  'primary-50':  #FAF7F2,
-  'primary-100': #EDE6D8,
-  'primary-150': #DBC9A8,
-  'primary-200': #C8B092,
-  'primary-250': #AB906F,
-  'primary-300': #8B7359,
-  'primary-350': #6F5D49,
-  'primary-400': #584A3C,
-  'primary-450': #3F372D,
-);
-$color-map-v05: (
-  'primary-50':  #F4F5F7,
-  'primary-100': #E1E3E8,
-  'primary-150': #C7CAD4,
-  'primary-200': #AEB4C0,
-  'primary-250': #8991A3,
-  'primary-300': #6F768A,
-  'primary-350': #53586D,
-  'primary-400': #3C4253,
-  'primary-450': #242936,
-);
-$color-map-v06: (
-  'primary-50':  #F4F7F8,
-  'primary-100': #E5EBEE,
-  'primary-150': #CDD8DF,
-  'primary-200': #B0C2CB,
-  'primary-250': #8C9AA7,
-  'primary-300': #6F7C87,
-  'primary-350': #55616F,
-  'primary-400': #3F4B57,
-  'primary-450': #2B323B,
-);
-$color-map-v07: (
-  'primary-50':  #F6F6EF,
-  'primary-100': #E8E7D6,
-  'primary-150': #D8D7B9,
-  'primary-200': #C4C39A,
-  'primary-250': #A9A67D,
-  'primary-300': #87855F,
-  'primary-350': #6D6B48,
-  'primary-400': #525137,
-  'primary-450': #363520,
-);
-$color-map-v08: (
-  'primary-50':  #F2F5F6,
-  'primary-100': #DCE6E8,
-  'primary-150': #B7C9CC,
-  'primary-200': #8AAAB0,
-  'primary-250': #628994,
-  'primary-300': #506F7C,
-  'primary-350': #405A68,
-  'primary-400': #324953,
-  'primary-450': #1F3038,
-);
+
+// THEME 09 — PINK GLASS
 $color-map-v09: (
-  'primary-50':  #F6F4F7,
-  'primary-100': #EBE7EF,
-  'primary-150': #D7CCDB,
-  'primary-200': #BFB0C5,
-  'primary-250': #9A8AA7,
-  'primary-300': #7F6F8D,
-  'primary-350': #625371,
-  'primary-400': #4D4160,
-  'primary-450': #342B44,
+  'primary-50':  #FDF2F8,
+  'primary-100': #FCE7F3,
+  'primary-150': #FBCFE8,
+  'primary-200': #F9A8D4,
+  'primary-250': #F472B6,
+  'primary-300': #EC4899,
+  'primary-350': #DB2777,
+  'primary-400': #BE185D,
+  'primary-450': #9D174D,
 );
+
+// THEME 10 — TEAL PREMIUM
 $color-map-v10: (
-  'primary-50':  #F7F1EE,
-  'primary-100': #EDDACC,
-  'primary-150': #D8B4A3,
-  'primary-200': #C49284,
-  'primary-250': #AA7970,
-  'primary-300': #8F625D,
-  'primary-350': #6F4D4A,
-  'primary-400': #543D39,
-  'primary-450': #3A2B29,
+  'primary-50':  #F0FDFA,
+  'primary-100': #CCFBF1,
+  'primary-150': #99F6E4,
+  'primary-200': #5EEAD4,
+  'primary-250': #2DD4BF,
+  'primary-300': #14B8A6,
+  'primary-350': #0D9488,
+  'primary-400': #0F766E,
+  'primary-450': #115E59,
 );
+
+// THEME 11 — GOLD LUXURY
 $color-map-v11: (
-  'primary-50':  #F1F4F1,
-  'primary-100': #DEE5DC,
-  'primary-150': #C7D0C0,
-  'primary-200': #A8B29F,
-  'primary-250': #86967F,
-  'primary-300': #6C7B60,
-  'primary-350': #56644C,
-  'primary-400': #424F3B,
-  'primary-450': #2C372A,
+  'primary-50':  #FEFCE8,
+  'primary-100': #FEF9C3,
+  'primary-150': #FEF08A,
+  'primary-200': #FDE047,
+  'primary-250': #FACC15,
+  'primary-300': #EAB308,
+  'primary-350': #CA8A04,
+  'primary-400': #A16207,
+  'primary-450': #854D0E,
 );
+
+// THEME 12 — FOREST
 $color-map-v12: (
-  'primary-50':  #F4F6F7,
-  'primary-100': #E4EAED,
-  'primary-150': #C7D3D9,
-  'primary-200': #A8B8C0,
-  'primary-250': #7F8C9A,
-  'primary-300': #5E6F7F,
-  'primary-350': #485966,
-  'primary-400': #343F4C,
-  'primary-450': #1F2834,
+  'primary-50':  #F0FDF4,
+  'primary-100': #DCFCE7,
+  'primary-150': #BBF7D0,
+  'primary-200': #86EFAC,
+  'primary-250': #4ADE80,
+  'primary-300': #22C55E,
+  'primary-350': #16A34A,
+  'primary-400': #15803D,
+  'primary-450': #166534,
 );
+
+// THEME 13 — RED MODERN
 $color-map-v13: (
-  'primary-50':  #F6F2EF,
-  'primary-100': #EBDFD6,
-  'primary-150': #D8BFB0,
-  'primary-200': #C5A496,
-  'primary-250': #A98478,
-  'primary-300': #896558,
-  'primary-350': #6B4F46,
-  'primary-400': #513F35,
-  'primary-450': #382D27,
+  'primary-50':  #FEF2F2,
+  'primary-100': #FEE2E2,
+  'primary-150': #FECACA,
+  'primary-200': #FCA5A5,
+  'primary-250': #F87171,
+  'primary-300': #EF4444,
+  'primary-350': #DC2626,
+  'primary-400': #B91C1C,
+  'primary-450': #7F1D1D,
 );
+
+// THEME 14 — SKY MODERN
 $color-map-v14: (
-  'primary-50':  #F5F7EF,
-  'primary-100': #E7ECD6,
-  'primary-150': #D4DFA7,
-  'primary-200': #BCD075,
-  'primary-250': #98B54D,
-  'primary-300': #7C9039,
-  'primary-350': #5F6F2C,
-  'primary-400': #4D5822,
-  'primary-450': #343B18,
+  'primary-50':  #F0F9FF,
+  'primary-100': #E0F2FE,
+  'primary-150': #BAE6FD,
+  'primary-200': #7DD3FC,
+  'primary-250': #38BDF8,
+  'primary-300': #0EA5E9,
+  'primary-350': #0284C7,
+  'primary-400': #0369A1,
+  'primary-450': #075985,
 );
+
+// THEME 15 — NEUTRAL MONO
 $color-map-v15: (
-  'primary-50':  #F5F6F8,
-  'primary-100': #E7EBF0,
-  'primary-150': #CAD5DE,
-  'primary-200': #A9BBC9,
-  'primary-250': #7F93AD,
-  'primary-300': #62758B,
-  'primary-350': #4D5F72,
-  'primary-400': #394A59,
-  'primary-450': #26333C,
+  'primary-50':  #FAFAFA,
+  'primary-100': #F4F4F5,
+  'primary-150': #E4E4E7,
+  'primary-200': #D4D4D8,
+  'primary-250': #A1A1AA,
+  'primary-300': #71717A,
+  'primary-350': #52525B,
+  'primary-400': #3F3F46,
+  'primary-450': #27272A,
 );

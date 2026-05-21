@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Interactive &amp; Feedback | Aura Color Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ffb4ab",
+                        "secondary": "#cdc0e9",
+                        "on-background": "#e6e0e9",
+                        "secondary-fixed": "#e9ddff",
+                        "tertiary": "#e7c365",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "inverse-primary": "#6750a4",
+                        "surface-bright": "#3b383e",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-surface": "#e6e0e9",
+                        "outline": "#948e9c",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-container-lowest": "#0f0d13",
+                        "surface-container": "#211f24",
+                        "on-secondary-container": "#bfb2da",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-tertiary-container": "#503d00",
+                        "on-surface": "#e6e0e9",
+                        "secondary-container": "#4d4465",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-tint": "#cfbcff",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "on-secondary": "#342b4b",
+                        "error-container": "#93000a",
+                        "tertiary-container": "#c9a74d",
+                        "surface-variant": "#36343a",
+                        "surface-container-low": "#1d1b20",
+                        "primary-container": "#6750a4",
+                        "surface-container-high": "#2b292f",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-dim": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "surface": "#141218",
+                        "background": "#141218",
+                        "on-primary": "#381e72",
+                        "surface-container-highest": "#36343a",
+                        "on-primary-fixed": "#22005d",
+                        "inverse-on-surface": "#322f35",
+                        "on-error": "#690005",
+                        "on-tertiary": "#3e2e00",
+                        "on-tertiary-fixed": "#241a00",
+                        "primary-fixed": "#e9ddff",
+                        "on-error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xxl": "48px",
+                        "md": "16px",
+                        "giant": "80px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-sm": ["Inter"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "label-lg": ["Inter"],
+                        "headline-lg": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "label-sm": ["10px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "label-lg": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #0f0d13; color: #e6e0e9; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        /* Lume Effect: Glowing Glass Tubes */
+        .lume-glass {
+            background: rgba(207, 188, 255, 0.05);
+            border: 1px solid rgba(207, 188, 255, 0.1);
+            backdrop-filter: blur(8px);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
+        }
+        .lume-glow-bar {
+            background: linear-gradient(90deg, #6750a4, #cfbcff);
+            box-shadow: 0 0 12px rgba(207, 188, 255, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+        }
+        .lume-halo {
+            box-shadow: 0 0 20px 2px rgba(207, 188, 255, 0.3);
+        }
+        
+        /* Custom Slider Thumb */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #cfbcff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(207, 188, 255, 0.8);
+            margin-top: -8px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(207, 188, 255, 0.1);
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md selection:bg-primary/30">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-md h-16 bg-background/80 backdrop-blur-md border-b border-primary/20">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="palette">palette</span>
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">Aura Color Lab</h1>
+</div>
+<div class="flex items-center gap-md">
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Components</a>
+<a class="text-primary font-bold hover:text-primary transition-colors duration-200" href="#">Interactive</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Documentation</a>
+</nav>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</div>
+</header>
+<main class="pt-xxl pb-giant px-md max-w-[1440px] mx-auto">
+<!-- Hero Section -->
+<section class="mt-xxl mb-giant text-center">
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-md">System Feedback</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Explore high-precision interactive components designed with digital craftsmanship and obsidian-light luminosity.
+            </p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- AUSTEPPER: Horizontal Progress Steps -->
+<div class="md:col-span-12 p-lg lume-glass rounded-xl overflow-hidden">
+<div class="flex flex-col md:flex-row items-center justify-between w-full max-w-4xl mx-auto py-md gap-lg md:gap-0">
+<!-- Step 1 (Active) -->
+<div class="flex flex-col items-center relative z-10">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center lume-halo mb-sm">
+<span class="material-symbols-outlined text-on-primary" data-icon="check">check</span>
+</div>
+<span class="font-label-lg text-label-lg text-primary">Configuration</span>
+</div>
+<div class="hidden md:block flex-1 h-px bg-primary/30 mx-4"></div>
+<!-- Step 2 (Active Current) -->
+<div class="flex flex-col items-center relative z-10">
+<div class="w-12 h-12 rounded-full border-2 border-primary bg-primary-container/20 flex items-center justify-center lume-halo mb-sm">
+<span class="font-headline-sm text-headline-sm text-primary">2</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface">Feedback Loop</span>
+</div>
+<div class="hidden md:block flex-1 h-px bg-outline-variant mx-4"></div>
+<!-- Step 3 (Inactive) -->
+<div class="flex flex-col items-center relative z-10 opacity-50">
+<div class="w-12 h-12 rounded-full border-2 border-outline flex items-center justify-center mb-sm">
+<span class="font-headline-sm text-headline-sm text-outline">3</span>
+</div>
+<span class="font-label-lg text-label-lg text-outline">Final Review</span>
+</div>
+</div>
+</div>
+<!-- AUPROGRESS: Progress Bars -->
+<div class="md:col-span-7 flex flex-col gap-lg">
+<div class="p-lg lume-glass rounded-xl flex flex-col gap-xl">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Lume Progress</h3>
+<!-- Linear Bars -->
+<div class="space-y-md">
+<div class="flex justify-between font-label-md text-label-md text-on-surface-variant mb-xs">
+<span>System Integrity</span>
+<span>84%</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden border border-primary/10">
+<div class="h-full lume-glow-bar" style="width: 84%;"></div>
+</div>
+<div class="flex justify-between font-label-md text-label-md text-on-surface-variant mb-xs">
+<span>Processing Flux</span>
+<span>42%</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden border border-primary/10">
+<div class="h-full lume-glow-bar animate-pulse" style="width: 42%;"></div>
+</div>
+</div>
+<!-- Circular Progress Indicators -->
+<div class="flex flex-wrap gap-giant justify-around items-center">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary lume-halo" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="109.3" stroke-width="8" style="filter: drop-shadow(0 0 6px #cfbcff);"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-primary">70%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Core</span>
+</div>
+</div>
+<div class="relative w-24 h-24">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="48" cy="48" fill="transparent" r="42" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-secondary" cx="48" cy="48" fill="transparent" r="42" stroke="currentColor" stroke-dasharray="263.8" stroke-dashoffset="184.6" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-sm text-headline-sm text-secondary">30%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AURANGE: Sliders -->
+<div class="p-lg lume-glass rounded-xl">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-lg">Threshold Tuning</h3>
+<div class="space-y-xl">
+<div class="space-y-sm">
+<div class="flex justify-between font-label-md text-label-md text-on-surface-variant">
+<span>Luminance Sensitivity</span>
+<span class="text-primary">6.4</span>
+</div>
+<input class="w-full appearance-none bg-transparent" max="10" min="0" step="0.1" type="range" value="6.4"/>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between font-label-md text-label-md text-on-surface-variant">
+<span>Neon Saturation</span>
+<span class="text-secondary">88%</span>
+</div>
+<input class="w-full appearance-none bg-transparent opacity-80" max="100" min="0" type="range" value="88"/>
+</div>
+</div>
+</div>
+</div>
+<!-- AUTIMELINE: Activity Feed -->
+<div class="md:col-span-5 p-lg lume-glass rounded-xl flex flex-col h-full">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-lg">Operational Feed</h3>
+<div class="flex-1 space-y-md relative">
+<!-- Timeline Line -->
+<div class="absolute left-[15px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-primary/40 via-primary/10 to-transparent"></div>
+<!-- Item 1 -->
+<div class="flex gap-lg relative">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center z-10 lume-halo">
+<span class="material-symbols-outlined text-on-primary text-sm" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Neural Mesh Optimized</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Optimization engine applied high-contrast indigo filters to the dashboard layer.</p>
+<span class="font-label-sm text-label-sm text-outline mt-xs block">2 mins ago</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-lg relative">
+<div class="w-8 h-8 rounded-full bg-surface-container border border-primary/40 flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="sync">sync</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Data Sync Complete</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Global assets synchronized with Obsidian cloud storage.</p>
+<span class="font-label-sm text-label-sm text-outline mt-xs block">14 mins ago</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex gap-lg relative">
+<div class="w-8 h-8 rounded-full bg-error/20 border border-error/50 flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-error text-sm" data-icon="priority_high">priority_high</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-error">Anomalous Spike</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Detected luminance overflow in Section 4. Auto-dimming applied.</p>
+<span class="font-label-sm text-label-sm text-outline mt-xs block">1 hour ago</span>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex gap-lg relative">
+<div class="w-8 h-8 rounded-full bg-surface-container border border-primary/20 flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="person">person</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface">Access Granted</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Executive director signed in from Stockholm Terminal.</p>
+<span class="font-label-sm text-label-sm text-outline mt-xs block">3 hours ago</span>
+</div>
+</div>
+</div>
+<button class="mt-xl w-full py-md border border-primary/20 text-primary font-label-lg rounded hover:bg-primary/5 transition-all">
+                    View Full Audit Log
+                </button>
+</div>
+</div>
+<!-- AUTOAST: Notification Section -->
+<div class="mt-giant grid grid-cols-1 md:grid-cols-2 gap-lg items-center">
+<div class="space-y-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Interactive Alerts</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Our notification system utilizes non-intrusive floating toasts that maintain the luxury minimalist aesthetic while ensuring high-visibility feedback.
+                </p>
+<div class="flex gap-md">
+<button class="px-xl py-md bg-primary text-on-primary rounded-xl font-label-lg flex items-center gap-sm transition-transform active:scale-95 lume-halo" onclick="showToast()">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                        Trigger Toast
+                    </button>
+</div>
+</div>
+<div class="relative h-[300px] flex items-center justify-center border-2 border-dashed border-primary/10 rounded-xxl bg-surface-container-low/30 overflow-hidden">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<img alt="Abstract digital waves" class="w-full h-full object-cover" data-alt="A sophisticated digital landscape showing undulating indigo waves and glass-like prisms floating in a deep black obsidian void. The lighting is low-key with sharp, vibrant purple highlights reflecting off the crystalline surfaces. The atmosphere is quiet, technological, and premium, perfectly representing a high-end software environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDco1RjqmmI6HLXEmOyeyV4L3eQ7yFsWOegg3WugljJBCyhBbmsjpGqz3gX7WhnEN8rtTVZgE8oxFHOwJ6wU9QSSooRVInMCuZaNXjBhFPAbv5mVJutQ_YfPAcqwwt6H_SgEoeOrnU7Zjcu7jAUDH4CNDKOpcoy6Uo8GEt4icX8JmlcMD52UDpWIF6dIQ9u8-iiGLjVrugYAKGSJnih3NQ2aHEV527WidJbC7f9c1UqkaoXIkWQIlrutyyicHlLeS0KwNLMjzHuZhM"/>
+</div>
+<!-- Mock Toast Container -->
+<div class="flex flex-col gap-sm z-20" id="toast-container">
+<div class="flex items-center gap-md p-md bg-surface-container-highest/90 border border-primary/30 rounded-lg backdrop-blur-xl shadow-2xl animate-bounce">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="pr-lg">
+<p class="font-label-lg text-label-lg text-on-surface">Update Successful</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Global variables synced to local cache.</p>
+</div>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined" data-icon="close">close</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-sm bg-surface-container border-t border-primary/10 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-variant/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="ads_click">ads_click</span>
+<span class="font-label-md text-label-md">Buttons</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-variant/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
+<span class="font-label-md text-label-md">Inputs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-variant/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="font-label-md text-label-md">Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-full px-4 py-1.5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="palette">palette</span>
+<span class="font-label-md text-label-md">Interactive</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1.5 hover:bg-surface-variant/30 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-md text-label-md">Themes</span>
+</a>
+</nav>
+<script>
+        function showToast() {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = "flex items-center gap-md p-md bg-surface-container-highest/90 border border-secondary/30 rounded-lg backdrop-blur-xl shadow-2xl opacity-0 translate-y-4 transition-all duration-500 mb-2";
+            toast.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+                </div>
+                <div class="pr-lg">
+                    <p class="font-label-lg text-label-lg text-on-surface">Interactive Action</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">The feedback loop has been initiated.</p>
+                </div>
+            `;
+            container.prepend(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-y-4');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y--4');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // Mouse move light follow effect on bento grid
+        document.querySelectorAll('.lume-glass').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+                card.style.background = `radial-gradient(400px circle at ${x}px ${y}px, rgba(207, 188, 255, 0.08), transparent 40%)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'rgba(207, 188, 255, 0.05)';
+            });
+        });
+    </script>
+</body></html>

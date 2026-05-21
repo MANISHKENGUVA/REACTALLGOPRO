@@ -15,6 +15,7 @@ export default function AUINPUT({
   prefixIcon,
   suffixIcon,
   clearable = false,
+  showPasswordToggle = false,
   disabled = false,
   className = "",
   name,
@@ -22,9 +23,12 @@ export default function AUINPUT({
 }) {
   const safeType = INPUT_TYPES.includes(type) ? type : "text";
   const [internalValue, setInternalValue] = useState(value ?? defaultValue);
+  const [isFocused, setIsFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const isControlled = value !== undefined;
   const currentValue = isControlled ? value : internalValue;
-  const showClear = clearable && !disabled && currentValue?.toString().length > 0;
+  const hasValue = currentValue?.toString().length > 0;
+  const showClear = clearable && !disabled && hasValue;
   const hasError = Boolean(error);
   const wrapperClasses = [
     "au-input",
@@ -69,14 +73,12 @@ export default function AUINPUT({
     }
   }
 
+  function togglePasswordVisibility() {
+    setShowPassword((prev) => !prev);
+  }
+
   return (
     <div className={wrapperClasses}>
-      {label ? (
-        <label className="au-input__label" htmlFor={id}>
-          {label}
-        </label>
-      ) : null}
-
       <div className="au-input__field">
         {prefixIcon ? (
           <div className="au-input__adornment au-input__adornment--prefix">
@@ -87,16 +89,27 @@ export default function AUINPUT({
         <input
           id={id}
           name={name}
-          type={safeType}
+          type={safeType === "password" && showPassword ? "text" : safeType}
           value={currentValue}
           onChange={handleChange}
-          placeholder={placeholder}
+          placeholder={placeholder || " "}
           disabled={disabled}
           className="au-input__control"
           aria-invalid={hasError ? "true" : "false"}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           {...rest}
         />
+
+        {label ? (
+          <label
+            className={`au-input__floating-label ${isFocused || hasValue ? "au-input__floating-label--active" : ""}`}
+            htmlFor={id}
+          >
+            {label}
+          </label>
+        ) : null}
 
         {showClear ? (
           <button
@@ -106,6 +119,17 @@ export default function AUINPUT({
             aria-label="Clear input"
           >
             ×
+          </button>
+        ) : null}
+
+        {showPasswordToggle && safeType === "password" ? (
+          <button
+            type="button"
+            className="au-input__visibility"
+            onClick={togglePasswordVisibility}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "Hide" : "Show"}
           </button>
         ) : null}
 

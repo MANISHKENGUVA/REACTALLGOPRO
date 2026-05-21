@@ -1,11 +1,12 @@
 import React from "react";
 
-const VARIANTS = ["primary", "secondary", "outline", "ghost", "danger", "link"];
+const VARIANTS = ["primary", "secondary", "outline", "ghost", "danger", "gradient", "link"];
 
 export default function AUBUTTON({
   children,
   variant = "primary",
   loading = false,
+  loadingText = "Loading",
   disabled = false,
   leftIcon,
   rightIcon,
@@ -39,7 +40,7 @@ export default function AUBUTTON({
       {loading ? (
         <>
           <span className="au-button__spinner" aria-hidden="true" />
-          <span className="au-button__label">Loading</span>
+          <span className="au-button__label">{loadingText}</span>
         </>
       ) : (
         <>
