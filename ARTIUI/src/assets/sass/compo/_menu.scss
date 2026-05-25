@@ -1,14 +1,19 @@
-// Menu styles
+// ═══════════════════════════════════════════════════════
+// AUMENU & AUMENUDROPDOWN — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-menu,
 .au-menu-dropdown__menu {
   display: inline-flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 0.5rem 0;
-  background-color: #fff;
-  border: 1px solid $primary-tint-3;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
+  padding: 0.5rem;
+  background-color: $glass-bg;
+  backdrop-filter: $glass-blur;
+  border: $lume-border;
+  box-shadow: $shadow-lg;
+  border-radius: $radius-xl;
+  font-family: $font-body;
 }
 
 .au-menu__item,
@@ -16,36 +21,40 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: $sp-sm;
   padding: 0.75rem 1rem;
   background: transparent;
   border: none;
   text-align: left;
-  color: $primary-shade-4;
+  color: $on-surface;
   cursor: pointer;
-  border-radius: 0.75rem;
-}
+  border-radius: $radius-lg;
+  font-family: $font-body;
+  font-size: 14px;
+  transition: background-color $transition-fast, color $transition-fast;
 
-.au-menu__item:hover,
-.au-menu-dropdown__item:hover {
-  background-color: $primary-tint-2;
+  &:hover {
+    background-color: rgba($primary, 0.1);
+    color: $primary;
+  }
 }
 
 .au-menu__item--active,
 .au-menu-dropdown__item--active {
-  background-color: $primary-tint-3;
+  background-color: rgba($primary, 0.15);
+  color: $primary;
 }
 
 .au-menu__divider,
 .au-menu-dropdown__divider {
   height: 1px;
   margin: 0.25rem 0;
-  background-color: $primary-tint-2;
+  background-color: $outline-variant;
 }
 
 .au-menu__item--checkbox,
 .au-menu__item--radio {
-  gap: 0.75rem;
+  gap: $sp-sm;
 }
 
 .au-menu__item-icon,
@@ -54,6 +63,7 @@
   align-items: center;
   justify-content: center;
   width: 1.5rem;
+  color: $primary;
 }
 
 .au-menu-dropdown {
@@ -63,12 +73,21 @@
 .au-menu-dropdown__trigger {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: $sp-xs;
   padding: 0.75rem 1rem;
-  border: 1px solid $primary-tint-2;
-  background: #fff;
-  border-radius: 0.75rem;
+  border: $lume-border;
+  background: $surface-container-low;
+  border-radius: $radius-lg;
+  color: $on-surface;
   cursor: pointer;
+  font-family: $font-body;
+  font-weight: 600;
+  transition: border-color $transition-fast, background-color $transition-fast;
+
+  &:hover {
+    border-color: rgba($primary, 0.4);
+    background-color: rgba($primary, 0.05);
+  }
 }
 
 .au-menu-dropdown__menu {
@@ -84,4 +103,5 @@
 
 .au-menu-dropdown__trigger-arrow {
   margin-left: auto;
+  color: $outline;
 }

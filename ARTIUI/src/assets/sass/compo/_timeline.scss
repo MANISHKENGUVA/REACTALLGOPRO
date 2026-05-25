@@ -1,23 +1,33 @@
-// Timeline styles
+// ═══════════════════════════════════════════════════════
+// AUTIMELINE — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-timeline {
   position: relative;
-  padding-left: 1.75rem;
+  padding-left: 2rem;
   margin: 0;
   list-style: none;
-  border-left: 2px solid $primary-tint-3;
+  border-left: 2px solid transparent;
+  background-image: linear-gradient($surface-container, $surface-container),
+                    linear-gradient(to bottom, rgba($primary, 0.4), rgba($primary, 0.1), transparent);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-image: linear-gradient(to bottom, rgba($primary, 0.4), rgba($primary, 0.1), transparent) 1;
 }
 
 .au-timeline--horizontal {
   display: flex;
   padding-left: 0;
   border-left: none;
+  border-image: none;
+  background: none;
   gap: 1rem;
 }
 
 .au-timeline__item {
   position: relative;
-  padding: 0.75rem 0 0.75rem 1.25rem;
-  margin-bottom: 1rem;
+  padding: 0.75rem 0 0.75rem 1.5rem;
+  margin-bottom: $sp-md;
 }
 
 .au-timeline__item:last-child {
@@ -26,64 +36,102 @@
 
 .au-timeline__indicator {
   position: absolute;
-  left: -1.25rem;
+  left: -1.5rem;
   top: 0.75rem;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.au-timeline__dot,
-.au-timeline__icon {
+.au-timeline__dot {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background-color: $primary-base;
-  color: #fff;
-  font-size: 0.85rem;
+  background-color: $primary;
+  ring: 4px;
+  box-shadow: 0 0 0 4px rgba($primary, 0.2);
 }
 
 .au-timeline__icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: $primary;
+  color: $on-primary;
+  font-size: 0.85rem;
+  box-shadow: $lume-halo;
 }
 
 .au-timeline__content {
-  padding-left: 0.25rem;
+  padding-left: $sp-xs;
 }
 
 .au-timeline__title {
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-  color: $primary-shade-3;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  margin-bottom: $sp-xs;
+  color: $on-surface;
 }
 
-.au-timeline__description,
+.au-timeline__description {
+  color: $on-surface-variant;
+  font-size: 14px;
+}
+
 .au-timeline__timestamp {
-  color: $primary-shade-2;
-  font-size: 0.95rem;
+  color: $outline;
+  font-size: 10px;
+  font-weight: 500;
+  margin-top: $sp-xs;
 }
 
-.au-timeline__timestamp {
-  margin-top: 0.25rem;
+// ── Status variants ─────────────────────────────────────
+
+.au-timeline__item--completed .au-timeline__dot {
+  background-color: $primary;
+  box-shadow: $lume-halo;
 }
 
-.au-timeline__item--completed .au-timeline__dot,
 .au-timeline__item--completed .au-timeline__icon {
-  background-color: #10b981;
+  background-color: $primary;
+  box-shadow: $lume-halo;
 }
 
-.au-timeline__item--pending .au-timeline__dot,
+.au-timeline__item--pending .au-timeline__dot {
+  background-color: transparent;
+  border: 2px solid $primary;
+  box-shadow: none;
+}
+
 .au-timeline__item--pending .au-timeline__icon {
-  background-color: #f59e0b;
+  background-color: $surface-container;
+  border: 1px solid rgba($primary, 0.4);
+  color: $primary;
+  box-shadow: none;
 }
 
-.au-timeline__item--failed .au-timeline__dot,
+.au-timeline__item--failed .au-timeline__dot {
+  background-color: rgba($error, 0.2);
+  border: 1px solid rgba($error, 0.5);
+  box-shadow: none;
+}
+
 .au-timeline__item--failed .au-timeline__icon {
-  background-color: #ef4444;
+  background-color: rgba($error, 0.2);
+  border: 1px solid rgba($error, 0.5);
+  color: $error;
+  box-shadow: none;
+}
+
+.au-timeline__item--failed .au-timeline__title {
+  color: $error;
 }

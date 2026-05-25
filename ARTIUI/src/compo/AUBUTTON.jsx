@@ -5,6 +5,7 @@ const VARIANTS = ["primary", "secondary", "outline", "ghost", "danger", "gradien
 export default function AUBUTTON({
   children,
   variant = "primary",
+  size = "medium",
   loading = false,
   loadingText = "Loading",
   disabled = false,
@@ -18,9 +19,11 @@ export default function AUBUTTON({
 }) {
   const isDisabled = disabled || loading;
   const safeVariant = VARIANTS.includes(variant) ? variant : "primary";
+  const safeSize = ["small", "medium", "large"].includes(size) ? size : "medium";
   const classes = [
     "au-button",
     `au-button--${safeVariant}`,
+    `au-button--${safeSize}`,
     rounded && "au-button--rounded",
     loading && "au-button--loading",
     className

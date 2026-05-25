@@ -1,9 +1,13 @@
-// Stepper styles
+// ═══════════════════════════════════════════════════════
+// AUSTEPPER — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-stepper {
   display: flex;
-  gap: 1rem;
+  gap: $sp-md;
   width: 100%;
   flex-wrap: wrap;
+  font-family: $font-body;
 }
 
 .au-stepper--vertical {
@@ -13,7 +17,7 @@
 .au-stepper__step {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: $sp-md;
   position: relative;
   flex: 1 1 12rem;
 }
@@ -25,51 +29,64 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 50%;
-  border: 2px solid $primary-tint-3;
-  background-color: #fff;
-  color: $primary-base;
+  border: 2px solid $outline-variant;
+  background-color: $surface-container-lowest;
+  color: $outline;
   font-weight: 700;
+  font-size: 14px;
+  transition: all $transition-smooth;
 }
 
 .au-stepper__step--completed .au-stepper__indicator {
-  background-color: $primary-base;
-  color: #fff;
-  border-color: $primary-base;
+  background-color: $primary;
+  color: $on-primary;
+  border-color: $primary;
+  box-shadow: $lume-halo;
 }
 
 .au-stepper__step--active .au-stepper__indicator {
-  border-color: $primary-base;
+  border-color: $primary;
+  background-color: rgba($primary-container, 0.2);
+  color: $primary;
+  box-shadow: $lume-halo;
 }
 
 .au-stepper__content {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: $sp-xs;
 }
 
 .au-stepper__title {
   font-weight: 700;
-  color: $primary-shade-4;
+  color: $on-surface;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .au-stepper__description {
-  color: $primary-shade-3;
-  font-size: 0.94rem;
+  color: $on-surface-variant;
+  font-size: 14px;
 }
 
 .au-stepper__connector {
   position: absolute;
-  top: 1.6rem;
+  top: 1.125rem;
   left: 2.625rem;
   height: 2px;
   width: calc(100% - 2.625rem);
-  background-color: $primary-tint-2;
-  z-index: -1;
+  background-color: $outline-variant;
+  z-index: 0;
+}
+
+.au-stepper__step--completed .au-stepper__connector {
+  background-color: rgba($primary, 0.4);
 }
 
 .au-stepper--vertical .au-stepper__connector {
-  top: auto;
+  top: 2.25rem;
   left: 1.125rem;
   width: 2px;
-  height: calc(100% - 3rem);
+  height: calc(100% - 2.25rem);
 }

@@ -34,6 +34,8 @@ export default function AUINPUT({
     "au-input",
     hasError && "au-input--error",
     disabled && "au-input--disabled",
+    prefixIcon && "au-input--has-prefix",
+    suffixIcon && "au-input--has-suffix",
     className
   ]
     .filter(Boolean)

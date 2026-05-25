@@ -1,117 +1,162 @@
-// Button styles
+// ═══════════════════════════════════════════════════════
+// AUBUTTON — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  min-height: 3rem;
-  padding: 0.875rem 1.25rem;
+  gap: $sp-sm;
   border: 1px solid transparent;
-  border-radius: $component-radius;
-  background-color: $primary-base;
-  color: $text-inverse;
-  font-size: 1rem;
+  font-family: $font-body;
   font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: $shadow-sm;
-  transition: transform $transition-fast, box-shadow $transition-fast, background-color $transition-base, color $transition-base, border-color $transition-base;
+  box-shadow: 0 0 15px rgba($primary, 0.3);
+  transition: transform $transition-base,
+              box-shadow $transition-base,
+              background-color $transition-base,
+              color $transition-base,
+              border-color $transition-base;
   white-space: nowrap;
   user-select: none;
 
   &:hover {
-    transform: translateY(-1px);
-    box-shadow: $shadow-md;
-    background-color: $primary-shade-1;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba($primary, 0.4);
   }
 
   &:active {
-    transform: translateY(0);
-    background-color: $primary-shade-2;
+    transform: scale(0.98);
   }
 
   &:focus-visible {
-    outline: 2px solid rgba($primary-base, 0.32);
+    outline: 2px solid rgba($primary, 0.4);
     outline-offset: 3px;
   }
 
   &:disabled {
-    background-color: $primary-tint-3;
-    color: rgba($text-inverse, 0.85);
+    background-color: rgba($primary, 0.3);
+    color: rgba($on-primary, 0.7);
     cursor: not-allowed;
     box-shadow: none;
-    opacity: 0.9;
+    transform: none;
+    opacity: 0.7;
   }
 }
 
+// ── Sizes ───────────────────────────────────────────────
+
+.au-button--small {
+  min-height: 2.25rem;
+  padding: 0.5rem 1rem;
+  font-size: 12px;
+  border-radius: $radius-sm;
+}
+
+.au-button--medium {
+  min-height: 3rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 14px;
+  border-radius: $radius-lg;
+}
+
+.au-button--large {
+  min-height: 3.5rem;
+  padding: 1.125rem 1.75rem;
+  font-size: 16px;
+  border-radius: $radius-xl;
+}
+
+// ── Variants ────────────────────────────────────────────
+
 .au-button--primary {
-  background-color: $primary-base;
-  color: $text-inverse;
+  background-color: $primary;
+  color: $on-primary;
   border-color: transparent;
 }
 
 .au-button--secondary {
-  background-color: rgba($primary-base, 0.12);
-  color: $primary-base;
-  border-color: rgba($primary-base, 0.32);
+  background-color: transparent;
+  color: $on-surface;
+  border-color: rgba($on-surface, 0.2);
+  box-shadow: none;
 
   &:hover {
-    background-color: rgba($primary-base, 0.16);
+    background-color: rgba($on-surface, 0.05);
+    box-shadow: none;
   }
 }
 
 .au-button--outline {
   background-color: transparent;
-  color: $primary-base;
-  border-color: $primary-base;
+  color: $primary;
+  border-color: rgba($primary, 0.4);
+  box-shadow: none;
 
   &:hover {
-    background-color: rgba($primary-base, 0.08);
+    background-color: rgba($primary, 0.05);
+    box-shadow: 0 0 20px rgba($primary, 0.2);
   }
 }
 
 .au-button--ghost {
   background-color: transparent;
-  color: $primary-base;
+  color: $on-surface-variant;
   border-color: transparent;
+  box-shadow: none;
 
   &:hover {
-    background-color: rgba($primary-base, 0.08);
+    background-color: rgba($surface-variant, 0.5);
+    color: $on-surface;
+    box-shadow: none;
   }
 }
 
 .au-button--danger {
-  background-color: $danger-600;
-  color: $text-inverse;
-  border-color: transparent;
+  background-color: $error-container;
+  color: $on-error-container;
+  border-color: rgba($error, 0.2);
+  box-shadow: none;
 
   &:hover {
-    background-color: $danger-700;
+    filter: brightness(1.1);
   }
 }
 
 .au-button--gradient {
-  background-image: linear-gradient(135deg, $primary-500 0%, $primary-600 100%);
-  color: $text-inverse;
+  background-image: linear-gradient(135deg, $primary-container 0%, $primary 100%);
+  color: $on-primary;
   border-color: transparent;
+  box-shadow: 0 0 15px rgba($primary, 0.3);
 }
 
 .au-button--link {
   background-color: transparent;
-  color: $primary-base;
+  color: $primary;
   border-color: transparent;
-  padding: 0;
+  border-bottom: 1px solid rgba($primary, 0.4);
+  border-radius: 0;
+  padding: 0 0 2px 0;
   min-height: auto;
   box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 
   &:hover {
-    text-decoration: underline;
+    border-bottom-color: $primary;
     background-color: transparent;
+    transform: none;
+    box-shadow: none;
   }
 }
 
+// ── Modifiers ───────────────────────────────────────────
+
 .au-button--rounded {
-  border-radius: $radius-full;
+  border-radius: $radius-full !important;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
@@ -119,22 +164,28 @@
 .au-button--loading {
   cursor: progress;
   pointer-events: none;
-  opacity: 0.85;
+  background-color: rgba($primary, 0.2);
+  color: $primary;
+  border-color: rgba($primary, 0.3);
+  box-shadow: none;
 }
+
+// ── Sub-elements ────────────────────────────────────────
 
 .au-button__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
+  font-size: 18px;
 }
 
 .au-button__icon--left {
-  margin-right: 0.375rem;
+  margin-right: $sp-xs;
 }
 
 .au-button__icon--right {
-  margin-left: 0.375rem;
+  margin-left: $sp-xs;
 }
 
 .au-button__label {

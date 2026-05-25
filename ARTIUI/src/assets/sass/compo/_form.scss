@@ -1,3 +1,10 @@
+// ═══════════════════════════════════════════════════════
+// FORM COMPONENTS — Stitch / Midnight Obsidian
+// AUTEXTAREA, AUSELECT, AUCHECKBOX, AURADIO, AUTOGGLE,
+// AURANGE, AUDATEPICKER
+// ═══════════════════════════════════════════════════════
+
+// ── Shared Layout ───────────────────────────────────────
 .au-textarea,
 .au-select,
 .au-checkbox,
@@ -6,110 +13,142 @@
 .au-radio-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  font-family: inherit;
+  gap: $sp-sm;
+  font-family: $font-body;
 }
 
 .au-textarea__label,
 .au-select__label,
 .au-checkbox-group__label,
 .au-radio-group__label {
-  color: $primary-shade-4;
+  color: $on-surface;
   font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
+
+// ═══════════════════════════════════════════════════════
+// AUTEXTAREA
+// ═══════════════════════════════════════════════════════
 
 .au-textarea__control {
   min-height: 5rem;
   padding: 0.9rem 1rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
+  border: $lume-border;
+  box-shadow: $lume-inner-glow;
+  border-radius: $radius-lg;
+  background: $surface-container-lowest;
+  color: $on-surface;
+  font-family: $font-body;
+  font-size: 16px;
   resize: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color $transition-smooth, box-shadow $transition-smooth;
+
+  &::placeholder {
+    color: $outline-variant;
+  }
 }
 
 .au-textarea__control:focus {
   outline: none;
-  border-color: $primary-base;
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
+  border-color: $primary;
+  box-shadow: $lume-focus-glow;
 }
 
 .au-textarea__meta {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  font-size: 0.9rem;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .au-textarea__helper {
-  color: $primary-shade-2;
+  color: $on-surface-variant;
 }
 
 .au-textarea__error {
-  color: #b91c1c;
+  color: $error;
 }
 
 .au-textarea__counter {
-  color: $primary-shade-2;
+  color: $on-surface-variant;
 }
 
 .au-textarea--error .au-textarea__control {
-  border-color: #f87171;
+  border-color: rgba($error, 0.5);
 }
 
 .au-textarea--disabled .au-textarea__control {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
 }
+
+// ═══════════════════════════════════════════════════════
+// AUSELECT
+// ═══════════════════════════════════════════════════════
 
 .au-select__control {
   width: 100%;
   min-height: 3rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
+  border: $lume-border;
+  box-shadow: $lume-inner-glow;
+  border-radius: $radius-lg;
+  background: $surface-container-lowest;
+  color: $on-surface;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: $font-body;
+  transition: border-color $transition-smooth, box-shadow $transition-smooth;
 }
 
 .au-select__control:focus-visible {
   outline: none;
-  border-color: $primary-base;
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
+  border-color: $primary;
+  box-shadow: $lume-focus-glow;
 }
 
 .au-select__placeholder {
-  color: $primary-tint-3;
+  color: $outline-variant;
 }
 
 .au-select__menu {
-  margin-top: 0.5rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: #fff;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  margin-top: $sp-sm;
+  border: $lume-border;
+  border-radius: $radius-xl;
+  background: $glass-bg;
+  backdrop-filter: $glass-blur;
+  box-shadow: $shadow-lg;
   z-index: 10;
   overflow: hidden;
 }
 
 .au-select__search {
   padding: 0.75rem;
-  border-bottom: 1px solid $primary-tint-4;
+  border-bottom: 1px solid $outline-variant;
 }
 
 .au-select__search-input {
   width: 100%;
   padding: 0.65rem 0.85rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.75rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
+  border: 1px solid $outline-variant;
+  border-radius: $radius-lg;
+  background: $surface-container-lowest;
+  color: $on-surface;
+  font-family: $font-body;
+
+  &::placeholder {
+    color: $outline-variant;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+  }
 }
 
 .au-select__item,
@@ -125,24 +164,34 @@
   width: 100%;
   border: none;
   background: transparent;
-  color: $primary-shade-4;
+  color: $on-surface;
   padding: 0.85rem 1rem;
   cursor: pointer;
+  font-family: $font-body;
+  transition: background-color $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: rgba($primary, 0.1);
+    color: $primary;
+  }
 }
 
-.au-select__item:hover,
 .au-select__item--selected {
-  background: $primary-tint-3;
+  background: rgba($primary, 0.1);
+  color: $primary;
 }
 
 .au-select__group {
-  border-top: 1px solid $primary-tint-4;
+  border-top: 1px solid $outline-variant;
 }
 
 .au-select__group-label {
   padding: 0.85rem 1rem 0.5rem;
-  color: $primary-shade-3;
-  font-size: 0.9rem;
+  color: $on-surface-variant;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .au-select__checkbox {
@@ -151,37 +200,45 @@
   height: 1.1rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.25rem;
+  border: 1px solid $outline-variant;
+  border-radius: $radius-xs;
+  transition: all $transition-fast;
 }
 
 .au-select__empty {
   padding: 1rem;
-  color: $primary-tint-3;
+  color: $outline;
+  text-align: center;
 }
 
 .au-select__helper {
-  color: $primary-shade-2;
+  color: $on-surface-variant;
+  font-size: 12px;
 }
 
 .au-select__error {
-  color: #b91c1c;
+  color: $error;
+  font-size: 12px;
 }
 
 .au-select--error .au-select__control {
-  border-color: #f87171;
+  border-color: rgba($error, 0.5);
 }
 
 .au-select--disabled .au-select__control {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
 }
+
+// ═══════════════════════════════════════════════════════
+// AUCHECKBOX & AURADIO
+// ═══════════════════════════════════════════════════════
 
 .au-checkbox,
 .au-radio {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: $sp-md;
   cursor: pointer;
 }
 
@@ -194,49 +251,72 @@
 
 .au-checkbox__box,
 .au-radio__circle {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.35rem;
-  background: $primary-tint-1;
+  border: $lume-border;
+  border-radius: $radius-xs;
+  background: $surface-container-lowest;
+  transition: all $transition-base;
+}
+
+// Checked state
+.au-checkbox input:checked + .au-checkbox__box,
+.au-checkbox input:checked ~ .au-checkbox__box {
+  background: rgba($primary, 0.2);
+  border-color: $primary;
 }
 
 .au-checkbox__check,
 .au-checkbox__indeterminate {
-  color: $primary-base;
-  font-size: 0.85rem;
+  color: $primary;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .au-radio__circle {
-  border-radius: 9999px;
+  border-radius: $radius-full;
+}
+
+.au-radio input:checked + .au-radio__circle,
+.au-radio input:checked ~ .au-radio__circle {
+  background: rgba($primary, 0.2);
+  border-color: $primary;
 }
 
 .au-radio__dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: $primary-base;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: $radius-full;
+  background: $primary;
 }
 
 .au-checkbox__label,
 .au-radio__label {
-  color: $primary-shade-4;
+  color: $on-surface;
+  font-size: 16px;
 }
 
 .au-checkbox--disabled,
 .au-radio--disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+// Hover states
+.au-checkbox:hover .au-checkbox__box,
+.au-radio:hover .au-radio__circle {
+  border-color: $primary;
+  transform: scale(1.1);
 }
 
 .au-checkbox-group__list,
 .au-radio-group__list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $sp-md;
 }
 
 .au-checkbox-group--horizontal .au-checkbox-group__list,
@@ -248,19 +328,27 @@
 .au-checkbox-group__label,
 .au-radio-group__label {
   font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: $sp-sm;
 }
+
+// ═══════════════════════════════════════════════════════
+// AUTOGGLE
+// ═══════════════════════════════════════════════════════
 
 .au-toggle {
   display: grid;
-  gap: 0.5rem;
-  font-family: inherit;
+  gap: $sp-sm;
+  font-family: $font-body;
 }
 
 .au-toggle__labels {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  color: $primary-shade-4;
+  color: $on-surface;
 }
 
 .au-toggle__label {
@@ -268,13 +356,13 @@
 }
 
 .au-toggle__state {
-  color: $primary-tint-3;
+  color: $on-surface-variant;
 }
 
 .au-toggle__switch {
   position: relative;
-  width: 3.5rem;
-  height: 1.85rem;
+  width: 3rem;
+  height: 1.5rem;
 }
 
 .au-toggle__input {
@@ -285,137 +373,187 @@
   position: absolute;
   inset: 0;
   cursor: pointer;
+  z-index: 1;
 }
 
 .au-toggle__slider {
   position: absolute;
   inset: 0;
-  border-radius: 9999px;
-  background: $primary-tint-3;
-  transition: background 0.2s ease;
+  border-radius: $radius-full;
+  background: $surface-container-highest;
+  transition: background $transition-base, box-shadow $transition-base;
 }
 
 .au-toggle__input:checked + .au-toggle__slider {
-  background: $primary-base;
+  background: $primary;
+  box-shadow: 0 0 10px rgba($primary, 0.4);
 }
 
 .au-toggle__slider::after {
   content: "";
   position: absolute;
-  width: 1.55rem;
-  height: 1.55rem;
-  left: 0.15rem;
-  top: 0.15rem;
+  width: 1rem;
+  height: 1rem;
+  left: 0.25rem;
+  top: 0.25rem;
   border-radius: 50%;
-  background: #fff;
-  transition: transform 0.2s ease;
+  background: $outline;
+  transition: transform $transition-base, background $transition-base;
 }
 
 .au-toggle__input:checked + .au-toggle__slider::after {
-  transform: translateX(1.65rem);
+  transform: translateX(1.5rem);
+  background: $on-primary;
 }
 
 .au-toggle--disabled {
-  opacity: 0.65;
+  opacity: 0.5;
   cursor: not-allowed;
+
+  .au-toggle__input {
+    cursor: not-allowed;
+  }
 }
+
+// ═══════════════════════════════════════════════════════
+// AURANGE
+// ═══════════════════════════════════════════════════════
 
 .au-range {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $sp-sm;
 }
 
 .au-range__label {
-  color: $primary-shade-4;
+  color: $on-surface;
   font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .au-range__field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $sp-sm;
 }
 
 .au-range__slider-row {
   display: flex;
-  gap: 0.5rem;
+  gap: $sp-sm;
+  align-items: center;
 }
 
 .au-range__input {
   width: 100%;
   appearance: none;
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: $primary-tint-3;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: $radius-full;
+  background: rgba($primary, 0.1);
   outline: none;
 }
 
-.au-range__input::-webkit-slider-thumb,
-.au-range__input::-moz-range-thumb {
-  width: 1rem;
-  height: 1rem;
+.au-range__input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: $primary-base;
-  border: none;
+  background: $primary;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba($primary, 0.8);
+  margin-top: -8px;
+  border: none;
+}
+
+.au-range__input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $primary;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba($primary, 0.8);
+  border: none;
+}
+
+.au-range__input::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  background: rgba($primary, 0.1);
+  border-radius: 2px;
 }
 
 .au-range__tooltip {
-  color: $primary-shade-4;
-  font-size: 0.9rem;
+  color: $primary;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .au-range__meta {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  font-size: 0.9rem;
+  font-size: 12px;
 }
 
 .au-range__helper {
-  color: $primary-shade-2;
+  color: $on-surface-variant;
 }
 
 .au-range__error {
-  color: #b91c1c;
+  color: $error;
 }
 
 .au-range--error .au-range__input {
-  border-color: #f87171;
+  border-color: rgba($error, 0.5);
 }
 
 .au-range--disabled .au-range__input {
-  opacity: 0.65;
+  opacity: 0.5;
   cursor: not-allowed;
 }
+
+// ═══════════════════════════════════════════════════════
+// AUDATEPICKER
+// ═══════════════════════════════════════════════════════
 
 .au-datepicker {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: $sp-sm;
 }
 
 .au-datepicker__label {
-  color: $primary-shade-4;
+  color: $on-surface;
   font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .au-datepicker__control {
   width: 100%;
   min-height: 3rem;
   padding: 0.85rem 1rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border: $lume-border;
+  box-shadow: $lume-inner-glow;
+  border-radius: $radius-lg;
+  background: $surface-container-lowest;
+  color: $on-surface;
+  font-family: $font-body;
+  transition: border-color $transition-smooth, box-shadow $transition-smooth;
+
+  &::placeholder {
+    color: $outline-variant;
+  }
 }
 
 .au-datepicker__control:focus {
   outline: none;
-  border-color: $primary-base;
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
+  border-color: $primary;
+  box-shadow: $lume-focus-glow;
 }
 
 .au-datepicker__range {
@@ -426,7 +564,7 @@
 }
 
 .au-datepicker__range-separator {
-  color: $primary-shade-3;
+  color: $on-surface-variant;
   font-size: 0.95rem;
 }
 
@@ -434,18 +572,18 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  font-size: 0.9rem;
+  font-size: 12px;
 }
 
 .au-datepicker__helper {
-  color: $primary-shade-2;
+  color: $on-surface-variant;
 }
 
 .au-datepicker__error {
-  color: #b91c1c;
+  color: $error;
 }
 
 .au-datepicker--disabled .au-datepicker__control {
-  opacity: 0.65;
+  opacity: 0.5;
   cursor: not-allowed;
 }

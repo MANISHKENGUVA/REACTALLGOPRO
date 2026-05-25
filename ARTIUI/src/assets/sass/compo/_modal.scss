@@ -1,0 +1,117 @@
+// ═══════════════════════════════════════════════════════
+// AUMODAL — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
+.au-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: $glass-blur;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $sp-md;
+  animation: au-fade-in 0.25s ease-out;
+}
+
+.au-modal {
+  width: 100%;
+  background-color: $glass-bg;
+  border: $lume-border;
+  box-shadow: $shadow-lg, $lume-inner-glow;
+  border-radius: $radius-xl;
+  display: flex;
+  flex-direction: column;
+  color: $on-surface;
+  font-family: $font-body;
+  max-height: calc(100vh - 4rem);
+  transform: scale(1);
+  transition: transform $transition-smooth, opacity $transition-smooth;
+  outline: none;
+
+  &.au-modal--open {
+    animation: au-modal-scale-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  &.au-modal--closing {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+// ── Sizes ───────────────────────────────────────────────
+
+.au-modal--small {
+  max-width: 24rem;
+}
+
+.au-modal--medium {
+  max-width: 32rem;
+}
+
+.au-modal--large {
+  max-width: 48rem;
+}
+
+// ── Header, Body, Footer ────────────────────────────────
+
+.au-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $sp-md $sp-lg;
+  border-bottom: 1px solid rgba($primary, 0.1);
+}
+
+.au-modal__title {
+  font-family: $font-display;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: $on-surface;
+}
+
+.au-modal__close {
+  background: transparent;
+  border: none;
+  color: $on-surface-variant;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color $transition-fast, color $transition-fast;
+
+  &:hover {
+    background-color: rgba($primary, 0.15);
+    color: $primary;
+  }
+}
+
+.au-modal__body {
+  padding: $sp-lg;
+  overflow-y: auto;
+  font-size: 16px;
+  color: $on-surface-variant;
+  line-height: 1.5;
+}
+
+.au-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: $sp-sm;
+  padding: $sp-md $sp-lg;
+  border-top: 1px solid $outline-variant;
+}
+
+@keyframes au-modal-scale-up {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

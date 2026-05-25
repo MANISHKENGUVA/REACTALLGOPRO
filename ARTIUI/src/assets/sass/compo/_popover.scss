@@ -1,19 +1,23 @@
-// Popover styles
+// ═══════════════════════════════════════════════════════
+// AUPOPOVER — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-popover {
   position: fixed;
   z-index: 1000;
   min-width: 12rem;
   max-width: 20rem;
-  padding: 0.85rem 1rem;
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-  color: #1f2937;
+  padding: $sp-md;
+  background-color: $glass-bg;
+  backdrop-filter: $glass-blur;
+  border: $lume-border;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+  color: $on-surface;
   left: var(--au-popover-left, 0);
   top: var(--au-popover-top, 0);
   transform: translate(-50%, -100%);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity $transition-fast, transform $transition-fast;
   opacity: 1;
   pointer-events: auto;
 }
@@ -38,9 +42,9 @@
   position: absolute;
   width: 0.85rem;
   height: 0.85rem;
-  background-color: inherit;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: $surface-container-highest;
+  border-left: 1px solid rgba($primary, 0.15);
+  border-top: 1px solid rgba($primary, 0.15);
   transform: rotate(45deg);
 }
 
@@ -53,19 +57,19 @@
 .au-popover--top .au-popover__arrow {
   bottom: -0.35rem;
   left: 50%;
-  transform: translateX(-50%) rotate(45deg);
+  transform: translateX(-50%) rotate(225deg);
 }
 
 .au-popover--left .au-popover__arrow {
   right: -0.35rem;
   top: 50%;
-  transform: translateY(-50%) rotate(45deg);
+  transform: translateY(-50%) rotate(135deg);
 }
 
 .au-popover--right .au-popover__arrow {
   left: -0.35rem;
   top: 50%;
-  transform: translateY(-50%) rotate(45deg);
+  transform: translateY(-50%) rotate(-45deg);
 }
 
 .au-popover-trigger {

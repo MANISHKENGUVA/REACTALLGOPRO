@@ -1,40 +1,53 @@
-// Pagination styles
+// ═══════════════════════════════════════════════════════
+// AUPAGINATION — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-pagination {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
-  background-color: $primary-tint-1;
-  border: 1px solid $primary-tint-2;
-  border-radius: 0.75rem;
+  gap: $sp-sm;
+  padding: $sp-md;
+  background-color: $surface-container;
+  border: $lume-border;
+  box-shadow: $lume-inner-glow;
+  border-radius: $radius-xl;
+  font-family: $font-body;
 }
 
 .au-pagination__page-size,
 .au-pagination__jump {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: $sp-xs;
 }
 
 .au-pagination__page-size label,
 .au-pagination__jump label {
   font-weight: 600;
-  color: $primary-shade-4;
+  color: $on-surface;
+  font-size: 14px;
 }
 
 .au-pagination__page-size select,
 .au-pagination__jump input {
   min-width: 5rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid $primary-tint-3;
-  border-radius: 0.5rem;
-  background: #fff;
+  border: 1px solid $outline-variant;
+  border-radius: $radius-lg;
+  background: $surface-container-lowest;
+  color: $on-surface;
+  font-family: $font-body;
+  outline: none;
+
+  &:focus {
+    border-color: $primary;
+  }
 }
 
 .au-pagination__controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: $sp-xs;
   align-items: center;
   justify-content: space-between;
 }
@@ -42,40 +55,56 @@
 .au-pagination__pages {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: $sp-xs;
 }
 
 .au-pagination__page,
 .au-pagination__nav {
-  border: 1px solid $primary-tint-3;
-  background: #fff;
-  color: $primary-base;
+  border: 1px solid $outline-variant;
+  background: $surface-container-low;
+  color: $on-surface;
   padding: 0.55rem 0.85rem;
-  border-radius: 0.65rem;
+  border-radius: $radius-lg;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
+  font-family: $font-body;
+  font-weight: 600;
+  transition: background-color $transition-fast, transform $transition-fast, border-color $transition-fast;
 
-.au-pagination__page:hover,
-.au-pagination__nav:hover {
-  background-color: $primary-tint-2;
+  &:hover {
+    background-color: rgba($primary, 0.08);
+    border-color: rgba($primary, 0.3);
+    color: $primary;
+  }
 }
 
 .au-pagination__page--active {
-  background-color: $primary-base;
-  color: #fff;
-  border-color: $primary-base;
+  background-color: $primary;
+  color: $on-primary;
+  border-color: $primary;
+  box-shadow: 0 0 10px rgba($primary, 0.3);
+
+  &:hover {
+    background-color: $primary;
+    color: $on-primary;
+    border-color: $primary;
+  }
 }
 
 .au-pagination__page:disabled,
 .au-pagination__nav:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+
+  &:hover {
+    background-color: $surface-container-low;
+    border-color: $outline-variant;
+    color: $on-surface;
+  }
 }
 
 .au-pagination__ellipsis {
   display: inline-flex;
   align-items: center;
   padding: 0 0.5rem;
-  color: $primary-shade-3;
+  color: $on-surface-variant;
 }

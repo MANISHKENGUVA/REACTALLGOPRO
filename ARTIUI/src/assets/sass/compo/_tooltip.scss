@@ -1,21 +1,26 @@
-// Tooltip styles
+// ═══════════════════════════════════════════════════════
+// AUTOOLTIP — Stitch / Midnight Obsidian
+// ═══════════════════════════════════════════════════════
+
 .au-tooltip {
   position: fixed;
   z-index: 1000;
   max-width: 16rem;
   padding: 0.55rem 0.85rem;
-  background-color: $primary-base;
-  color: #ffffff;
-  border-radius: 0.5rem;
-  font-size: 0.85rem;
+  background-color: $primary;
+  color: $on-primary;
+  border-radius: $radius-lg;
+  font-family: $font-body;
+  font-size: 12px;
   line-height: 1.25;
   text-align: center;
   left: var(--au-tooltip-left, 0);
   top: var(--au-tooltip-top, 0);
   transform: translate(-50%, -100%);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity $transition-fast, transform $transition-fast;
   opacity: 1;
   pointer-events: none;
+  box-shadow: $lume-halo;
 }
 
 .au-tooltip--bottom {
