@@ -1,4 +1,16 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { useEffect } from 'react';
+import { createBrowserRouter, Outlet, useLocation } from 'react-router-dom';
+import { runWFEngine } from './global.js';
+
+function RootWatcher() {
+  const location = useLocation();
+
+  useEffect(() => {
+    runWFEngine();
+  }, [location]);
+
+  return <Outlet />;
+}
 
 // Layouts
 import LoanFlowLayout from './layouts/LoanFlowLayout';
@@ -30,178 +42,184 @@ import HomePage from './pages/HomePage';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/loan-flow',
-    element: <LoanFlowLayout />,
+    element: <RootWatcher />,
     children: [
-      // ==========================================
-      // 1. BORROWER-DETAILS-V1-PERSONAL-INFO-V1
-      // ==========================================
       {
-        path: 'personal-info',
-        element: <PersonalInfoPage />,
+        index: true,
+        element: <HomePage />,
       },
-
-      // ==========================================
-      // 2. BORROWER-ADDRESS-V1-ADDRESS-INFO-V1
-      // ==========================================
       {
-        path: 'address-info',
-        element: <AddressInfoPage />,
-      },
+        path: 'loan-flow',
+        element: <LoanFlowLayout />,
+        children: [
+          // ==========================================
+          // 1. BORROWER-DETAILS-V1-PERSONAL-INFO-V1
+          // ==========================================
+          {
+            path: 'personal-info',
+            element: <PersonalInfoPage />,
+          },
 
-      // ==========================================
-      // 3. BORROWER-KYC-V1-KYC-UPLOAD-V1
-      // ==========================================
-      {
-        path: 'kyc-upload',
-        element: <KYCUploadPage />,
-      },
+          // ==========================================
+          // 2. BORROWER-ADDRESS-V1-ADDRESS-INFO-V1
+          // ==========================================
+          {
+            path: 'address-info',
+            element: <AddressInfoPage />,
+          },
 
-      // ==========================================
-      // 4. BORROWER-KYC-V1-FACE-VERIFICATION-V1
-      // ==========================================
-      {
-        path: 'face-verification',
-        element: <FaceVerificationPage />,
-      },
+          // ==========================================
+          // 3. BORROWER-KYC-V1-KYC-UPLOAD-V1
+          // ==========================================
+          {
+            path: 'kyc-upload',
+            element: <KYCUploadPage />,
+          },
 
-      // ==========================================
-      // 5. BORROWER-KYC-V1-PAN-VERIFICATION-V1
-      // ==========================================
-      {
-        path: 'pan-verification',
-        element: <PANVerificationPage />,
-      },
+          // ==========================================
+          // 4. BORROWER-KYC-V1-FACE-VERIFICATION-V1
+          // ==========================================
+          {
+            path: 'face-verification',
+            element: <FaceVerificationPage />,
+          },
 
-      // ==========================================
-      // 6. BORROWER-KYC-V1-AADHAR-VERIFICATION-V1
-      // ==========================================
-      {
-        path: 'aadhar-verification',
-        element: <AadharVerificationPage />,
-      },
+          // ==========================================
+          // 5. BORROWER-KYC-V1-PAN-VERIFICATION-V1
+          // ==========================================
+          {
+            path: 'pan-verification',
+            element: <PANVerificationPage />,
+          },
 
-      // ==========================================
-      // 7. BORROWER-EMPLOYMENT-V1-EMPLOYMENT-INFO-V1
-      // ==========================================
-      {
-        path: 'employment-info',
-        element: <EmploymentInfoPage />,
-      },
+          // ==========================================
+          // 6. BORROWER-KYC-V1-AADHAR-VERIFICATION-V1
+          // ==========================================
+          {
+            path: 'aadhar-verification',
+            element: <AadharVerificationPage />,
+          },
 
-      // ==========================================
-      // 8. BORROWER-SALARY-V1-SALARY-INFO-V1
-      // ==========================================
-      {
-        path: 'salary-info',
-        element: <SalaryInfoPage />,
-      },
+          // ==========================================
+          // 7. BORROWER-EMPLOYMENT-V1-EMPLOYMENT-INFO-V1
+          // ==========================================
+          {
+            path: 'employment-info',
+            element: <EmploymentInfoPage />,
+          },
 
-      // ==========================================
-      // 9. BORROWER-BUSINESS-V1-BUSINESS-INFO-V1
-      // ==========================================
-      {
-        path: 'business-info',
-        element: <BusinessInfoPage />,
-      },
+          // ==========================================
+          // 8. BORROWER-SALARY-V1-SALARY-INFO-V1
+          // ==========================================
+          {
+            path: 'salary-info',
+            element: <SalaryInfoPage />,
+          },
 
-      // ==========================================
-      // 10. BORROWER-BANK-V1-BANK-DETAILS-V1
-      // ==========================================
-      {
-        path: 'bank-details',
-        element: <BankDetailsPage />,
-      },
+          // ==========================================
+          // 9. BORROWER-BUSINESS-V1-BUSINESS-INFO-V1
+          // ==========================================
+          {
+            path: 'business-info',
+            element: <BusinessInfoPage />,
+          },
 
-      // ==========================================
-      // 11. BORROWER-BANK-V1-BANK-STATEMENT-UPLOAD-V1
-      // ==========================================
-      {
-        path: 'bank-statement-upload',
-        element: <BankStatementUploadPage />,
-      },
+          // ==========================================
+          // 10. BORROWER-BANK-V1-BANK-DETAILS-V1
+          // ==========================================
+          {
+            path: 'bank-details',
+            element: <BankDetailsPage />,
+          },
 
-      // ==========================================
-      // 12. BORROWER-DOCUMENTS-V1-DOCUMENT-UPLOAD-V1
-      // ==========================================
-      {
-        path: 'document-upload',
-        element: <DocumentUploadPage />,
-      },
+          // ==========================================
+          // 11. BORROWER-BANK-V1-BANK-STATEMENT-UPLOAD-V1
+          // ==========================================
+          {
+            path: 'bank-statement-upload',
+            element: <BankStatementUploadPage />,
+          },
 
-      // ==========================================
-      // 13. BORROWER-CREDIT-V1-CREDIT-CHECK-V1
-      // ==========================================
-      {
-        path: 'credit-check',
-        element: <CreditCheckPage />,
-      },
+          // ==========================================
+          // 12. BORROWER-DOCUMENTS-V1-DOCUMENT-UPLOAD-V1
+          // ==========================================
+          {
+            path: 'document-upload',
+            element: <DocumentUploadPage />,
+          },
 
-      // ==========================================
-      // 14. BORROWER-RISK-V1-RISK-ASSESSMENT-V1
-      // ==========================================
-      {
-        path: 'risk-assessment',
-        element: <RiskAssessmentPage />,
-      },
+          // ==========================================
+          // 13. BORROWER-CREDIT-V1-CREDIT-CHECK-V1
+          // ==========================================
+          {
+            path: 'credit-check',
+            element: <CreditCheckPage />,
+          },
 
-      // ==========================================
-      // 15. RISKENGINE-FRAUD-V1-FRAUD-CHECK-V1
-      // ==========================================
-      {
-        path: 'fraud-check',
-        element: <FraudCheckPage />,
-      },
+          // ==========================================
+          // 14. BORROWER-RISK-V1-RISK-ASSESSMENT-V1
+          // ==========================================
+          {
+            path: 'risk-assessment',
+            element: <RiskAssessmentPage />,
+          },
 
-      // ==========================================
-      // 16. RISKENGINE-CIBIL-V1-CIBIL-CHECK-V1
-      // ==========================================
-      {
-        path: 'cibil-check',
-        element: <CibilCheckPage />,
-      },
+          // ==========================================
+          // 15. RISKENGINE-FRAUD-V1-FRAUD-CHECK-V1
+          // ==========================================
+          {
+            path: 'fraud-check',
+            element: <FraudCheckPage />,
+          },
 
-      // ==========================================
-      // 17. COBORROWER-KYC-V1-KYC-UPLOAD-V1
-      // ==========================================
-      {
-        path: 'coborrower-kyc',
-        element: <CoBorrowerKYCPage />,
-      },
+          // ==========================================
+          // 16. RISKENGINE-CIBIL-V1-CIBIL-CHECK-V1
+          // ==========================================
+          {
+            path: 'cibil-check',
+            element: <CibilCheckPage />,
+          },
 
-      // ==========================================
-      // 18. GUARANTOR-KYC-V1-KYC-UPLOAD-V1
-      // ==========================================
-      {
-        path: 'guarantor-kyc',
-        element: <GuarantorKYCPage />,
-      },
+          // ==========================================
+          // 17. COBORROWER-KYC-V1-KYC-UPLOAD-V1
+          // ==========================================
+          {
+            path: 'coborrower-kyc',
+            element: <CoBorrowerKYCPage />,
+          },
 
-      // ==========================================
-      // 19. UNDERWRITER-REVIEW-V1-UNDERWRITER-CHECK-V1
-      // ==========================================
-      {
-        path: 'underwriter-review',
-        element: <UnderwriterReviewPage />,
-      },
+          // ==========================================
+          // 18. GUARANTOR-KYC-V1-KYC-UPLOAD-V1
+          // ==========================================
+          {
+            path: 'guarantor-kyc',
+            element: <GuarantorKYCPage />,
+          },
 
-      // ==========================================
-      // 20. MANAGER-APPROVAL-V1-FINAL-APPROVAL-V1
-      // ==========================================
-      {
-        path: 'manager-approval',
-        element: <ManagerApprovalPage />,
-      },
+          // ==========================================
+          // 19. UNDERWRITER-REVIEW-V1-UNDERWRITER-CHECK-V1
+          // ==========================================
+          {
+            path: 'underwriter-review',
+            element: <UnderwriterReviewPage />,
+          },
 
-      // ==========================================
-      // 21. DISBURSEMENT-PAYMENT-V1-LOAN-DISBURSEMENT-V1
-      // ==========================================
-      {
-        path: 'disbursement',
-        element: <DisbursementPage />,
+          // ==========================================
+          // 20. MANAGER-APPROVAL-V1-FINAL-APPROVAL-V1
+          // ==========================================
+          {
+            path: 'manager-approval',
+            element: <ManagerApprovalPage />,
+          },
+
+          // ==========================================
+          // 21. DISBURSEMENT-PAYMENT-V1-LOAN-DISBURSEMENT-V1
+          // ==========================================
+          {
+            path: 'disbursement',
+            element: <DisbursementPage />,
+          },
+        ],
       },
     ],
   },
