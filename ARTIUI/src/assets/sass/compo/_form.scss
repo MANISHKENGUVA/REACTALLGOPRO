@@ -1,115 +1,139 @@
 .au-textarea,
 .au-select,
-.au-checkbox,
 .au-checkbox-group,
-.au-radio,
 .au-radio-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
   font-family: inherit;
 }
 
 .au-textarea__label,
 .au-select__label,
 .au-checkbox-group__label,
-.au-radio-group__label {
-  color: $primary-shade-4;
-  font-weight: 600;
+.au-radio-group__label,
+.au-range__label,
+.au-datepicker__label {
+  color: $text-secondary;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.au-textarea__control,
+.au-datepicker__control,
+.au-datepicker__trigger,
+.au-select__control {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-primary;
+  font: inherit;
+  box-shadow: $shadow-sm;
+  transition: border-color $transition-fast, box-shadow $transition-fast, background-color $transition-fast;
 }
 
 .au-textarea__control {
   min-height: 5rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
-  resize: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 0.75rem 0.85rem;
+  resize: vertical;
 }
 
-.au-textarea__control:focus {
+.au-textarea__control:hover,
+.au-datepicker__control:hover,
+.au-datepicker__trigger:hover,
+.au-select__control:hover {
+  border-color: $neutral-400;
+}
+
+.au-textarea__control:focus,
+.au-datepicker__control:focus,
+.au-datepicker__trigger:focus-visible,
+.au-select__control:focus-visible,
+.au-select__search-input:focus {
   outline: none;
   border-color: $primary-base;
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
+  box-shadow: 0 0 0 3px $focus-ring;
 }
 
-.au-textarea__meta {
+.au-textarea__meta,
+.au-datepicker__meta,
+.au-range__meta {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  font-size: 0.9rem;
+  color: $text-muted;
+  font-size: 0.84rem;
 }
 
-.au-textarea__helper {
-  color: $primary-shade-2;
+.au-textarea__helper,
+.au-select__helper,
+.au-datepicker__helper,
+.au-range__helper {
+  color: $text-muted;
 }
 
-.au-textarea__error {
+.au-textarea__error,
+.au-select__error,
+.au-datepicker__error,
+.au-range__error {
   color: $danger-700;
 }
 
-.au-textarea__counter {
-  color: $primary-shade-2;
-}
-
-.au-textarea--error .au-textarea__control {
+.au-textarea--error .au-textarea__control,
+.au-select--error .au-select__control,
+.au-datepicker--error .au-datepicker__control,
+.au-datepicker--error .au-datepicker__trigger {
   border-color: $danger-400;
+  background: $danger-50;
 }
 
-.au-textarea--disabled .au-textarea__control {
-  opacity: 0.7;
+.au-textarea--disabled .au-textarea__control,
+.au-select--disabled .au-select__control,
+.au-datepicker--disabled .au-datepicker__control,
+.au-datepicker--disabled .au-datepicker__trigger {
+  background: $neutral-100;
+  color: $text-disabled;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .au-select__control {
-  width: 100%;
-  min-height: 3rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 0.85rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.au-select__control:focus-visible {
-  outline: none;
-  border-color: $primary-base;
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
 }
 
 .au-select__placeholder {
-  color: $primary-tint-3;
+  color: $text-muted;
 }
 
 .au-select__menu {
-  margin-top: 0.5rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: linear-gradient(180deg, $surface 0%, $surface-secondary 100%);
-  box-shadow: $shadow-lg;
-  z-index: 10;
+  z-index: 20;
+  margin-top: 0.4rem;
   overflow: hidden;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  box-shadow: $shadow-lg;
 }
 
 .au-select__search {
-  padding: 0.75rem;
-  border-bottom: 1px solid $primary-tint-4;
+  padding: 0.6rem;
+  border-bottom: 1px solid $border;
 }
 
 .au-select__search-input {
   width: 100%;
-  padding: 0.65rem 0.85rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.75rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
+  padding: 0.62rem 0.7rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-primary;
+  font: inherit;
 }
 
 .au-select__item,
@@ -121,67 +145,55 @@
 .au-select__item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  width: 100%;
+  gap: 0.65rem;
+  padding: 0.68rem 0.8rem;
   border: none;
   background: transparent;
-  color: $primary-shade-4;
-  padding: 0.85rem 1rem;
+  color: $text-secondary;
+  font: inherit;
   cursor: pointer;
 }
 
 .au-select__item:hover,
 .au-select__item--selected {
-  background: $primary-tint-3;
+  background: $surface-hover;
+  color: $text-primary;
 }
 
 .au-select__group {
-  border-top: 1px solid $primary-tint-4;
+  border-top: 1px solid $border;
 }
 
 .au-select__group-label {
-  padding: 0.85rem 1rem 0.5rem;
-  color: $primary-shade-3;
-  font-size: 0.9rem;
+  padding: 0.7rem 0.8rem 0.35rem;
+  color: $text-muted;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 .au-select__checkbox {
   display: inline-flex;
-  width: 1.1rem;
-  height: 1.1rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.25rem;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid $neutral-300;
+  border-radius: $radius-sm;
+  background: $surface;
 }
 
 .au-select__empty {
-  padding: 1rem;
-  color: $primary-tint-3;
-}
-
-.au-select__helper {
-  color: $primary-shade-2;
-}
-
-.au-select__error {
-  color: $danger-700;
-}
-
-.au-select--error .au-select__control {
-  border-color: $danger-400;
-}
-
-.au-select--disabled .au-select__control {
-  opacity: 0.7;
-  cursor: not-allowed;
+  padding: 0.85rem;
+  color: $text-muted;
 }
 
 .au-checkbox,
 .au-radio {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
+  color: $text-secondary;
   cursor: pointer;
 }
 
@@ -194,41 +206,46 @@
 
 .au-checkbox__box,
 .au-radio__circle {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1.08rem;
+  height: 1.08rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.35rem;
-  background: $primary-tint-1;
+  flex: 0 0 auto;
+  border: 1px solid $neutral-400;
+  background: $surface;
 }
 
-.au-checkbox__check,
-.au-checkbox__indeterminate {
-  color: $primary-base;
-  font-size: 0.85rem;
+.au-checkbox__box {
+  border-radius: $radius-sm;
 }
 
 .au-radio__circle {
-  border-radius: 9999px;
+  border-radius: $radius-full;
+}
+
+.au-checkbox__check,
+.au-checkbox__indeterminate,
+.au-radio__dot {
+  color: $primary-base;
 }
 
 .au-radio__dot {
   width: 0.5rem;
   height: 0.5rem;
-  border-radius: 9999px;
+  border-radius: $radius-full;
   background: $primary-base;
 }
 
 .au-checkbox__label,
 .au-radio__label {
-  color: $primary-shade-4;
+  color: $text-secondary;
 }
 
 .au-checkbox--disabled,
-.au-radio--disabled {
-  opacity: 0.7;
+.au-radio--disabled,
+.au-toggle--disabled {
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
@@ -236,7 +253,7 @@
 .au-radio-group__list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .au-checkbox-group--horizontal .au-checkbox-group__list,
@@ -245,14 +262,9 @@
   flex-wrap: wrap;
 }
 
-.au-checkbox-group__label,
-.au-radio-group__label {
-  font-weight: 600;
-}
-
 .au-toggle {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.45rem;
   font-family: inherit;
 }
 
@@ -260,146 +272,120 @@
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  color: $primary-shade-4;
+  color: $text-secondary;
+  font-size: 0.88rem;
 }
 
 .au-toggle__label {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .au-toggle__state {
-  color: $primary-tint-3;
+  color: $text-muted;
 }
 
 .au-toggle__switch {
   position: relative;
-  width: 3.5rem;
-  height: 1.85rem;
+  width: 3rem;
+  height: 1.65rem;
 }
 
 .au-toggle__input {
-  opacity: 0;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   margin: 0;
-  position: absolute;
-  inset: 0;
+  opacity: 0;
   cursor: pointer;
 }
 
 .au-toggle__slider {
   position: absolute;
   inset: 0;
-  border-radius: 9999px;
-  background: $primary-tint-3;
-  transition: background 0.2s ease;
+  border-radius: $radius-full;
+  background: $neutral-300;
+  transition: background-color $transition-fast;
+}
+
+.au-toggle__slider::after {
+  content: "";
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  left: 0.2rem;
+  top: 0.2rem;
+  border-radius: 50%;
+  background: $surface;
+  box-shadow: $shadow-sm;
+  transition: transform $transition-fast;
 }
 
 .au-toggle__input:checked + .au-toggle__slider {
   background: $primary-base;
 }
 
-.au-toggle__slider::after {
-  content: "";
-  position: absolute;
-  width: 1.55rem;
-  height: 1.55rem;
-  left: 0.15rem;
-  top: 0.15rem;
-  border-radius: 50%;
-  background: $surface;
-  transition: transform 0.2s ease;
-}
-
 .au-toggle__input:checked + .au-toggle__slider::after {
-  transform: translateX(1.65rem);
-}
-
-.au-toggle--disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+  transform: translateX(1.35rem);
 }
 
 .au-range {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.au-range__label {
-  color: $primary-shade-4;
-  font-weight: 600;
+  gap: 0.45rem;
 }
 
 .au-range__field {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .au-range__slider-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .au-range__input {
   width: 100%;
-  appearance: none;
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: $primary-tint-3;
+  height: 0.42rem;
+  border-radius: $radius-full;
+  background: $neutral-200;
   outline: none;
+  appearance: none;
 }
 
 .au-range__input::-webkit-slider-thumb,
 .au-range__input::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
+  border: 2px solid $surface;
   border-radius: 50%;
   background: $primary-base;
-  border: none;
+  box-shadow: $shadow-sm;
   cursor: pointer;
 }
 
 .au-range__tooltip {
-  color: $primary-shade-4;
-  font-size: 0.9rem;
-}
-
-.au-range__meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.9rem;
-}
-
-.au-range__helper {
-  color: $primary-shade-2;
-}
-
-.au-range__error {
-  color: $danger-700;
+  color: $text-secondary;
+  font-size: 0.84rem;
+  font-weight: 700;
 }
 
 .au-range--error .au-range__input {
-  border-color: $danger-400;
+  background: $danger-100;
 }
 
 .au-range--disabled .au-range__input {
-  opacity: 0.65;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
 .au-datepicker {
   position: relative;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.45rem;
   font-family: inherit;
-}
-
-.au-datepicker__label {
-  color: $primary-shade-4;
-  font-weight: 600;
 }
 
 .au-datepicker__native-wrap {
@@ -408,17 +394,8 @@
 
 .au-datepicker__trigger,
 .au-datepicker__control {
-  width: 100%;
-  min-height: 3.25rem;
-  padding: 0.85rem 3rem 0.85rem 1rem;
-  border: 1px solid rgba($primary-base, 0.22);
-  border-radius: 8px;
-  background: linear-gradient(180deg, $surface 0%, rgba($primary-tint-1, 0.72) 100%);
-  color: $primary-shade-4;
-  font: inherit;
+  padding: 0.72rem 2.65rem 0.72rem 0.85rem;
   text-align: left;
-  box-shadow: 0 8px 18px rgba($primary-shade-4, 0.05);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .au-datepicker__trigger {
@@ -428,35 +405,21 @@
   cursor: pointer;
 }
 
-.au-datepicker__trigger:hover,
-.au-datepicker__control:hover {
-  border-color: rgba($primary-base, 0.55);
-  transform: translateY(-1px);
-}
-
-.au-datepicker__trigger:focus-visible,
-.au-datepicker__control:focus {
-  outline: none;
-  border-color: $primary-base;
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
-}
-
 .au-datepicker__value {
-  color: $primary-shade-4;
+  color: $text-primary;
   font-weight: 700;
 }
 
 .au-datepicker__placeholder {
-  color: $primary-shade-2;
-  opacity: 0.7;
+  color: $text-muted;
 }
 
 .au-datepicker__icon {
   position: absolute;
-  right: 0.85rem;
+  right: 0.8rem;
   top: 50%;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.15rem;
+  height: 1.15rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -466,17 +429,17 @@
 
 .au-datepicker__icon span {
   position: relative;
-  width: 1rem;
-  height: 0.9rem;
-  border: 1.5px solid $primary-base;
-  border-radius: 4px;
+  width: 0.95rem;
+  height: 0.85rem;
+  border: 1.5px solid $text-muted;
+  border-radius: $radius-sm;
 }
 
 .au-datepicker__icon span::before,
 .au-datepicker__icon span::after {
   content: "";
   position: absolute;
-  background: $primary-base;
+  background: $text-muted;
 }
 
 .au-datepicker__icon span::before {
@@ -487,64 +450,48 @@
 }
 
 .au-datepicker__icon span::after {
-  width: 0.28rem;
-  height: 0.28rem;
+  width: 0.25rem;
+  height: 0.25rem;
   border-radius: 50%;
-  left: 0.24rem;
-  bottom: 0.18rem;
-  box-shadow: 0.42rem 0 0 $primary-base;
+  left: 0.22rem;
+  bottom: 0.16rem;
+  box-shadow: 0.38rem 0 0 $text-muted;
 }
 
 .au-datepicker__panel {
   position: absolute;
-  top: calc(100% + 0.55rem);
+  top: calc(100% + 0.45rem);
   left: 0;
   z-index: 30;
-  width: min(24rem, calc(100vw - 2rem));
-  padding: 0.9rem;
-  border: 1px solid rgba($primary-base, 0.18);
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, rgba($surface, 0.98) 0%, rgba($surface-secondary, 0.98) 100%);
-  box-shadow: 0 24px 54px rgba($primary-shade-4, 0.18), 0 8px 18px rgba($primary-base, 0.12);
+  width: min(23rem, calc(100vw - 2rem));
   display: grid;
-  gap: 0.85rem;
-}
-
-.au-datepicker__panel::before {
-  content: "";
-  position: absolute;
-  top: -0.4rem;
-  left: 1.2rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-left: 1px solid rgba($primary-base, 0.18);
-  border-top: 1px solid rgba($primary-base, 0.18);
-  border-radius: 2px;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
   background: $surface;
-  transform: rotate(45deg);
+  box-shadow: $shadow-lg;
 }
 
 .au-datepicker__panel-hero {
-  position: relative;
   display: grid;
-  gap: 0.18rem;
-  padding: 0.85rem 0.95rem;
-  border: 1px solid rgba($primary-base, 0.16);
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba($primary-base, 0.12) 0%, rgba($success-400, 0.14) 100%);
+  gap: 0.2rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface-secondary;
 }
 
 .au-datepicker__panel-hero span {
-  color: $primary-shade-2;
+  color: $text-muted;
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .au-datepicker__panel-hero strong {
-  color: $primary-shade-4;
-  font-size: 1.05rem;
+  color: $text-primary;
+  font-size: 1rem;
   line-height: 1.25;
 }
 
@@ -554,82 +501,72 @@
   gap: 0.5rem;
 }
 
-.au-datepicker__range-preview button {
-  border: 1px solid rgba($primary-base, 0.16);
-  border-radius: 8px;
-  background: rgba($surface, 0.92);
-  color: $primary-shade-4;
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.55rem 0.65rem;
-  text-align: left;
+.au-datepicker__range-preview button,
+.au-datepicker__panel-header button,
+.au-datepicker__actions button,
+.au-datepicker__presets button {
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-secondary;
+  font: inherit;
+  font-weight: 700;
   cursor: pointer;
 }
 
+.au-datepicker__range-preview button {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.52rem 0.62rem;
+  text-align: left;
+}
+
 .au-datepicker__range-preview button span {
-  color: $primary-shade-2;
-  font-size: 0.72rem;
-  font-weight: 700;
+  color: $text-muted;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
 .au-datepicker__range-preview button strong {
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.85rem;
 }
 
-.au-datepicker__range-preview button.is-active {
-  border-color: rgba($primary-base, 0.48);
-  background: linear-gradient(180deg, $surface 0%, rgba($primary-base, 0.1) 100%);
-  box-shadow: 0 0 0 3px rgba($primary-base, 0.12);
+.au-datepicker__range-preview button.is-active,
+.au-datepicker__panel-header button:hover,
+.au-datepicker__actions button:hover,
+.au-datepicker__presets button:hover {
+  border-color: $primary-tint-4;
+  background: $primary-tint-1;
+  color: $primary-shade-2;
 }
 
 .au-datepicker__panel-header {
   display: grid;
-  grid-template-columns: 2.25rem 1fr 2.25rem;
+  grid-template-columns: 2.15rem 1fr 2.15rem;
   align-items: center;
   gap: 0.5rem;
 }
 
+.au-datepicker__panel-header button {
+  width: 2.15rem;
+  height: 2.15rem;
+}
+
 .au-datepicker__month-title {
   display: grid;
-  gap: 0.05rem;
-  color: $primary-shade-4;
   text-align: center;
 }
 
 .au-datepicker__month-title strong {
-  font-size: 1rem;
-  line-height: 1.1;
+  color: $text-primary;
+  font-size: 0.98rem;
 }
 
 .au-datepicker__month-title span {
-  color: $primary-shade-2;
+  color: $text-muted;
   font-size: 0.78rem;
-  font-weight: 750;
-}
-
-.au-datepicker__nav-button,
-.au-datepicker__actions button {
-  border: 1px solid rgba($primary-base, 0.16);
-  border-radius: 8px;
-  background: $surface;
-  color: $primary-shade-3;
-  font: inherit;
   font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-.au-datepicker__nav-button {
-  width: 2.25rem;
-  height: 2.25rem;
-}
-
-.au-datepicker__nav-button:hover,
-.au-datepicker__actions button:hover {
-  border-color: rgba($primary-base, 0.42);
-  background: rgba($primary-base, 0.08);
 }
 
 .au-datepicker__weekdays,
@@ -640,7 +577,7 @@
 }
 
 .au-datepicker__weekdays span {
-  color: $primary-shade-2;
+  color: $text-muted;
   font-size: 0.72rem;
   font-weight: 800;
   text-align: center;
@@ -651,61 +588,44 @@
   aspect-ratio: 1;
   min-width: 0;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: $radius-md;
   background: transparent;
-  color: $primary-shade-4;
+  color: $text-secondary;
   font: inherit;
-  font-size: 0.9rem;
-  font-weight: 650;
+  font-size: 0.88rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
 }
 
 .au-datepicker__day:hover {
-  border-color: rgba($primary-base, 0.26);
-  background: rgba($primary-base, 0.09);
-  transform: translateY(-1px);
+  border-color: $border;
+  background: $surface-hover;
 }
 
 .au-datepicker__day.is-muted {
-  color: $primary-tint-4;
+  color: $text-disabled;
 }
 
 .au-datepicker__day.is-today {
-  border-color: rgba($success-500, 0.55);
-  color: $success-800;
+  border-color: $success-400;
+  color: $success-700;
 }
 
 .au-datepicker__day.is-in-range {
-  border-radius: 4px;
-  background: rgba($primary-base, 0.12);
-  color: $primary-shade-4;
+  background: $primary-tint-1;
+  color: $primary-shade-2;
 }
 
 .au-datepicker__day.is-selected {
   border-color: $primary-base;
-  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-2 100%);
+  background: $primary-base;
   color: $text-inverse;
-  box-shadow: 0 8px 14px rgba($primary-base, 0.24);
 }
 
 .au-datepicker__day:disabled {
-  opacity: 0.38;
+  opacity: 0.35;
   cursor: not-allowed;
   text-decoration: line-through;
-}
-
-.au-datepicker__actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding-top: 0.15rem;
-  border-top: 1px solid rgba($primary-base, 0.12);
-}
-
-.au-datepicker__actions button {
-  min-height: 2.25rem;
-  padding: 0 0.75rem;
 }
 
 .au-datepicker__presets {
@@ -716,50 +636,21 @@
 
 .au-datepicker__presets button {
   min-height: 2rem;
-  border: 1px solid rgba($primary-base, 0.18);
-  border-radius: 8px;
-  background: rgba($surface, 0.78);
-  color: $primary-shade-3;
-  font: inherit;
+  padding: 0 0.62rem;
   font-size: 0.8rem;
-  font-weight: 750;
-  padding: 0 0.65rem;
-  cursor: pointer;
 }
 
-.au-datepicker__presets button:hover {
-  border-color: rgba($primary-base, 0.42);
-  background: rgba($primary-base, 0.09);
-}
-
-.au-datepicker__range-separator {
-  color: $primary-shade-3;
-  font-size: 0.95rem;
-}
-
-.au-datepicker__meta {
+.au-datepicker__actions {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.9rem;
+  gap: 0.5rem;
+  padding-top: 0.15rem;
+  border-top: 1px solid $border;
 }
 
-.au-datepicker__helper {
-  color: $primary-shade-2;
-}
-
-.au-datepicker__error {
-  color: $danger-700;
-}
-
-.au-datepicker--disabled .au-datepicker__control {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.au-datepicker--disabled .au-datepicker__trigger {
-  opacity: 0.65;
-  cursor: not-allowed;
+.au-datepicker__actions button {
+  min-height: 2.1rem;
+  padding: 0 0.7rem;
 }
 
 @media (max-width: 520px) {
