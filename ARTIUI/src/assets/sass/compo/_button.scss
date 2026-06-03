@@ -3,31 +3,32 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  min-height: 3rem;
-  padding: 0.875rem 1.25rem;
+  gap: 0.65rem;
+  min-height: 2.95rem;
+  padding: 0.78rem 1.1rem;
   border: 1px solid transparent;
-  border-radius: $component-radius;
-  background-color: $primary-base;
+  border-radius: $radius-md;
+  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-1 100%);
   color: $text-inverse;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: $shadow-sm;
-  transition: transform $transition-fast, box-shadow $transition-fast, background-color $transition-base, color $transition-base, border-color $transition-base;
+  box-shadow: 0 10px 18px rgba(68, 85, 232, 0.16);
+  transition: transform $transition-fast, box-shadow $transition-fast, background $transition-base, color $transition-base, border-color $transition-base;
   white-space: nowrap;
   user-select: none;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: $shadow-md;
-    background-color: $primary-shade-1;
+    box-shadow: 0 14px 24px rgba(68, 85, 232, 0.24);
+    background: linear-gradient(135deg, $primary-shade-1 0%, $primary-shade-2 100%);
   }
 
   &:active {
     transform: translateY(0);
-    background-color: $primary-shade-2;
+    background: linear-gradient(135deg, $primary-shade-2 0%, $primary-shade-3 100%);
   }
 
   &:focus-visible {
@@ -36,8 +37,8 @@
   }
 
   &:disabled {
-    background-color: $primary-tint-3;
-    color: rgba($text-inverse, 0.85);
+    background: linear-gradient(135deg, $primary-tint-3 0%, $primary-tint-2 100%);
+    color: rgba($text-primary, 0.75);
     cursor: not-allowed;
     box-shadow: none;
     opacity: 0.9;
@@ -51,22 +52,23 @@
 }
 
 .au-button--secondary {
-  background-color: rgba($primary-base, 0.12);
-  color: $primary-base;
-  border-color: rgba($primary-base, 0.32);
+  background: linear-gradient(135deg, rgba($primary-base, 0.12) 0%, rgba($primary-base, 0.18) 100%);
+  color: $primary-shade-2;
+  border-color: rgba($primary-base, 0.28);
 
   &:hover {
-    background-color: rgba($primary-base, 0.16);
+    background: linear-gradient(135deg, rgba($primary-base, 0.18) 0%, rgba($primary-base, 0.24) 100%);
   }
 }
 
 .au-button--outline {
   background-color: transparent;
-  color: $primary-base;
-  border-color: $primary-base;
+  color: $primary-shade-2;
+  border-color: rgba($primary-base, 0.35);
 
   &:hover {
     background-color: rgba($primary-base, 0.08);
+    box-shadow: 0 8px 18px rgba(68, 85, 232, 0.12);
   }
 }
 

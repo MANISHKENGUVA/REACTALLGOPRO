@@ -4,11 +4,11 @@
   display: inline-flex;
   flex-direction: column;
   gap: 0.25rem;
-  padding: 0.5rem 0;
-  background-color: #fff;
-  border: 1px solid $primary-tint-3;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
+  padding: 0.45rem;
+  background: $surface;
+  border: 1px solid $border;
+  box-shadow: $shadow-lg;
+  border-radius: $radius-lg;
 }
 
 .au-menu__item,
@@ -17,23 +17,26 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 0.68rem 0.75rem;
   background: transparent;
   border: none;
   text-align: left;
-  color: $primary-shade-4;
+  color: $text-secondary;
   cursor: pointer;
-  border-radius: 0.75rem;
+  border-radius: $radius-md;
+  font-weight: 600;
 }
 
 .au-menu__item:hover,
 .au-menu-dropdown__item:hover {
-  background-color: $primary-tint-2;
+  background: linear-gradient(135deg, $surface-secondary 0%, $primary-tint-1 100%);
+  color: $text-primary;
 }
 
 .au-menu__item--active,
 .au-menu-dropdown__item--active {
-  background-color: $primary-tint-3;
+  background: linear-gradient(135deg, rgba($primary-base, 0.14) 0%, rgba($primary-base, 0.20) 100%);
+  color: $primary-shade-2;
 }
 
 .au-menu__divider,

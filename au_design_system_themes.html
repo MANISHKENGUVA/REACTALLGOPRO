@@ -1,0 +1,158 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1.5rem 0}
+.header{margin-bottom:1.5rem}
+.header h2{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.header p{font-size:13px;color:var(--color-text-secondary)}
+.themes-grid{display:flex;flex-direction:column;gap:1.5rem}
+.theme-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.theme-meta{padding:12px 16px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between;align-items:center}
+.theme-name{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.theme-label{font-size:11px;color:var(--color-text-secondary);font-family:var(--font-mono)}
+.swatches{display:flex;height:56px}
+.swatch{flex:1;position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px}
+.swatch span{font-size:9px;font-weight:500;opacity:0;transition:opacity .15s;white-space:nowrap}
+.swatch:hover span{opacity:1}
+.stop-label{font-size:9px;color:var(--color-text-tertiary);padding:4px 16px 8px;display:flex;gap:0;background:var(--color-background-secondary)}
+.stop-label div{flex:1;text-align:center;font-family:var(--font-mono)}
+.preview-row{display:flex;gap:10px;padding:12px 16px;align-items:center;flex-wrap:wrap;border-top:0.5px solid var(--color-border-tertiary)}
+.btn-prev{height:28px;padding:0 12px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;gap:6px}
+.badge-prev{height:20px;padding:0 8px;border-radius:10px;font-size:10px;font-weight:500;display:flex;align-items:center}
+.tag-prev{height:22px;padding:0 8px;border-radius:4px;font-size:10px;font-weight:500;display:flex;align-items:center;border:1px solid}
+.chip-prev{height:22px;padding:0 8px;border-radius:11px;font-size:10px;font-weight:500;display:flex;align-items:center}
+.progress-prev{width:80px;height:5px;border-radius:3px;overflow:hidden;background:#E5E7EB;flex-shrink:0}
+.progress-fill{height:100%;border-radius:3px;width:65%}
+</style>
+
+<div class="wrap">
+<div class="header">
+  <h2>AU Design System — Redesigned Theme Palettes</h2>
+  <p>15 premium themes for Fintech & SaaS. Hover swatches to see hex values.</p>
+</div>
+
+<div class="themes-grid" id="themesGrid"></div>
+</div>
+
+<script>
+const themes = [
+  {
+    id:'v01', name:'Indigo Depth', label:'Primary brand, dashboards',
+    stops:['#F0F1FF','#DDE0FF','#C0C6FF','#9AA5FF','#6674F4','#4455E8','#2D3DC4','#1D2A9F','#0E1870'],
+    btn:['#6674F4','#fff'], btnHov:'#4455E8', badge:['#DDE0FF','#2D3DC4'], tag:['#F0F1FF','#4455E8','#C0C6FF'], chip:['#6674F4','#fff']
+  },
+  {
+    id:'v02', name:'Midnight Sapphire', label:'Banking, trust, corporate',
+    stops:['#EEF4FF','#D6E6FF','#AECEFF','#75ADFF','#3880FF','#1A5EF5','#1046D0','#0B32A0','#06206E'],
+    btn:['#3880FF','#fff'], btnHov:'#1A5EF5', badge:['#D6E6FF','#1046D0'], tag:['#EEF4FF','#1A5EF5','#AECEFF'], chip:['#3880FF','#fff']
+  },
+  {
+    id:'v03', name:'Obsidian Teal', label:'Wealth management, premium',
+    stops:['#EDFAF6','#C8F1E6','#8EE3CC','#43CBAA','#00AE87','#008E6E','#006E56','#00503F','#003429'],
+    btn:['#00AE87','#fff'], btnHov:'#008E6E', badge:['#C8F1E6','#006E56'], tag:['#EDFAF6','#008E6E','#8EE3CC'], chip:['#00AE87','#fff']
+  },
+  {
+    id:'v04', name:'Electric Violet', label:'Crypto, AI, innovation',
+    stops:['#F3EEFF','#E3D3FF','#C8AEFF','#A37BFF','#7C45F8','#6127E8','#4A15C4','#330EA0','#1F0870'],
+    btn:['#7C45F8','#fff'], btnHov:'#6127E8', badge:['#E3D3FF','#4A15C4'], tag:['#F3EEFF','#6127E8','#C8AEFF'], chip:['#7C45F8','#fff']
+  },
+  {
+    id:'v05', name:'Crimson Luxury', label:'Premium cards, private banking',
+    stops:['#FFF0F0','#FFD6D6','#FFB0B0','#FF7A7A','#F04040','#D42020','#A81010','#820808','#570303'],
+    btn:['#F04040','#fff'], btnHov:'#D42020', badge:['#FFD6D6','#A81010'], tag:['#FFF0F0','#D42020','#FFB0B0'], chip:['#F04040','#fff']
+  },
+  {
+    id:'v06', name:'Amber Prestige', label:'Fintech alerts, premium accents',
+    stops:['#FFFAEE','#FFF0C2','#FFE08A','#FFC940','#F5A800','#D48800','#A86800','#7A4C00','#4E3000'],
+    btn:['#F5A800','#3A2800'], btnHov:'#D48800', badge:['#FFF0C2','#7A4C00'], tag:['#FFFAEE','#A86800','#FFE08A'], chip:['#F5A800','#3A2800']
+  },
+  {
+    id:'v07', name:'Arctic Cyan', label:'Analytics, data visualization',
+    stops:['#ECFEFF','#CDFAFF','#A0F2FF','#54E2F8','#00C4E8','#009DC0','#007698','#005270','#003148'],
+    btn:['#00C4E8','#fff'], btnHov:'#009DC0', badge:['#CDFAFF','#007698'], tag:['#ECFEFF','#009DC0','#A0F2FF'], chip:['#00C4E8','#fff']
+  },
+  {
+    id:'v08', name:'Graphite Premium', label:'Neutral UI, enterprise',
+    stops:['#F7F7F8','#EBEBED','#D4D4D8','#AEAEB4','#7B7B84','#595962','#3E3E46','#28282F','#14141A'],
+    btn:['#3E3E46','#fff'], btnHov:'#28282F', badge:['#EBEBED','#3E3E46'], tag:['#F7F7F8','#3E3E46','#D4D4D8'], chip:['#3E3E46','#fff']
+  },
+  {
+    id:'v09', name:'Rose Quartz', label:'Wealth, lifestyle fintech',
+    stops:['#FFF0F7','#FFD6EC','#FFB0D8','#FF7AB8','#F0408A','#D42070','#A81056','#820840','#57032A'],
+    btn:['#F0408A','#fff'], btnHov:'#D42070', badge:['#FFD6EC','#A81056'], tag:['#FFF0F7','#D42070','#FFB0D8'], chip:['#F0408A','#fff']
+  },
+  {
+    id:'v10', name:'Emerald Wealth', label:'Investment, growth metrics',
+    stops:['#EDFCF4','#C6F5DC','#8DEABB','#42D490','#00BA6E','#009858','#007542','#005430','#00341E'],
+    btn:['#00BA6E','#fff'], btnHov:'#009858', badge:['#C6F5DC','#007542'], tag:['#EDFCF4','#009858','#8DEABB'], chip:['#00BA6E','#fff']
+  },
+  {
+    id:'v11', name:'Gold Reserve', label:'Private equity, luxury brand',
+    stops:['#FFFBEE','#FFF3C2','#FFE480','#FFD030','#E8B800','#C09200','#906C00','#604800','#3A2C00'],
+    btn:['#E8B800','#2A2000'], btnHov:'#C09200', badge:['#FFF3C2','#604800'], tag:['#FFFBEE','#906C00','#FFE480'], chip:['#E8B800','#2A2000']
+  },
+  {
+    id:'v12', name:'Forest Digital', label:'ESG, sustainable finance',
+    stops:['#F0FBF0','#D4F5D4','#AAEAAA','#6DD66D','#30BE30','#229A22','#167216','#0C4C0C','#062E06'],
+    btn:['#30BE30','#fff'], btnHov:'#229A22', badge:['#D4F5D4','#167216'], tag:['#F0FBF0','#229A22','#AAEAAA'], chip:['#30BE30','#fff']
+  },
+  {
+    id:'v13', name:'Vermillion Edge', label:'Trading, risk, action alerts',
+    stops:['#FFF2F0','#FFDAD6','#FFB4AC','#FF7A6C','#F5381E','#D41800','#A80E00','#7C0800','#520400'],
+    btn:['#F5381E','#fff'], btnHov:'#D41800', badge:['#FFDAD6','#A80E00'], tag:['#FFF2F0','#D41800','#FFB4AC'], chip:['#F5381E','#fff']
+  },
+  {
+    id:'v14', name:'Horizon Sky', label:'Insurance, clarity, open banking',
+    stops:['#EEF9FF','#D2EFFF','#A6DFFF','#60C8FF','#00A8F0','#0086C8','#0062A0','#004478','#002850'],
+    btn:['#00A8F0','#fff'], btnHov:'#0086C8', badge:['#D2EFFF','#0062A0'], tag:['#EEF9FF','#0086C8','#A6DFFF'], chip:['#00A8F0','#fff']
+  },
+  {
+    id:'v15', name:'Ink Minimal', label:'Document tools, neutral SaaS',
+    stops:['#F8F8F9','#EDEEF0','#D8DADD','#B4B8BE','#848A94','#606670','#444A52','#2A2F36','#14181F'],
+    btn:['#444A52','#fff'], btnHov:'#2A2F36', badge:['#EDEEF0','#444A52'], tag:['#F8F8F9','#444A52','#D8DADD'], chip:['#444A52','#fff']
+  }
+];
+
+const stopNames = ['50','100','150','200','250','300','350','400','450'];
+
+const grid = document.getElementById('themesGrid');
+
+themes.forEach(t => {
+  const card = document.createElement('div');
+  card.className = 'theme-card';
+
+  const swatchHTML = t.stops.map((hex,i) => {
+    const isLight = parseInt(hex.replace('#',''),16) > 0xAAAAAA;
+    const txtColor = isLight ? '#1a1a1a' : '#ffffff';
+    return `<div class="swatch" style="background:${hex}"><span style="color:${txtColor}">${hex}</span></div>`;
+  }).join('');
+
+  const stopLabelHTML = stopNames.map(s => `<div>${s}</div>`).join('');
+
+  const base = t.stops[4];
+  const shade1 = t.stops[5];
+  const tint2 = t.stops[1];
+  const shade3 = t.stops[6];
+
+  card.innerHTML = `
+    <div class="theme-meta">
+      <span class="theme-name">${t.id.toUpperCase()} — ${t.name}</span>
+      <span class="theme-label">${t.label}</span>
+    </div>
+    <div class="swatches">${swatchHTML}</div>
+    <div class="stop-label">${stopLabelHTML}</div>
+    <div class="preview-row">
+      <button class="btn-prev" style="background:${t.btn[0]};color:${t.btn[1]}">
+        <i class="ti ti-check" aria-hidden="true" style="font-size:12px"></i>Primary
+      </button>
+      <button class="btn-prev" style="background:${tint2};color:${shade3};border:1px solid ${t.stops[2]}">Outline</button>
+      <span class="badge-prev" style="background:${t.badge[0]};color:${t.badge[1]}">${t.name}</span>
+      <span class="tag-prev" style="background:transparent;color:${shade1};border-color:${t.stops[2]}">${t.id.toUpperCase()}</span>
+      <div class="progress-prev"><div class="progress-fill" style="background:${base}"></div></div>
+      <span style="font-size:11px;color:var(--color-text-secondary);margin-left:auto">primary-base: ${base}</span>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+</script>

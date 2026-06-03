@@ -26,11 +26,16 @@ import DisbursementPage from './pages/loanFlow/DisbursementPage';
 import CoBorrowerKYCPage from './pages/loanFlow/CoBorrowerKYCPage';
 import GuarantorKYCPage from './pages/loanFlow/GuarantorKYCPage';
 import HomePage from './pages/HomePage';
+import AllComponentsPlaygroundPage from './pages/AllComponentsPlaygroundPage';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <AllComponentsPlaygroundPage />,
+  },
+  {
+    path: '/display-all-components-with-all-possible-props-and-combinations',
+    element: <AllComponentsPlaygroundPage />,
   },
   {
     path: '/loan-flow',

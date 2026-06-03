@@ -22,6 +22,8 @@ export default function AUINPUT({
   ...rest
 }) {
   const safeType = INPUT_TYPES.includes(type) ? type : "text";
+  const inputId = id ?? name ?? "au-input";
+  const hasLabel = Boolean(label);
   const [internalValue, setInternalValue] = useState(value ?? defaultValue);
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +34,7 @@ export default function AUINPUT({
   const hasError = Boolean(error);
   const wrapperClasses = [
     "au-input",
+    hasLabel && "au-input--has-label",
     hasError && "au-input--error",
     disabled && "au-input--disabled",
     className
@@ -87,16 +90,16 @@ export default function AUINPUT({
         ) : null}
 
         <input
-          id={id}
+          id={inputId}
           name={name}
           type={safeType === "password" && showPassword ? "text" : safeType}
           value={currentValue}
           onChange={handleChange}
-          placeholder={placeholder || " "}
+          placeholder={hasLabel ? "" : placeholder || ""}
           disabled={disabled}
           className="au-input__control"
           aria-invalid={hasError ? "true" : "false"}
-          aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+          aria-describedby={hasError ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           {...rest}
@@ -105,7 +108,7 @@ export default function AUINPUT({
         {label ? (
           <label
             className={`au-input__floating-label ${isFocused || hasValue ? "au-input__floating-label--active" : ""}`}
-            htmlFor={id}
+            htmlFor={inputId}
           >
             {label}
           </label>
@@ -141,13 +144,13 @@ export default function AUINPUT({
       </div>
 
       {helperText && !hasError ? (
-        <div id={id ? `${id}-helper` : undefined} className="au-input__helper">
+        <div id={inputId ? `${inputId}-helper` : undefined} className="au-input__helper">
           {helperText}
         </div>
       ) : null}
 
       {hasError ? (
-        <div id={id ? `${id}-error` : undefined} className="au-input__error">
+        <div id={inputId ? `${inputId}-error` : undefined} className="au-input__error">
           {error}
         </div>
       ) : null}

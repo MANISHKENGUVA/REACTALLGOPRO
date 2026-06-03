@@ -47,7 +47,7 @@
 }
 
 .au-textarea__error {
-  color: #b91c1c;
+  color: $danger-700;
 }
 
 .au-textarea__counter {
@@ -55,7 +55,7 @@
 }
 
 .au-textarea--error .au-textarea__control {
-  border-color: #f87171;
+  border-color: $danger-400;
 }
 
 .au-textarea--disabled .au-textarea__control {
@@ -92,8 +92,8 @@
   margin-top: 0.5rem;
   border: 1px solid $primary-tint-4;
   border-radius: 0.85rem;
-  background: #fff;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  background: linear-gradient(180deg, $surface 0%, $surface-secondary 100%);
+  box-shadow: $shadow-lg;
   z-index: 10;
   overflow: hidden;
 }
@@ -165,11 +165,11 @@
 }
 
 .au-select__error {
-  color: #b91c1c;
+  color: $danger-700;
 }
 
 .au-select--error .au-select__control {
-  border-color: #f87171;
+  border-color: $danger-400;
 }
 
 .au-select--disabled .au-select__control {
@@ -307,7 +307,7 @@
   left: 0.15rem;
   top: 0.15rem;
   border-radius: 50%;
-  background: #fff;
+  background: $surface;
   transition: transform 0.2s ease;
 }
 
@@ -378,11 +378,11 @@
 }
 
 .au-range__error {
-  color: #b91c1c;
+  color: $danger-700;
 }
 
 .au-range--error .au-range__input {
-  border-color: #f87171;
+  border-color: $danger-400;
 }
 
 .au-range--disabled .au-range__input {
@@ -391,9 +391,10 @@
 }
 
 .au-datepicker {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: grid;
   gap: 0.5rem;
+  font-family: inherit;
 }
 
 .au-datepicker__label {
@@ -401,28 +402,334 @@
   font-weight: 600;
 }
 
-.au-datepicker__control {
-  width: 100%;
-  min-height: 3rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid $primary-tint-4;
-  border-radius: 0.85rem;
-  background: $primary-tint-1;
-  color: $primary-shade-4;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.au-datepicker__native-wrap {
+  position: relative;
 }
 
+.au-datepicker__trigger,
+.au-datepicker__control {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.85rem 3rem 0.85rem 1rem;
+  border: 1px solid rgba($primary-base, 0.22);
+  border-radius: 8px;
+  background: linear-gradient(180deg, $surface 0%, rgba($primary-tint-1, 0.72) 100%);
+  color: $primary-shade-4;
+  font: inherit;
+  text-align: left;
+  box-shadow: 0 8px 18px rgba($primary-shade-4, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.au-datepicker__trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.au-datepicker__trigger:hover,
+.au-datepicker__control:hover {
+  border-color: rgba($primary-base, 0.55);
+  transform: translateY(-1px);
+}
+
+.au-datepicker__trigger:focus-visible,
 .au-datepicker__control:focus {
   outline: none;
   border-color: $primary-base;
   box-shadow: 0 0 0 3px rgba($primary-base, 0.14);
 }
 
-.au-datepicker__range {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 0.75rem;
+.au-datepicker__value {
+  color: $primary-shade-4;
+  font-weight: 700;
+}
+
+.au-datepicker__placeholder {
+  color: $primary-shade-2;
+  opacity: 0.7;
+}
+
+.au-datepicker__icon {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.au-datepicker__icon span {
+  position: relative;
+  width: 1rem;
+  height: 0.9rem;
+  border: 1.5px solid $primary-base;
+  border-radius: 4px;
+}
+
+.au-datepicker__icon span::before,
+.au-datepicker__icon span::after {
+  content: "";
+  position: absolute;
+  background: $primary-base;
+}
+
+.au-datepicker__icon span::before {
+  left: -1.5px;
+  right: -1.5px;
+  top: 0.22rem;
+  height: 1.5px;
+}
+
+.au-datepicker__icon span::after {
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 50%;
+  left: 0.24rem;
+  bottom: 0.18rem;
+  box-shadow: 0.42rem 0 0 $primary-base;
+}
+
+.au-datepicker__panel {
+  position: absolute;
+  top: calc(100% + 0.55rem);
+  left: 0;
+  z-index: 30;
+  width: min(24rem, calc(100vw - 2rem));
+  padding: 0.9rem;
+  border: 1px solid rgba($primary-base, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba($surface, 0.98) 0%, rgba($surface-secondary, 0.98) 100%);
+  box-shadow: 0 24px 54px rgba($primary-shade-4, 0.18), 0 8px 18px rgba($primary-base, 0.12);
+  display: grid;
+  gap: 0.85rem;
+}
+
+.au-datepicker__panel::before {
+  content: "";
+  position: absolute;
+  top: -0.4rem;
+  left: 1.2rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-left: 1px solid rgba($primary-base, 0.18);
+  border-top: 1px solid rgba($primary-base, 0.18);
+  border-radius: 2px;
+  background: $surface;
+  transform: rotate(45deg);
+}
+
+.au-datepicker__panel-hero {
+  position: relative;
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba($primary-base, 0.16);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba($primary-base, 0.12) 0%, rgba($success-400, 0.14) 100%);
+}
+
+.au-datepicker__panel-hero span {
+  color: $primary-shade-2;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.au-datepicker__panel-hero strong {
+  color: $primary-shade-4;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.au-datepicker__range-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.au-datepicker__range-preview button {
+  border: 1px solid rgba($primary-base, 0.16);
+  border-radius: 8px;
+  background: rgba($surface, 0.92);
+  color: $primary-shade-4;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.au-datepicker__range-preview button span {
+  color: $primary-shade-2;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.au-datepicker__range-preview button strong {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.au-datepicker__range-preview button.is-active {
+  border-color: rgba($primary-base, 0.48);
+  background: linear-gradient(180deg, $surface 0%, rgba($primary-base, 0.1) 100%);
+  box-shadow: 0 0 0 3px rgba($primary-base, 0.12);
+}
+
+.au-datepicker__panel-header {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr 2.25rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.au-datepicker__month-title {
+  display: grid;
+  gap: 0.05rem;
+  color: $primary-shade-4;
+  text-align: center;
+}
+
+.au-datepicker__month-title strong {
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.au-datepicker__month-title span {
+  color: $primary-shade-2;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.au-datepicker__nav-button,
+.au-datepicker__actions button {
+  border: 1px solid rgba($primary-base, 0.16);
+  border-radius: 8px;
+  background: $surface;
+  color: $primary-shade-3;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.au-datepicker__nav-button {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.au-datepicker__nav-button:hover,
+.au-datepicker__actions button:hover {
+  border-color: rgba($primary-base, 0.42);
+  background: rgba($primary-base, 0.08);
+}
+
+.au-datepicker__weekdays,
+.au-datepicker__days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+
+.au-datepicker__weekdays span {
+  color: $primary-shade-2;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.au-datepicker__day {
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: $primary-shade-4;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.au-datepicker__day:hover {
+  border-color: rgba($primary-base, 0.26);
+  background: rgba($primary-base, 0.09);
+  transform: translateY(-1px);
+}
+
+.au-datepicker__day.is-muted {
+  color: $primary-tint-4;
+}
+
+.au-datepicker__day.is-today {
+  border-color: rgba($success-500, 0.55);
+  color: $success-800;
+}
+
+.au-datepicker__day.is-in-range {
+  border-radius: 4px;
+  background: rgba($primary-base, 0.12);
+  color: $primary-shade-4;
+}
+
+.au-datepicker__day.is-selected {
+  border-color: $primary-base;
+  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-2 100%);
+  color: $text-inverse;
+  box-shadow: 0 8px 14px rgba($primary-base, 0.24);
+}
+
+.au-datepicker__day:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.au-datepicker__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.15rem;
+  border-top: 1px solid rgba($primary-base, 0.12);
+}
+
+.au-datepicker__actions button {
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+}
+
+.au-datepicker__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.au-datepicker__presets button {
+  min-height: 2rem;
+  border: 1px solid rgba($primary-base, 0.18);
+  border-radius: 8px;
+  background: rgba($surface, 0.78);
+  color: $primary-shade-3;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 750;
+  padding: 0 0.65rem;
+  cursor: pointer;
+}
+
+.au-datepicker__presets button:hover {
+  border-color: rgba($primary-base, 0.42);
+  background: rgba($primary-base, 0.09);
 }
 
 .au-datepicker__range-separator {
@@ -442,10 +749,25 @@
 }
 
 .au-datepicker__error {
-  color: #b91c1c;
+  color: $danger-700;
 }
 
 .au-datepicker--disabled .au-datepicker__control {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.au-datepicker--disabled .au-datepicker__trigger {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 520px) {
+  .au-datepicker__panel {
+    width: min(21rem, calc(100vw - 2rem));
+  }
+
+  .au-datepicker__range-preview {
+    grid-template-columns: 1fr;
+  }
 }

@@ -4,9 +4,9 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background-color: $primary-tint-1;
-  border: 1px solid $primary-tint-2;
-  border-radius: 0.75rem;
+  background: linear-gradient(180deg, $surface 0%, $surface-secondary 100%);
+  border: 1px solid rgba($primary-base, 0.16);
+  border-radius: $radius-lg;
 }
 
 .au-pagination__page-size,
@@ -28,7 +28,8 @@
   padding: 0.5rem 0.75rem;
   border: 1px solid $primary-tint-3;
   border-radius: 0.5rem;
-  background: #fff;
+  background: $surface;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .au-pagination__controls {
@@ -47,11 +48,11 @@
 
 .au-pagination__page,
 .au-pagination__nav {
-  border: 1px solid $primary-tint-3;
-  background: #fff;
-  color: $primary-base;
+  border: 1px solid rgba($primary-base, 0.18);
+  background: $surface;
+  color: $primary-shade-2;
   padding: 0.55rem 0.85rem;
-  border-radius: 0.65rem;
+  border-radius: $radius-md;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
@@ -62,9 +63,9 @@
 }
 
 .au-pagination__page--active {
-  background-color: $primary-base;
-  color: #fff;
-  border-color: $primary-base;
+  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-1 100%);
+  color: $text-inverse;
+  border-color: transparent;
 }
 
 .au-pagination__page:disabled,

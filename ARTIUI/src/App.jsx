@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { AUCARD, AUBUTTON, AUCHIP, AUTIMELINE, AULISTGROUP } from "./routerEngine";
+import React, { useEffect, useState } from "react";
+import { AUCARD, AUBUTTON, AUCHIP, AUINPUT, AUTIMELINE, AULISTGROUP } from "./routerEngine";
+import ComponentDocsPage from "./ComponentDocsPage";
 
 const timelineItems = [
   {
@@ -51,14 +52,37 @@ const listItems = [
 
 export default function App() {
   const [selectedItems, setSelectedItems] = useState(["1"]);
+  const [route, setRoute] = useState(() => window.location.hash === "#/docs" ? "docs" : "home");
+
+  useEffect(() => {
+    const syncRoute = () => setRoute(window.location.hash === "#/docs" ? "docs" : "home");
+    window.addEventListener("hashchange", syncRoute);
+    return () => window.removeEventListener("hashchange", syncRoute);
+  }, []);
+
+  if (route === "docs") {
+    return <ComponentDocsPage />;
+  }
 
   return (
-    <div style={{ padding: "20px", display: "grid", gap: "1.5rem" }}>
+    <div style={{ padding: "24px", display: "grid", gap: "1.5rem", background: "linear-gradient(180deg, #F5F7FF 0%, #FFFFFF 100%)", minHeight: "100vh" }}>
       <AUCARD>
-        <h1>AU Button Demo</h1>
-        <p>All button variants and features are now available.</p>
+        <div style={{ display: "grid", gap: "0.75rem" }}>
+          <span style={{ display: "inline-flex", width: "fit-content", padding: "0.35rem 0.6rem", borderRadius: "999px", background: "#EEF2FF", color: "#4455E8", fontSize: "0.82rem", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+            Premium AU Design System
+          </span>
+          <h1 style={{ margin: 0, fontSize: "1.8rem", lineHeight: 1.2 }}>Refreshed components, premium palette, cleaner hierarchy.</h1>
+          <p style={{ margin: 0, color: "#3F4C89", maxWidth: "720px" }}>
+            The visual system now uses the premium Indigo theme across buttons, cards, chips, inputs, and the live demo surface.
+          </p>
+          <AUBUTTON variant="primary" onClick={() => (window.location.hash = "#/docs")}>Open docs route</AUBUTTON>
+        </div>
+      </AUCARD>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center", marginBottom: "1rem" }}>
+      <AUCARD>
+        <h2 style={{ margin: 0, fontSize: "1.1rem" }}>Buttons</h2>
+        <p style={{ marginTop: "0.25rem" }}>Polished primary actions, softer secondary states, and cleaner hover motion.</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.85rem" }}>
           <AUBUTTON variant="primary">Primary</AUBUTTON>
           <AUBUTTON variant="secondary">Secondary</AUBUTTON>
           <AUBUTTON variant="outline">Outline</AUBUTTON>
@@ -66,52 +90,33 @@ export default function App() {
           <AUBUTTON variant="danger">Danger</AUBUTTON>
           <AUBUTTON variant="link">Link</AUBUTTON>
         </div>
+      </AUCARD>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center", marginBottom: "1rem" }}>
-          <AUBUTTON loading>Loading</AUBUTTON>
-          <AUBUTTON disabled>Disabled</AUBUTTON>
-          <AUBUTTON leftIcon="←">Left Icon</AUBUTTON>
-          <AUBUTTON rightIcon="→">Right Icon</AUBUTTON>
-          <AUBUTTON rounded>Rounded</AUBUTTON>
-        </div>
-
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", justifyContent: "center" }}>
-          <AUBUTTON variant="outline" rounded leftIcon="⭐" rightIcon="→">
-            Icon Button
-          </AUBUTTON>
-          <AUBUTTON variant="danger" loading rounded>
-            Saving
-          </AUBUTTON>
+      <AUCARD>
+        <h2 style={{ margin: 0, fontSize: "1.1rem" }}>Input & chips</h2>
+        <p style={{ marginTop: "0.25rem" }}>Icon placement, focus contrast, and chip color treatment are now aligned with the main palette.</p>
+        <div style={{ display: "grid", gap: "1rem" }}>
+          <AUINPUT id="demo-email" label="Email address" placeholder="name@company.com" prefixIcon="✉️" />
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+            <AUCHIP>Default</AUCHIP>
+            <AUCHIP selectable selected>Selected</AUCHIP>
+            <AUCHIP variant="success" closable>Success</AUCHIP>
+            <AUCHIP variant="danger" closable>Danger</AUCHIP>
+          </div>
         </div>
       </AUCARD>
 
       <AUCARD>
-        <h1>AU Chip Demo</h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", marginTop: "1rem" }}>
-          <AUCHIP>Default Chip</AUCHIP>
-          <AUCHIP selectable selected>Selected Chip</AUCHIP>
-          <AUCHIP variant="success" closable>
-            Success Chip
-          </AUCHIP>
-          <AUCHIP variant="danger" closable>
-            Danger Chip
-          </AUCHIP>
+        <h2 style={{ margin: 0, fontSize: "1.1rem" }}>Timeline & list group</h2>
+        <div style={{ display: "grid", gap: "1rem" }}>
+          <AUTIMELINE items={timelineItems} />
+          <AULISTGROUP
+            selectable
+            selectedItems={selectedItems}
+            onSelectionChange={setSelectedItems}
+            items={listItems}
+          />
         </div>
-      </AUCARD>
-
-      <AUCARD>
-        <h1>AU Timeline Demo</h1>
-        <AUTIMELINE items={timelineItems} />
-      </AUCARD>
-
-      <AUCARD>
-        <h1>AU List Group Demo</h1>
-        <AULISTGROUP
-          selectable
-          selectedItems={selectedItems}
-          onSelectionChange={setSelectedItems}
-          items={listItems}
-        />
       </AUCARD>
     </div>
   );

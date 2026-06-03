@@ -4,12 +4,12 @@
   z-index: 1000;
   min-width: 12rem;
   max-width: 20rem;
-  padding: 0.85rem 1rem;
-  background-color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 0.75rem;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-  color: #1f2937;
+  padding: 0.9rem 1rem;
+  background: linear-gradient(180deg, $surface 0%, $surface-secondary 100%);
+  border: 1px solid rgba($primary-base, 0.16);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  color: $text-primary;
   left: var(--au-popover-left, 0);
   top: var(--au-popover-top, 0);
   transform: translate(-50%, -100%);
@@ -39,8 +39,8 @@
   width: 0.85rem;
   height: 0.85rem;
   background-color: inherit;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 1px solid rgba($primary-base, 0.18);
+  border-top: 1px solid rgba($primary-base, 0.18);
   transform: rotate(45deg);
 }
 

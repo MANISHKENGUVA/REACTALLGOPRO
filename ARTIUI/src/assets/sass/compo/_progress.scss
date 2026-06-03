@@ -15,21 +15,21 @@
 .au-progress__track {
   width: 100%;
   height: 0.75rem;
-  border-radius: 999px;
-  background-color: $primary-tint-2;
+  border-radius: $radius-full;
+  background-color: $neutral-100;
   overflow: hidden;
 }
 
 .au-progress__bar {
   width: var(--au-progress-width, 0);
   height: 100%;
-  background-color: $primary-base;
-  border-radius: 999px;
+  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-1 100%);
+  border-radius: $radius-full;
   transition: width 0.3s ease;
 }
 
 .au-progress__value {
-  color: $primary-shade-4;
+  color: $text-secondary;
   font-weight: 600;
   align-self: flex-end;
 }
@@ -52,7 +52,7 @@
 }
 
 .au-progress__circle-track {
-  stroke: $primary-tint-2;
+  stroke: $neutral-200;
 }
 
 .au-progress__circle-bar {

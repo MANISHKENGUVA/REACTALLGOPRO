@@ -1,194 +1,200 @@
-// THEME 01 — INDIGO MODERN
+// ═══════════════════════════════════════════════════════════
+// AU DESIGN SYSTEM — REDESIGNED PREMIUM THEMES
+// Crafted for Fintech & SaaS — Modern & Premium vibe
+// Each theme: 9 stops, properly balanced contrast ratios
+// ═══════════════════════════════════════════════════════════
+
+// V01 — INDIGO DEPTH (primary brand, dashboards)
 $color-map-v01: (
-  'primary-50':  #EEF2FF,
-  'primary-100': #E0E7FF,
-  'primary-150': #C7D2FE,
-  'primary-200': #A5B4FC,
-  'primary-250': #818CF8,
-  'primary-300': #6366F1,
-  'primary-350': #4F46E5,
-  'primary-400': #4338CA,
-  'primary-450': #3730A3,
+  'primary-50':  #F0F1FF,
+  'primary-100': #DDE0FF,
+  'primary-150': #C0C6FF,
+  'primary-200': #9AA5FF,
+  'primary-250': #6674F4,
+  'primary-300': #4455E8,
+  'primary-350': #2D3DC4,
+  'primary-400': #1D2A9F,
+  'primary-450': #0E1870,
 );
 
-// THEME 02 — OCEAN BLUE
+// V02 — MIDNIGHT SAPPHIRE (banking, trust, corporate)
 $color-map-v02: (
-  'primary-50':  #EFF6FF,
-  'primary-100': #DBEAFE,
-  'primary-150': #BFDBFE,
-  'primary-200': #93C5FD,
-  'primary-250': #60A5FA,
-  'primary-300': #3B82F6,
-  'primary-350': #2563EB,
-  'primary-400': #1D4ED8,
-  'primary-450': #1E3A8A,
+  'primary-50':  #EEF4FF,
+  'primary-100': #D6E6FF,
+  'primary-150': #AECEFF,
+  'primary-200': #75ADFF,
+  'primary-250': #3880FF,
+  'primary-300': #1A5EF5,
+  'primary-350': #1046D0,
+  'primary-400': #0B32A0,
+  'primary-450': #06206E,
 );
 
-// THEME 03 — EMERALD
+// V03 — OBSIDIAN TEAL (wealth management, premium)
 $color-map-v03: (
-  'primary-50':  #ECFDF5,
-  'primary-100': #D1FAE5,
-  'primary-150': #A7F3D0,
-  'primary-200': #6EE7B7,
-  'primary-250': #34D399,
-  'primary-300': #10B981,
-  'primary-350': #059669,
-  'primary-400': #047857,
-  'primary-450': #065F46,
+  'primary-50':  #EDFAF6,
+  'primary-100': #C8F1E6,
+  'primary-150': #8EE3CC,
+  'primary-200': #43CBAA,
+  'primary-250': #00AE87,
+  'primary-300': #008E6E,
+  'primary-350': #006E56,
+  'primary-400': #00503F,
+  'primary-450': #003429,
 );
 
-// THEME 04 — VIOLET AI
+// V04 — ELECTRIC VIOLET (crypto, AI, innovation)
 $color-map-v04: (
-  'primary-50':  #F5F3FF,
-  'primary-100': #EDE9FE,
-  'primary-150': #DDD6FE,
-  'primary-200': #C4B5FD,
-  'primary-250': #A78BFA,
-  'primary-300': #8B5CF6,
-  'primary-350': #7C3AED,
-  'primary-400': #6D28D9,
-  'primary-450': #5B21B6,
+  'primary-50':  #F3EEFF,
+  'primary-100': #E3D3FF,
+  'primary-150': #C8AEFF,
+  'primary-200': #A37BFF,
+  'primary-250': #7C45F8,
+  'primary-300': #6127E8,
+  'primary-350': #4A15C4,
+  'primary-400': #330EA0,
+  'primary-450': #1F0870,
 );
 
-// THEME 05 — ROSE PREMIUM
+// V05 — CRIMSON LUXURY (premium cards, private banking)
 $color-map-v05: (
-  'primary-50':  #FFF1F2,
-  'primary-100': #FFE4E6,
-  'primary-150': #FECDD3,
-  'primary-200': #FDA4AF,
-  'primary-250': #FB7185,
-  'primary-300': #F43F5E,
-  'primary-350': #E11D48,
-  'primary-400': #BE123C,
-  'primary-450': #881337,
+  'primary-50':  #FFF0F0,
+  'primary-100': #FFD6D6,
+  'primary-150': #FFB0B0,
+  'primary-200': #FF7A7A,
+  'primary-250': #F04040,
+  'primary-300': #D42020,
+  'primary-350': #A81010,
+  'primary-400': #820808,
+  'primary-450': #570303,
 );
 
-// THEME 06 — ORANGE ENERGY
+// V06 — AMBER PRESTIGE (fintech alerts, premium accents)
 $color-map-v06: (
-  'primary-50':  #FFF7ED,
-  'primary-100': #FFEDD5,
-  'primary-150': #FED7AA,
-  'primary-200': #FDBA74,
-  'primary-250': #FB923C,
-  'primary-300': #F97316,
-  'primary-350': #EA580C,
-  'primary-400': #C2410C,
-  'primary-450': #9A3412,
+  'primary-50':  #FFFAEE,
+  'primary-100': #FFF0C2,
+  'primary-150': #FFE08A,
+  'primary-200': #FFC940,
+  'primary-250': #F5A800,
+  'primary-300': #D48800,
+  'primary-350': #A86800,
+  'primary-400': #7A4C00,
+  'primary-450': #4E3000,
 );
 
-// THEME 07 — CYAN TECH
+// V07 — ARCTIC CYAN (analytics, data visualization)
 $color-map-v07: (
   'primary-50':  #ECFEFF,
-  'primary-100': #CFFAFE,
-  'primary-150': #A5F3FC,
-  'primary-200': #67E8F9,
-  'primary-250': #22D3EE,
-  'primary-300': #06B6D4,
-  'primary-350': #0891B2,
-  'primary-400': #0E7490,
-  'primary-450': #155E75,
+  'primary-100': #CDFAFF,
+  'primary-150': #A0F2FF,
+  'primary-200': #54E2F8,
+  'primary-250': #00C4E8,
+  'primary-300': #009DC0,
+  'primary-350': #007698,
+  'primary-400': #005270,
+  'primary-450': #003148,
 );
 
-// THEME 08 — SLATE MINIMAL
+// V08 — GRAPHITE PREMIUM (neutral UI, enterprise)
 $color-map-v08: (
-  'primary-50':  #F8FAFC,
-  'primary-100': #F1F5F9,
-  'primary-150': #E2E8F0,
-  'primary-200': #CBD5E1,
-  'primary-250': #94A3B8,
-  'primary-300': #64748B,
-  'primary-350': #475569,
-  'primary-400': #334155,
-  'primary-450': #1E293B,
+  'primary-50':  #F7F7F8,
+  'primary-100': #EBEBED,
+  'primary-150': #D4D4D8,
+  'primary-200': #AEAEB4,
+  'primary-250': #7B7B84,
+  'primary-300': #595962,
+  'primary-350': #3E3E46,
+  'primary-400': #28282F,
+  'primary-450': #14141A,
 );
 
-// THEME 09 — PINK GLASS
+// V09 — ROSE QUARTZ (wealth, lifestyle fintech)
 $color-map-v09: (
-  'primary-50':  #FDF2F8,
-  'primary-100': #FCE7F3,
-  'primary-150': #FBCFE8,
-  'primary-200': #F9A8D4,
-  'primary-250': #F472B6,
-  'primary-300': #EC4899,
-  'primary-350': #DB2777,
-  'primary-400': #BE185D,
-  'primary-450': #9D174D,
+  'primary-50':  #FFF0F7,
+  'primary-100': #FFD6EC,
+  'primary-150': #FFB0D8,
+  'primary-200': #FF7AB8,
+  'primary-250': #F0408A,
+  'primary-300': #D42070,
+  'primary-350': #A81056,
+  'primary-400': #820840,
+  'primary-450': #57032A,
 );
 
-// THEME 10 — TEAL PREMIUM
+// V10 — EMERALD WEALTH (investment, growth metrics)
 $color-map-v10: (
-  'primary-50':  #F0FDFA,
-  'primary-100': #CCFBF1,
-  'primary-150': #99F6E4,
-  'primary-200': #5EEAD4,
-  'primary-250': #2DD4BF,
-  'primary-300': #14B8A6,
-  'primary-350': #0D9488,
-  'primary-400': #0F766E,
-  'primary-450': #115E59,
+  'primary-50':  #EDFCF4,
+  'primary-100': #C6F5DC,
+  'primary-150': #8DEABB,
+  'primary-200': #42D490,
+  'primary-250': #00BA6E,
+  'primary-300': #009858,
+  'primary-350': #007542,
+  'primary-400': #005430,
+  'primary-450': #00341E,
 );
 
-// THEME 11 — GOLD LUXURY
+// V11 — GOLD RESERVE (private equity, luxury brand)
 $color-map-v11: (
-  'primary-50':  #FEFCE8,
-  'primary-100': #FEF9C3,
-  'primary-150': #FEF08A,
-  'primary-200': #FDE047,
-  'primary-250': #FACC15,
-  'primary-300': #EAB308,
-  'primary-350': #CA8A04,
-  'primary-400': #A16207,
-  'primary-450': #854D0E,
+  'primary-50':  #FFFBEE,
+  'primary-100': #FFF3C2,
+  'primary-150': #FFE480,
+  'primary-200': #FFD030,
+  'primary-250': #E8B800,
+  'primary-300': #C09200,
+  'primary-350': #906C00,
+  'primary-400': #604800,
+  'primary-450': #3A2C00,
 );
 
-// THEME 12 — FOREST
+// V12 — FOREST DIGITAL (ESG, sustainable finance)
 $color-map-v12: (
-  'primary-50':  #F0FDF4,
-  'primary-100': #DCFCE7,
-  'primary-150': #BBF7D0,
-  'primary-200': #86EFAC,
-  'primary-250': #4ADE80,
-  'primary-300': #22C55E,
-  'primary-350': #16A34A,
-  'primary-400': #15803D,
-  'primary-450': #166534,
+  'primary-50':  #F0FBF0,
+  'primary-100': #D4F5D4,
+  'primary-150': #AAEAAA,
+  'primary-200': #6DD66D,
+  'primary-250': #30BE30,
+  'primary-300': #229A22,
+  'primary-350': #167216,
+  'primary-400': #0C4C0C,
+  'primary-450': #062E06,
 );
 
-// THEME 13 — RED MODERN
+// V13 — VERMILLION EDGE (trading, risk, action alerts)
 $color-map-v13: (
-  'primary-50':  #FEF2F2,
-  'primary-100': #FEE2E2,
-  'primary-150': #FECACA,
-  'primary-200': #FCA5A5,
-  'primary-250': #F87171,
-  'primary-300': #EF4444,
-  'primary-350': #DC2626,
-  'primary-400': #B91C1C,
-  'primary-450': #7F1D1D,
+  'primary-50':  #FFF2F0,
+  'primary-100': #FFDAD6,
+  'primary-150': #FFB4AC,
+  'primary-200': #FF7A6C,
+  'primary-250': #F5381E,
+  'primary-300': #D41800,
+  'primary-350': #A80E00,
+  'primary-400': #7C0800,
+  'primary-450': #520400,
 );
 
-// THEME 14 — SKY MODERN
+// V14 — HORIZON SKY (insurance, open banking, clarity)
 $color-map-v14: (
-  'primary-50':  #F0F9FF,
-  'primary-100': #E0F2FE,
-  'primary-150': #BAE6FD,
-  'primary-200': #7DD3FC,
-  'primary-250': #38BDF8,
-  'primary-300': #0EA5E9,
-  'primary-350': #0284C7,
-  'primary-400': #0369A1,
-  'primary-450': #075985,
+  'primary-50':  #EEF9FF,
+  'primary-100': #D2EFFF,
+  'primary-150': #A6DFFF,
+  'primary-200': #60C8FF,
+  'primary-250': #00A8F0,
+  'primary-300': #0086C8,
+  'primary-350': #0062A0,
+  'primary-400': #004478,
+  'primary-450': #002850,
 );
 
-// THEME 15 — NEUTRAL MONO
+// V15 — INK MINIMAL (document tools, neutral SaaS)
 $color-map-v15: (
-  'primary-50':  #FAFAFA,
-  'primary-100': #F4F4F5,
-  'primary-150': #E4E4E7,
-  'primary-200': #D4D4D8,
-  'primary-250': #A1A1AA,
-  'primary-300': #71717A,
-  'primary-350': #52525B,
-  'primary-400': #3F3F46,
-  'primary-450': #27272A,
+  'primary-50':  #F8F8F9,
+  'primary-100': #EDEEF0,
+  'primary-150': #D8DADD,
+  'primary-200': #B4B8BE,
+  'primary-250': #848A94,
+  'primary-300': #606670,
+  'primary-350': #444A52,
+  'primary-400': #2A2F36,
+  'primary-450': #14181F,
 );

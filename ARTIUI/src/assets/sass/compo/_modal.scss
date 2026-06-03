@@ -1,0 +1,94 @@
+// Modal styles
+.au-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(15, 23, 42, 0.52);
+  backdrop-filter: blur(6px);
+  z-index: 1100;
+}
+
+.au-modal {
+  width: min(100%, 36rem);
+  max-height: calc(100vh - 2.5rem);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba($primary-base, 0.18);
+  border-radius: $radius-xl;
+  background: linear-gradient(180deg, $surface 0%, $surface-secondary 100%);
+  box-shadow: $shadow-lg;
+  overflow: hidden;
+  animation: au-modal-in 180ms ease;
+}
+
+.au-modal--small { max-width: 28rem; }
+.au-modal--medium { max-width: 36rem; }
+.au-modal--large { max-width: 48rem; }
+
+.au-modal__header,
+.au-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.au-modal__header {
+  border-bottom: 1px solid rgba($primary-base, 0.12);
+}
+
+.au-modal__footer {
+  border-top: 1px solid rgba($primary-base, 0.12);
+  justify-content: flex-end;
+}
+
+.au-modal__title {
+  margin: 0;
+  color: $text-primary;
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.au-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba($primary-base, 0.18);
+  border-radius: $radius-full;
+  background: $surface;
+  color: $text-secondary;
+  cursor: pointer;
+  transition: background-color $transition-base, color $transition-base, transform $transition-fast;
+}
+
+.au-modal__close:hover {
+  background: rgba($primary-base, 0.08);
+  color: $primary-shade-2;
+  transform: translateY(-1px);
+}
+
+.au-modal__body {
+  padding: 1rem 1.1rem 1.1rem;
+  color: $text-secondary;
+  overflow-y: auto;
+}
+
+.au-modal--closing {
+  animation: au-modal-out 180ms ease forwards;
+}
+
+@keyframes au-modal-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes au-modal-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(6px) scale(0.98); }
+}

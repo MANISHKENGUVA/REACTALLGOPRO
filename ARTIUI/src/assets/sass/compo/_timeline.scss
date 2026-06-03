@@ -4,7 +4,7 @@
   padding-left: 1.75rem;
   margin: 0;
   list-style: none;
-  border-left: 2px solid $primary-tint-3;
+  border-left: 2px solid $neutral-200;
 }
 
 .au-timeline--horizontal {
@@ -43,8 +43,8 @@
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background-color: $primary-base;
-  color: #fff;
+  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-1 100%);
+  color: $text-inverse;
   font-size: 0.85rem;
 }
 
@@ -60,12 +60,12 @@
 .au-timeline__title {
   font-weight: 700;
   margin-bottom: 0.25rem;
-  color: $primary-shade-3;
+  color: $text-primary;
 }
 
 .au-timeline__description,
 .au-timeline__timestamp {
-  color: $primary-shade-2;
+  color: $text-secondary;
   font-size: 0.95rem;
 }
 

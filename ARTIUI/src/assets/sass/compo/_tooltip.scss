@@ -3,10 +3,10 @@
   position: fixed;
   z-index: 1000;
   max-width: 16rem;
-  padding: 0.55rem 0.85rem;
-  background-color: $primary-base;
-  color: #ffffff;
-  border-radius: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background: linear-gradient(135deg, $primary-shade-2 0%, $primary-base 100%);
+  color: $text-inverse;
+  border-radius: $radius-md;
   font-size: 0.85rem;
   line-height: 1.25;
   text-align: center;
@@ -35,6 +35,7 @@
   width: 0.6rem;
   height: 0.6rem;
   background-color: inherit;
+  box-shadow: inset -1px -1px 0 rgba($primary-shade-4, 0.12);
   transform: rotate(45deg);
 }
 

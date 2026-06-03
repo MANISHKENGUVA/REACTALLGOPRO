@@ -26,14 +26,15 @@
   height: 2.25rem;
   border-radius: 50%;
   border: 2px solid $primary-tint-3;
-  background-color: #fff;
+  background: linear-gradient(180deg, $surface 0%, $surface-secondary 100%);
   color: $primary-base;
   font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba($primary-base, 0.08);
 }
 
 .au-stepper__step--completed .au-stepper__indicator {
-  background-color: $primary-base;
-  color: #fff;
+  background: linear-gradient(135deg, $primary-base 0%, $primary-shade-1 100%);
+  color: $text-inverse;
   border-color: $primary-base;
 }
 
@@ -63,7 +64,7 @@
   left: 2.625rem;
   height: 2px;
   width: calc(100% - 2.625rem);
-  background-color: $primary-tint-2;
+  background: linear-gradient(90deg, $primary-tint-2 0%, rgba($primary-base, 0.35) 100%);
   z-index: -1;
 }
 

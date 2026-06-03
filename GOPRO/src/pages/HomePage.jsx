@@ -17,13 +17,22 @@ export default function HomePage() {
               Fast, easy, and transparent loan processing
             </p>
             
-            <AUBUTTON 
-              variant="primary" 
-              onClick={() => navigate('/loan-flow/personal-info')}
-              style={{ padding: '12px 30px', fontSize: '16px' }}
-            >
-              Start Loan Application
-            </AUBUTTON>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <AUBUTTON 
+                variant="primary" 
+                onClick={() => navigate('/loan-flow/personal-info')}
+                style={{ padding: '12px 30px', fontSize: '16px' }}
+              >
+                Start Loan Application
+              </AUBUTTON>
+              <AUBUTTON 
+                variant="outline" 
+                onClick={() => navigate('/display-all-components-with-all-possible-props-and-combinations')}
+                style={{ padding: '12px 30px', fontSize: '16px' }}
+              >
+                Open Components Playground
+              </AUBUTTON>
+            </div>
           </div>
         </AUCARD>
 
