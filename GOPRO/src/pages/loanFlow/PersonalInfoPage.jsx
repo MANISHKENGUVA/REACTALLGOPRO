@@ -1,24 +1,89 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUTEXTAREA, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
+
 
 export default function PersonalInfoPage() {
   const navigate = useNavigate();
-  const { loanApplicationData, updatePersonalDetails } = useLoanContext();
-  const [formData, setFormData] = useState(loanApplicationData.personalDetails);
+  const location = useLocation();
+  const metaData = location.state;
+  console.log('Route Meta Data received in Node Page:', metaData);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    fathersName: '',
+    mothersName: '',
+    dateOfBirth: '',
+    gender: '',
+    maritalStatus: '',
+    email: '',
+    mobileNumber: '',
+    panNumber: '',
+    aadhaarNumber: '',
+    employmentType: '',
+    monthlyIncome: '',
+    loanPurpose: ''
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = () => {
-    if (validateForm()) {
-      updatePersonalDetails(formData);
-      navigate('/loan-flow/address-info');
-    } else {
+  const handleNext = async () => {
+    if (!validateForm()) {
       alert('Please fill all required fields');
+      return;
+    }
+
+    try {
+      console.log('Form data submitted:', formData);
+      const data = {
+        
+        currentStepEVENT:"PERSONAL_INFO_COMPLETED",
+        metaData:{
+          ...metaData,
+          
+        },
+        data:{
+          PERSONALDETAILS:{
+            fullName:formData.fullName,
+            fathersName:formData.fathersName,
+            mothersName:formData.mothersName,
+            dateOfBirth:formData.dateOfBirth,
+            gender:formData.gender,
+            maritalStatus:formData.maritalStatus,
+            email:formData.email,
+            mobileNumber:formData.mobileNumber,
+            panNumber:formData.panNumber,
+            aadhaarNumber:formData.aadhaarNumber,
+            employmentType:formData.employmentType,
+            monthlyIncome:formData.monthlyIncome,
+            loanPurpose:formData.loanPurpose
+          }
+        }
+       
+      }
+
+
+     
+
+      const engineResponse = await fetch('http://localhost:5000/api/engine/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!engineResponse.ok) {
+        throw new Error(`Engine request failed with status ${engineResponse.status}`);
+      }
+
+      const payLoad = await engineResponse.json();
+      console.log('payLoad from backend', payLoad);
+    } catch (error) {
+      console.error('Failed to submit personal information:', error);
+      alert('Unable to continue right now. Please try again.');
     }
   };
 
@@ -31,7 +96,7 @@ export default function PersonalInfoPage() {
     <AUCARD className="loan-flow-card">
       <h2>Personal Information</h2>
       <p style={{ color: '#666', marginBottom: '20px' }}>State: BORROWER-DETAILS-V1-PERSONAL-INFO-V1</p>
-
+     <pre>{JSON.stringify(metaData, null, 2)}</pre>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <AUINPUT
           type="text"

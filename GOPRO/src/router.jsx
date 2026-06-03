@@ -1,4 +1,43 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { useEffect } from 'react';
+import { createBrowserRouter, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { runWFEngine } from './global.js';
+
+export function findPathByName(routesArray, name, basePath = '') {
+  for (const route of routesArray) {
+    const currentPath = route.path ? `${basePath}/${route.path}`.replace(/\/+/g, '/') : basePath;
+    if (route.name === name) {
+      return currentPath;
+    }
+    if (route.children) {
+      const childPath = findPathByName(route.children, name, currentPath);
+      if (childPath) return childPath;
+    }
+  }
+  return null;
+}
+
+function RootWatcher() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const initEngine = async () => {
+      const payLoad = await runWFEngine();
+      console.log('payLoad', payLoad);
+      
+      if (payLoad) {
+        const firstNode = payLoad?.StageNode;
+        console.log('firstNode', firstNode);
+        
+        const resolvedPath = findPathByName(appRoutes, firstNode);
+        if (resolvedPath && location.pathname !== resolvedPath) {
+          navigate(resolvedPath, { state: payLoad });
+        }
+      }
+    };
+    initEngine();
+  }, [location]);
+  return <Outlet />;
+}
 
 // Layouts
 import LoanFlowLayout from './layouts/LoanFlowLayout';
@@ -27,20 +66,21 @@ import CoBorrowerKYCPage from './pages/loanFlow/CoBorrowerKYCPage';
 import GuarantorKYCPage from './pages/loanFlow/GuarantorKYCPage';
 import HomePage from './pages/HomePage';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/loan-flow',
-    element: <LoanFlowLayout />,
-    children: [
+export const appRoutes = [
+      {
+        path: '/',
+        element: <HomePage />,
+      },
+      {
+        path: '/loan-flow',
+        element: <LoanFlowLayout />,
+        children: [
       // ==========================================
       // 1. BORROWER-DETAILS-V1-PERSONAL-INFO-V1
       // ==========================================
       {
         path: 'personal-info',
+        name: 'PERSONAL-INFO',
         element: <PersonalInfoPage />,
       },
 
@@ -205,6 +245,13 @@ const router = createBrowserRouter([
       },
     ],
   },
+];
+
+const router = createBrowserRouter([
+  {
+    element: <RootWatcher />,
+    children: appRoutes
+  }
 ]);
 
 export default router;
