@@ -5,8 +5,7 @@ import { LoanProvider } from './context/LoanContext';
 
 export default function App() {
   return (
-    <LoanProvider>
+    
       <RouterProvider router={router} />
-    </LoanProvider>
   );
 }

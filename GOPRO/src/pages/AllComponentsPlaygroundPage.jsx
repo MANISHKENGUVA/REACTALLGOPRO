@@ -26,6 +26,7 @@ import {
   AUTIMELINE,
   AULISTGROUP
 } from "artiqui/dist/router-engine.es.js";
+import { PLAYGROUND_SNIPPETS } from "./playgroundSnippets.js";
 
 // Helper components for the playground page layout
 function PlaygroundSection({ id, title, description, children }) {
@@ -67,7 +68,89 @@ function PlaygroundSection({ id, title, description, children }) {
   );
 }
 
-function PropCombination({ props, children }) {
+function CopyPasteCode({ code, label }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = code;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <div style={{ position: "relative" }}>
+      {label && (
+        <div
+          style={{
+            fontSize: "0.7rem",
+            fontFamily: "Inter, sans-serif",
+            color: "#606670",
+            marginBottom: "0.35rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+          }}
+        >
+          {label}
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={handleCopy}
+        style={{
+          position: "absolute",
+          top: "0.5rem",
+          right: "0.5rem",
+          fontSize: "0.7rem",
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 600,
+          color: copied ? "#1b7a3a" : "#6750a4",
+          background: "#ffffff",
+          border: "1px solid rgba(103, 80, 164, 0.25)",
+          borderRadius: "6px",
+          padding: "0.25rem 0.55rem",
+          cursor: "pointer",
+          zIndex: 1,
+        }}
+      >
+        {copied ? "Copied!" : "Copy"}
+      </button>
+      <pre
+        style={{
+          margin: 0,
+          fontSize: "0.72rem",
+          lineHeight: 1.5,
+          fontFamily: "'Courier New', Courier, monospace",
+          color: "#3d3a42",
+          background: "rgba(103, 80, 164, 0.05)",
+          padding: "0.65rem 4.5rem 0.65rem 0.75rem",
+          borderRadius: "6px",
+          overflowX: "auto",
+          whiteSpace: "pre",
+          border: "1px solid rgba(103, 80, 164, 0.1)",
+        }}
+      >
+        <code>{code}</code>
+      </pre>
+    </div>
+  );
+}
+
+function PropCombination({ snippet, props, code, children }) {
+  const usageCode = code ?? (snippet ? PLAYGROUND_SNIPPETS[snippet] : null);
+
   return (
     <div
       style={{
@@ -86,19 +169,23 @@ function PropCombination({ props, children }) {
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flex: 1, minHeight: "80px" }}>
         {children}
       </div>
-      <div
-        style={{
-          fontSize: "0.75rem",
-          fontFamily: "'Courier New', Courier, monospace",
-          color: "#6750a4",
-          background: "rgba(103, 80, 164, 0.05)",
-          padding: "0.4rem 0.6rem",
-          borderRadius: "6px",
-          wordBreak: "break-all"
-        }}
-      >
-        {props}
-      </div>
+      {usageCode ? (
+        <CopyPasteCode code={usageCode} label="Usage code" />
+      ) : (
+        <div
+          style={{
+            fontSize: "0.75rem",
+            fontFamily: "'Courier New', Courier, monospace",
+            color: "#6750a4",
+            background: "rgba(103, 80, 164, 0.05)",
+            padding: "0.4rem 0.6rem",
+            borderRadius: "6px",
+            wordBreak: "break-all"
+          }}
+        >
+          {props}
+        </div>
+      )}
     </div>
   );
 }
@@ -334,40 +421,40 @@ export default function AllComponentsPlaygroundPage() {
           description="Standard interaction points with multiple fills, icons, disabled and processing status variants."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='variant="primary"'>
+            <PropCombination snippet="aubutton_primary" props='variant="primary"'>
               <AUBUTTON variant="primary">Primary Action</AUBUTTON>
             </PropCombination>
-            <PropCombination props='variant="secondary"'>
+            <PropCombination snippet="aubutton_secondary" props='variant="secondary"'>
               <AUBUTTON variant="secondary">Secondary Action</AUBUTTON>
             </PropCombination>
-            <PropCombination props='variant="outline"'>
+            <PropCombination snippet="aubutton_outline" props='variant="outline"'>
               <AUBUTTON variant="outline">Outline Action</AUBUTTON>
             </PropCombination>
-            <PropCombination props='variant="ghost"'>
+            <PropCombination snippet="aubutton_ghost" props='variant="ghost"'>
               <AUBUTTON variant="ghost">Ghost Button</AUBUTTON>
             </PropCombination>
-            <PropCombination props='variant="danger"'>
+            <PropCombination snippet="aubutton_danger" props='variant="danger"'>
               <AUBUTTON variant="danger">Destructive Action</AUBUTTON>
             </PropCombination>
-            <PropCombination props='variant="gradient"'>
+            <PropCombination snippet="aubutton_gradient" props='variant="gradient"'>
               <AUBUTTON variant="gradient">Gradient Action</AUBUTTON>
             </PropCombination>
-            <PropCombination props='variant="link"'>
+            <PropCombination snippet="aubutton_link" props='variant="link"'>
               <AUBUTTON variant="link">Hyperlink Button</AUBUTTON>
             </PropCombination>
-            <PropCombination props='rounded={true} variant="primary"'>
+            <PropCombination snippet="aubutton_rounded" props='rounded={true} variant="primary"'>
               <AUBUTTON variant="primary" rounded>Rounded Button</AUBUTTON>
             </PropCombination>
-            <PropCombination props='loading={true} variant="primary"'>
+            <PropCombination snippet="aubutton_loading" props='loading={true} variant="primary"'>
               <AUBUTTON variant="primary" loading>Processing...</AUBUTTON>
             </PropCombination>
-            <PropCombination props='disabled={true} variant="primary"'>
+            <PropCombination snippet="aubutton_disabled" props='disabled={true} variant="primary"'>
               <AUBUTTON variant="primary" disabled>Unavailable</AUBUTTON>
             </PropCombination>
-            <PropCombination props='leftIcon="⭐" variant="outline"'>
+            <PropCombination snippet="aubutton_leftIcon" props='leftIcon="⭐" variant="outline"'>
               <AUBUTTON variant="outline" leftIcon="⭐">Starred Action</AUBUTTON>
             </PropCombination>
-            <PropCombination props='rightIcon="→" variant="primary"'>
+            <PropCombination snippet="aubutton_rightIcon" props='rightIcon="→" variant="primary"'>
               <AUBUTTON variant="primary" rightIcon="→">Continue</AUBUTTON>
             </PropCombination>
           </div>
@@ -382,25 +469,25 @@ export default function AllComponentsPlaygroundPage() {
           description="Categorization, status flags, filter items, and selection indicators."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='variant="default"'>
+            <PropCombination snippet="auchip_default" props='variant="default"'>
               <AUCHIP>Default tag</AUCHIP>
             </PropCombination>
-            <PropCombination props='variant="success"'>
+            <PropCombination snippet="auchip_success" props='variant="success"'>
               <AUCHIP variant="success">Completed</AUCHIP>
             </PropCombination>
-            <PropCombination props='variant="warning"'>
+            <PropCombination snippet="auchip_warning" props='variant="warning"'>
               <AUCHIP variant="warning">In Review</AUCHIP>
             </PropCombination>
-            <PropCombination props='variant="danger"'>
+            <PropCombination snippet="auchip_danger" props='variant="danger"'>
               <AUCHIP variant="danger">Rejected</AUCHIP>
             </PropCombination>
-            <PropCombination props='closable={true} onClose={() => {}}'>
+            <PropCombination snippet="auchip_closable" props='closable={true} onClose={() => {}}'>
               <AUCHIP closable onClose={() => alert("Chip dismissed")}>Dismissible</AUCHIP>
             </PropCombination>
-            <PropCombination props='selectable={true} selected={true}'>
+            <PropCombination snippet="auchip_selectable_selected" props='selectable={true} selected={true}'>
               <AUCHIP selectable selected>Active state</AUCHIP>
             </PropCombination>
-            <PropCombination props='selectable={true} selected={false}'>
+            <PropCombination snippet="auchip_selectable_unselected" props='selectable={true} selected={false}'>
               <AUCHIP selectable selected={false}>Inactive state</AUCHIP>
             </PropCombination>
           </div>
@@ -415,7 +502,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Standard panels styled for content grouping, visual alignment, headers, and footer items."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }}>
-            <PropCombination props='title="Static Header" description="Basic description subtitle"'>
+            <PropCombination snippet="aucard_basic" props='title="Static Header" description="Basic description subtitle"'>
               <div style={{ width: "100%" }}>
                 <AUCARD title="Visual Analytics Panel" description="Overview of neural execution mesh metrics">
                   <p style={{ margin: 0, fontSize: "0.95rem", color: "#606670" }}>
@@ -424,7 +511,7 @@ export default function AllComponentsPlaygroundPage() {
                 </AUCARD>
               </div>
             </PropCombination>
-            <PropCombination props='footer={<AUBUTTON variant="link">Action</AUBUTTON>}'>
+            <PropCombination snippet="aucard_footer" props='footer={<AUBUTTON variant="link">Action</AUBUTTON>}'>
               <div style={{ width: "100%" }}>
                 <AUCARD
                   title="System Update"
@@ -454,37 +541,37 @@ export default function AllComponentsPlaygroundPage() {
           description="Flexible entries for emails, passwords, numeric checks, validation warnings, and inline clear icons."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='placeholder="Name"'>
+            <PropCombination snippet="auinput_placeholder" props='placeholder="Name"'>
               <div style={{ width: "100%" }}>
                 <AUINPUT placeholder="John Doe" />
               </div>
             </PropCombination>
-            <PropCombination props='label="Floating label"'>
+            <PropCombination snippet="auinput_label" props='label="Floating label"'>
               <div style={{ width: "100%" }}>
                 <AUINPUT id="input-float" label="Full Name" />
               </div>
             </PropCombination>
-            <PropCombination props='type="email" prefixIcon="✉️"'>
+            <PropCombination snippet="auinput_email" props='type="email" prefixIcon="✉️"'>
               <div style={{ width: "100%" }}>
                 <AUINPUT type="email" id="input-email" label="Email Address" defaultValue="manish@gmail.com" prefixIcon="✉️" />
               </div>
             </PropCombination>
-            <PropCombination props='type="password" showPasswordToggle={true} clearable={true}'>
+            <PropCombination snippet="auinput_password" props='type="password" showPasswordToggle={true} clearable={true}'>
               <div style={{ width: "100%" }}>
                 <AUINPUT type="password" id="input-pass" label="Security Key" showPasswordToggle clearable defaultValue="pass123" prefixIcon="🔐" />
               </div>
             </PropCombination>
-            <PropCombination props='disabled={true} prefixIcon="👤"'>
+            <PropCombination snippet="auinput_disabled" props='disabled={true} prefixIcon="👤"'>
               <div style={{ width: "100%" }}>
                 <AUINPUT id="input-dis" label="Username" defaultValue="manish37" disabled prefixIcon="👤" />
               </div>
             </PropCombination>
-            <PropCombination props='error="Message error" prefixIcon="💳"'>
+            <PropCombination snippet="auinput_error" props='error="Message error" prefixIcon="💳"'>
               <div style={{ width: "100%" }}>
                 <AUINPUT id="input-err" label="PAN Identifier" defaultValue="ABC" error="Invalid PAN code pattern" prefixIcon="💳" />
               </div>
             </PropCombination>
-            <PropCombination props='helperText="Helper message" prefixIcon="📞"'>
+            <PropCombination snippet="auinput_helper" props='helperText="Helper message" prefixIcon="📞"'>
               <div style={{ width: "100%" }}>
                 <AUINPUT id="input-help" label="Contact Mobile" placeholder="10-digit number" helperText="Exclude country code prefix (+91)" prefixIcon="📞" />
               </div>
@@ -501,12 +588,12 @@ export default function AllComponentsPlaygroundPage() {
           description="Enlarged entry boxes with auto-growing height, text lengths counting, and custom guidelines."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }}>
-            <PropCombination props='label="Bio" placeholder="Vision..."'>
+            <PropCombination snippet="autextarea_basic" props='label="Bio" placeholder="Vision..."'>
               <div style={{ width: "100%" }}>
                 <AUTEXTAREA id="text-std" label="Project Brief" placeholder="Describe your vision here..." />
               </div>
             </PropCombination>
-            <PropCombination props='maxLength={200} charCount={true}'>
+            <PropCombination snippet="autextarea_charCount" props='maxLength={200} charCount={true}'>
               <div style={{ width: "100%" }}>
                 <AUTEXTAREA
                   id="text-count"
@@ -518,7 +605,7 @@ export default function AllComponentsPlaygroundPage() {
                 />
               </div>
             </PropCombination>
-            <PropCombination props='error="Remarks error"'>
+            <PropCombination snippet="autextarea_error" props='error="Remarks error"'>
               <div style={{ width: "100%" }}>
                 <AUTEXTAREA id="text-err" label="Additional Comments" defaultValue="Short" error="Remarks must contain at least 20 characters." />
               </div>
@@ -535,7 +622,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Selections for single choices, multi-item checkbox filters, input searching, and loading arrays."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='singleSelect'>
+            <PropCombination snippet="auselect_single" props='singleSelect'>
               <div style={{ width: "100%" }}>
                 <AUSELECT
                   label="Theme Preference"
@@ -549,7 +636,7 @@ export default function AllComponentsPlaygroundPage() {
                 />
               </div>
             </PropCombination>
-            <PropCombination props='searchable={true}'>
+            <PropCombination snippet="auselect_searchable" props='searchable={true}'>
               <div style={{ width: "100%" }}>
                 <AUSELECT
                   label="Host Region"
@@ -563,7 +650,7 @@ export default function AllComponentsPlaygroundPage() {
                 />
               </div>
             </PropCombination>
-            <PropCombination props='multiple={true} checkbox={true}'>
+            <PropCombination snippet="auselect_multiple" props='multiple={true} checkbox={true}'>
               <div style={{ width: "100%" }}>
                 <AUSELECT
                   label="Required Clearance"
@@ -578,12 +665,12 @@ export default function AllComponentsPlaygroundPage() {
                 />
               </div>
             </PropCombination>
-            <PropCombination props='loading={true}'>
+            <PropCombination snippet="auselect_loading" props='loading={true}'>
               <div style={{ width: "100%" }}>
                 <AUSELECT label="Active Server Node" loading asyncText="Querying live host arrays..." />
               </div>
             </PropCombination>
-            <PropCombination props='error="Unsupported choice"'>
+            <PropCombination snippet="auselect_error" props='error="Unsupported choice"'>
               <div style={{ width: "100%" }}>
                 <AUSELECT
                   label="Operating System"
@@ -604,14 +691,14 @@ export default function AllComponentsPlaygroundPage() {
           description="Clean on/off controls supporting custom text labels and disabled layouts."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='checked={true}'>
+            <PropCombination snippet="autoggle_basic" props='checked={true}'>
               <AUTOGGLE
                 label="Environment Sync"
                 checked={toggleValue}
                 onChange={(e) => setToggleValue(e.target.checked)}
               />
             </PropCombination>
-            <PropCombination props='activeLabel="ONLINE" inactiveLabel="OFFLINE"'>
+            <PropCombination snippet="autoggle_labels" props='activeLabel="ONLINE" inactiveLabel="OFFLINE"'>
               <AUTOGGLE
                 label="Server Flux"
                 checked={toggleValue}
@@ -620,10 +707,10 @@ export default function AllComponentsPlaygroundPage() {
                 inactiveLabel="OFFLINE"
               />
             </PropCombination>
-            <PropCombination props='disabled={true} checked={true}'>
+            <PropCombination snippet="autoggle_disabled_on" props='disabled={true} checked={true}'>
               <AUTOGGLE label="Strict Enforcement" checked={true} disabled />
             </PropCombination>
-            <PropCombination props='disabled={true} checked={false}'>
+            <PropCombination snippet="autoggle_disabled_off" props='disabled={true} checked={false}'>
               <AUTOGGLE label="Volumetric Glow" checked={false} disabled />
             </PropCombination>
           </div>
@@ -638,7 +725,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Continuous slider bar controls supporting value preview tooltips."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='min={0} max={100}'>
+            <PropCombination snippet="aurange_basic" props='min={0} max={100}'>
               <div style={{ width: "100%" }}>
                 <AURANGE
                   label="Audio Master Gain"
@@ -649,7 +736,7 @@ export default function AllComponentsPlaygroundPage() {
                 />
               </div>
             </PropCombination>
-            <PropCombination props='tooltip={true}'>
+            <PropCombination snippet="aurange_tooltip" props='tooltip={true}'>
               <div style={{ width: "100%" }}>
                 <AURANGE
                   label="Luminance Filter"
@@ -661,7 +748,7 @@ export default function AllComponentsPlaygroundPage() {
                 />
               </div>
             </PropCombination>
-            <PropCombination props='disabled={true}'>
+            <PropCombination snippet="aurange_disabled" props='disabled={true}'>
               <div style={{ width: "100%" }}>
                 <AURANGE label="Contrast Threshold" min={0} max={100} value={72} disabled />
               </div>
@@ -678,22 +765,22 @@ export default function AllComponentsPlaygroundPage() {
           description="Calendar and time selection views for dates, datetimes, clock indicators, and date ranges."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='mode="date"'>
+            <PropCombination snippet="audatepicker_date" props='mode="date"'>
               <div style={{ width: "100%" }}>
                 <AUDATEPICKER label="Filing Date" mode="date" />
               </div>
             </PropCombination>
-            <PropCombination props='mode="datetime"'>
+            <PropCombination snippet="audatepicker_datetime" props='mode="datetime"'>
               <div style={{ width: "100%" }}>
                 <AUDATEPICKER label="Scheduled Time" mode="datetime" />
               </div>
             </PropCombination>
-            <PropCombination props='mode="time"'>
+            <PropCombination snippet="audatepicker_time" props='mode="time"'>
               <div style={{ width: "100%" }}>
                 <AUDATEPICKER label="Trigger Alarm" mode="time" />
               </div>
             </PropCombination>
-            <PropCombination props='range={true}'>
+            <PropCombination snippet="audatepicker_range" props='range={true}'>
               <div style={{ width: "100%" }}>
                 <AUDATEPICKER label="Deployment Window" range />
               </div>
@@ -710,20 +797,20 @@ export default function AllComponentsPlaygroundPage() {
           description="Binary checklist options showing checked, unchecked, disabled and indeterminate options."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='checked={true}'>
+            <PropCombination snippet="aucheckbox_checked" props='checked={true}'>
               <AUCHECKBOX
                 label="Include source maps"
                 checked={checkboxValue}
                 onChange={(e) => setCheckboxValue(e.target.checked)}
               />
             </PropCombination>
-            <PropCombination props='indeterminate={true}'>
+            <PropCombination snippet="aucheckbox_indeterminate" props='indeterminate={true}'>
               <AUCHECKBOX label="Parent check selection" indeterminate />
             </PropCombination>
-            <PropCombination props='disabled={true} checked={true}'>
+            <PropCombination snippet="aucheckbox_disabled_on" props='disabled={true} checked={true}'>
               <AUCHECKBOX label="Auto-deploy configuration" checked={true} disabled />
             </PropCombination>
-            <PropCombination props='disabled={true} checked={false}'>
+            <PropCombination snippet="aucheckbox_disabled_off" props='disabled={true} checked={false}'>
               <AUCHECKBOX label="Enforce SSL encryption" checked={false} disabled />
             </PropCombination>
           </div>
@@ -738,7 +825,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Groups of checkboxes arranged horizontally or vertically."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }}>
-            <PropCombination props='layout="horizontal"'>
+            <PropCombination snippet="aucheckboxgroup_horizontal" props='layout="horizontal"'>
               <AUCHECKBOXGROUP
                 label="Selected Server Capabilities"
                 options={[
@@ -761,21 +848,21 @@ export default function AllComponentsPlaygroundPage() {
           description="Single choice selection options representing exclusive states."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='checked={true}'>
+            <PropCombination snippet="auradio_checked" props='checked={true}'>
               <AURADIO
                 label="Classic theme"
                 checked={radioValue === "option1"}
                 onChange={() => setRadioValue("option1")}
               />
             </PropCombination>
-            <PropCombination props='checked={false}'>
+            <PropCombination snippet="auradio_unchecked" props='checked={false}'>
               <AURADIO
                 label="Midnight Obsidian"
                 checked={radioValue === "option2"}
                 onChange={() => setRadioValue("option2")}
               />
             </PropCombination>
-            <PropCombination props='disabled={true} checked={false}'>
+            <PropCombination snippet="auradio_disabled" props='disabled={true} checked={false}'>
               <AURADIO label="Cyberpunk Neon" checked={false} disabled />
             </PropCombination>
           </div>
@@ -790,7 +877,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Arranged list groups of exclusive choice radio items."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }}>
-            <PropCombination props='layout="vertical"'>
+            <PropCombination snippet="auradiogroup_vertical" props='layout="vertical"'>
               <AURADIOGROUP
                 label="Target Deployment Host"
                 options={[
@@ -813,7 +900,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Groups of list items displaying structured data, badges, action links, and selections."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }}>
-            <PropCombination props='selectable={true}'>
+            <PropCombination snippet="aulistgroup_selectable" props='selectable={true}'>
               <div style={{ width: "100%" }}>
                 <AULISTGROUP
                   selectable
@@ -839,7 +926,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Structured context items, dropdown menus, divider lines, and active buttons."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='menu list items'>
+            <PropCombination snippet="aumenu_items" props='menu list items'>
               <div style={{ width: "100%" }}>
                 <AUMENU
                   items={[
@@ -864,7 +951,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Numbered sequence step trackers displaying configuration and verification phases."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }}>
-            <PropCombination props='activeStep={1}'>
+            <PropCombination snippet="austepper_active" props='activeStep={1}'>
               <div style={{ width: "100%" }}>
                 <AUSTEPPER
                   steps={[
@@ -896,7 +983,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Sleek chronologies showing system logs, check steps, and audit alerts."
         >
           <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }}>
-            <PropCombination props='timeline event items'>
+            <PropCombination snippet="autimeline_events" props='timeline event items'>
               <div style={{ width: "100%" }}>
                 <AUTIMELINE
                   items={[
@@ -940,7 +1027,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Numbered list indexes for page increments and table queries."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='currentPage={1} totalPages={5}'>
+            <PropCombination snippet="aupagination_basic" props='currentPage={1} totalPages={5}'>
               <AUPAGINATION
                 currentPage={currentPage}
                 totalPages={5}
@@ -959,7 +1046,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Sleek, blur-backdrop overlays displaying important settings details."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='modalTriggerButton'>
+            <PropCombination snippet="aumodal_trigger" props='modalTriggerButton'>
               <div style={{ width: "100%" }}>
                 <AUBUTTON variant="primary" onClick={() => setModalOpen(true)}>
                   Trigger Modal Box
@@ -994,22 +1081,22 @@ export default function AllComponentsPlaygroundPage() {
           description="Floating alerts displaying warnings, notifications, and operational errors."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='trigger variant success'>
+            <PropCombination snippet="autoast_success" props='trigger variant success'>
               <AUBUTTON variant="secondary" onClick={() => handleTriggerToast("Database syncing complete.", "success")}>
                 Trigger Success
               </AUBUTTON>
             </PropCombination>
-            <PropCombination props='trigger variant warning'>
+            <PropCombination snippet="autoast_warning" props='trigger variant warning'>
               <AUBUTTON variant="secondary" onClick={() => handleTriggerToast("Lume spread limit reaching capacity.", "warning")}>
                 Trigger Warning
               </AUBUTTON>
             </PropCombination>
-            <PropCombination props='trigger variant error'>
+            <PropCombination snippet="autoast_error" props='trigger variant error'>
               <AUBUTTON variant="secondary" onClick={() => handleTriggerToast("Token authorization failure.", "error")}>
                 Trigger Error
               </AUBUTTON>
             </PropCombination>
-            <PropCombination props='trigger variant info'>
+            <PropCombination snippet="autoast_info" props='trigger variant info'>
               <AUBUTTON variant="secondary" onClick={() => handleTriggerToast("New server updates verified.", "info")}>
                 Trigger Info
               </AUBUTTON>
@@ -1026,22 +1113,22 @@ export default function AllComponentsPlaygroundPage() {
           description="Hover popup tooltips displaying details on focus/mouse moves."
         >
           <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-            <PropCombination props='position="top"'>
+            <PropCombination snippet="autooltip_top" props='position="top"'>
               <AUTOOLTIP content="Tooltip top context message" position="top">
                 <AUBUTTON variant="outline">Hover Top</AUBUTTON>
               </AUTOOLTIP>
             </PropCombination>
-            <PropCombination props='position="bottom"'>
+            <PropCombination snippet="autooltip_bottom" props='position="bottom"'>
               <AUTOOLTIP content="Tooltip bottom context message" position="bottom">
                 <AUBUTTON variant="outline">Hover Bottom</AUBUTTON>
               </AUTOOLTIP>
             </PropCombination>
-            <PropCombination props='position="left"'>
+            <PropCombination snippet="autooltip_left" props='position="left"'>
               <AUTOOLTIP content="Tooltip left message" position="left">
                 <AUBUTTON variant="outline">Hover Left</AUBUTTON>
               </AUTOOLTIP>
             </PropCombination>
-            <PropCombination props='position="right"'>
+            <PropCombination snippet="autooltip_right" props='position="right"'>
               <AUTOOLTIP content="Tooltip right message" position="right">
                 <AUBUTTON variant="outline">Hover Right</AUBUTTON>
               </AUTOOLTIP>
@@ -1058,7 +1145,7 @@ export default function AllComponentsPlaygroundPage() {
           description="Interactive detail bubbles holding markdown/HTML text."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='popover Trigger'>
+            <PropCombination snippet="aupopover_basic" props='popover Trigger'>
               <AUPOPOVER content="Obsidian theme integrates deep backdrops with diffuse indigo inner line glows.">
                 <AUBUTTON variant="secondary">Display Specs</AUBUTTON>
               </AUPOPOVER>
@@ -1075,12 +1162,12 @@ export default function AllComponentsPlaygroundPage() {
           description="Linear percentage slots and rotating circular gauges for operation queues."
         >
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
-            <PropCombination props='variant="linear" value={64}'>
+            <PropCombination snippet="auprogress_linear" props='variant="linear" value={64}'>
               <div style={{ width: "100%" }}>
                 <AUPROGRESS variant="linear" value={64} showValue />
               </div>
             </PropCombination>
-            <PropCombination props='variant="circular" value={82}'>
+            <PropCombination snippet="auprogress_circular" props='variant="circular" value={82}'>
               <AUPROGRESS variant="circular" value={82} showValue />
             </PropCombination>
           </div>
