@@ -6,10 +6,15 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-node_modules
 
-
+# Dependencies and build output
+node_modules/
+dist/
+.vite/
+.env
+.env.*
 *.local
+package-lock.json
 
 # Editor directories and files
 .vscode/*

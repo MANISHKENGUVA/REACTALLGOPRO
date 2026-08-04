@@ -8,6 +8,15 @@ node_modules/
 **/dist/
 **/build/
 
+# Project-specific generated artifacts
+GOPRO/node_modules/
+GOPRO/dist/
+GOPRO/.vite/
+GOPRO/.env
+GOPRO/.env.*
+GOPRO/package-lock.json
+GOPRO/*.local
+
 # Environment files
 .env
 .env.local
