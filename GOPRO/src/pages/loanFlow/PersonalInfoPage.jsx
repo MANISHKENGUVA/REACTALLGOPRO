@@ -1,24 +1,81 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUTEXTAREA, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
+ // import { useLoanContext } from '../../context/LoanContext';
 
-export default function PersonalInfoPage() {
+export default function PersonalInfoPage({ metadata }) {
   const navigate = useNavigate();
-  const { loanApplicationData, updatePersonalDetails } = useLoanContext();
+  //const { loanApplicationData, updatePersonalDetails } = useLoanContext();
+  const loanApplicationData = {
+    personalDetails: {
+      fullName: '',
+      fathersName: '',
+      mothersName: '',
+      dateOfBirth: '',
+      gender: '',
+      maritalStatus: '',
+      email: '',
+      mobileNumber: '',
+      panNumber: '',
+      aadhaarNumber: '',
+      employmentType: '',
+      monthlyIncome: '',
+      loanPurpose: '',
+    },
+  };
   const [formData, setFormData] = useState(loanApplicationData.personalDetails);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState:
+        metadata?.componentViewRenderState ,
+      componentKey: metadata?.componentKey ,
+      workflowId: metadata?.workflowId ,
+      workflowActor: metadata?.workflowActor ,
+    };
+  }, [metadata]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = () => {
-    if (validateForm()) {
-      updatePersonalDetails(formData);
-      navigate('/loan-flow/address-info');
-    } else {
+  const handleNext = async () => {
+    if (!validateForm()) {
       alert('Please fill all required fields');
+      return;
+    }
+
+    try {
+      const payload = {
+        eventType: 'PERSONAL_INFO_SUBMITTED',
+        formData,
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute);
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
     }
   };
 
@@ -30,7 +87,10 @@ export default function PersonalInfoPage() {
   return (
     <AUCARD className="loan-flow-card">
       <h2>Personal Information</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: BORROWER-DETAILS-V1-PERSONAL-INFO-V1</p>
+      <p style={{ color: '#666', marginBottom: '4px' }}>State: {workflowMetadata.componentViewRenderState}</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>
+        Metadata: {workflowMetadata.workflowId} | {workflowMetadata.workflowActor} | {workflowMetadata.componentKey}
+      </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <AUINPUT

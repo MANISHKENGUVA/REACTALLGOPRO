@@ -1,7 +1,176 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, redirect } from 'react-router-dom';
 
 // Layouts
 import LoanFlowLayout from './layouts/LoanFlowLayout';
+
+const bootstrapWorkflowRequest = async (requestUrl) => {
+  const url = new URL(requestUrl);
+  const workflowId = url.searchParams.get('WORKFLOW_ID');
+  const workflowActor = url.searchParams.get('WORKFLOW_ACTOR');
+
+  console.info('[workflow-bootstrap] request incoming', {
+    requestUrl,
+    workflowId,
+    workflowActor,
+  });
+
+  if (!workflowId || !workflowActor) {
+    console.warn('[workflow-bootstrap] missing workflow params', {
+      workflowId,
+      workflowActor,
+    });
+    return null;
+  }
+
+  const endpoint = import.meta.env.VITE_WORKFLOW_BOOTSTRAP_URL || 'http://localhost:3000/api/workflow-navigator';
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        WORKFLOW_ID: workflowId,
+        WORKFLOW_ACTOR: workflowActor,
+      }),
+    });
+
+    const payload = await response.json().catch(() => null);
+
+    console.info('[workflow-bootstrap] response received', {
+      status: response.status,
+      ok: response.ok,
+      payload,
+    });
+
+    if (!response.ok) {
+      throw new Error(payload?.message || `Workflow bootstrap failed with status ${response.status}`);
+    }
+
+    console.info('[workflow-bootstrap] success', payload);
+    return payload;
+  } catch (error) {
+    console.error('[workflow-bootstrap] failed', error);
+    return null;
+  }
+};
+
+const COMPONENT_ROUTE_MAP = {
+  'PERSONAL-INFO-V1': '/loan-flow/personal-info',
+  'ADDRESS-INFO-V1': '/loan-flow/address-info',
+  'KYC-UPLOAD-V1': '/loan-flow/kyc-upload',
+  'FACE-VERIFICATION-V1': '/loan-flow/face-verification',
+  'PAN-VERIFICATION-V1': '/loan-flow/pan-verification',
+  'AADHAR-VERIFICATION-V1': '/loan-flow/aadhar-verification',
+  'EMPLOYMENT-INFO-V1': '/loan-flow/employment-info',
+  'SALARY-INFO-V1': '/loan-flow/salary-info',
+  'BUSINESS-INFO-V1': '/loan-flow/business-info',
+  'BANK-DETAILS-V1': '/loan-flow/bank-details',
+  'BANK-STATEMENT-UPLOAD-V1': '/loan-flow/bank-statement-upload',
+  'DOCUMENT-UPLOAD-V1': '/loan-flow/document-upload',
+  'CREDIT-CHECK-V1': '/loan-flow/credit-check',
+  'RISK-ASSESSMENT-V1': '/loan-flow/risk-assessment',
+  'FRAUD-CHECK-V1': '/loan-flow/fraud-check',
+  'CIBIL-CHECK-V1': '/loan-flow/cibil-check',
+  'COBORROWER-KYC-V1': '/loan-flow/coborrower-kyc',
+  'GUARANTOR-KYC-V1': '/loan-flow/guarantor-kyc',
+  'UNDERWRITER-CHECK-V1': '/loan-flow/underwriter-review',
+  'FINAL-APPROVAL-V1': '/loan-flow/manager-approval',
+  'LOAN-DISBURSEMENT-V1': '/loan-flow/disbursement',
+};
+
+const resolveRouteFromComponentView = (componentView) => {
+  if (!componentView) {
+    return null;
+  }
+
+  const componentKey = componentView.componentKey || componentView.componentviewrender?.componentKey;
+  const normalizedComponentKey = String(componentKey || '').toUpperCase();
+
+  if (normalizedComponentKey && COMPONENT_ROUTE_MAP[normalizedComponentKey]) {
+    return COMPONENT_ROUTE_MAP[normalizedComponentKey];
+  }
+
+  const componentState = componentView.componentviewrenderState || componentView.componentState;
+  const normalizedState = String(componentState || '').toUpperCase();
+  const stateKey = normalizedState.split('-').slice(-1)[0];
+
+  if (stateKey && COMPONENT_ROUTE_MAP[stateKey]) {
+    return COMPONENT_ROUTE_MAP[stateKey];
+  }
+
+  return null;
+};
+
+const constructRedirectUrl = (viewResult) => {
+  const payload = viewResult?.data ?? viewResult;
+
+  if (!payload) {
+    console.warn('[workflow-bootstrap] no payload available for redirect resolution');
+    return null;
+  }
+
+  if (payload.redirectUrl) {
+    console.info('[workflow-bootstrap] redirectUrl found', payload.redirectUrl);
+    return payload.redirectUrl;
+  }
+
+  const componentView = payload.componentviewrender || payload;
+  const resolvedRoute = resolveRouteFromComponentView(componentView) || resolveRouteFromComponentView(payload) || null;
+
+  console.info('[workflow-bootstrap] route resolved', {
+    payload,
+    componentView,
+    resolvedRoute,
+  });
+
+  return resolvedRoute;
+};
+
+const appendWorkflowParamsToRedirect = (redirectUrl, requestUrl) => {
+  const sourceUrl = new URL(requestUrl);
+  const workflowId = sourceUrl.searchParams.get('WORKFLOW_ID');
+  const workflowActor = sourceUrl.searchParams.get('WORKFLOW_ACTOR');
+
+  if (!workflowId && !workflowActor) {
+    return redirectUrl;
+  }
+
+  const targetUrl = new URL(redirectUrl, 'http://localhost');
+
+  if (workflowId) {
+    targetUrl.searchParams.set('WORKFLOW_ID', workflowId);
+  }
+
+  if (workflowActor) {
+    targetUrl.searchParams.set('WORKFLOW_ACTOR', workflowActor);
+  }
+
+  return `${targetUrl.pathname}${targetUrl.search}`;
+};
+
+const workflowBootstrapLoader = async ({ request }) => {
+  console.info('[workflow-bootstrap] loader invoked', request.url);
+  const viewResult = await bootstrapWorkflowRequest(request.url);
+
+  if (!viewResult) {
+    console.warn('[workflow-bootstrap] no workflow bootstrap result, defaulting to /');
+    return redirect('/');
+  }
+
+  const redirectUrl = constructRedirectUrl(viewResult);
+
+  if (!redirectUrl) {
+    console.warn('[workflow-bootstrap] route resolution failed, defaulting to /');
+    return redirect('/');
+  }
+
+  const finalRedirectUrl = appendWorkflowParamsToRedirect(redirectUrl, request.url, viewResult);
+
+  console.info('[workflow-bootstrap] loader redirecting to', finalRedirectUrl);
+  return redirect(finalRedirectUrl);
+};
 
 // Pages - Loan Flow
 import PersonalInfoPage from './pages/loanFlow/PersonalInfoPage';
@@ -38,6 +207,10 @@ const router = createBrowserRouter([
     element: <AllComponentsPlaygroundPage />,
   },
   {
+    path: '/workflow-navigator',
+    loader: workflowBootstrapLoader,
+  },
+  {
     path: '/loan-flow',
     element: <LoanFlowLayout />,
     children: [
@@ -46,7 +219,16 @@ const router = createBrowserRouter([
       // ==========================================
       {
         path: 'personal-info',
-        element: <PersonalInfoPage />,
+        element: (
+          <PersonalInfoPage
+            metadata={{
+              workflowId: 'WF-101',
+              workflowActor: 'BORROWER',
+              componentKey: 'PERSONAL-INFO-V1',
+              componentViewRenderState: 'BORROWER-DETAILS-V1-PERSONAL-INFO-V1',
+            }}
+          />
+        ),
       },
 
       // ==========================================

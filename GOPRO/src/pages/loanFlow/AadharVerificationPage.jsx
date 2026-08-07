@@ -5,7 +5,9 @@ import { useLoanContext } from '../../context/LoanContext';
 
 export default function AadharVerificationPage() {
   const navigate = useNavigate();
-  const { updateVerificationStatus } = useLoanContext();
+  const { 
+updateVerificationStatus
+   } = useLoanContext();
   const [progress, setProgress] = useState(0);
   const [verificationComplete, setVerificationComplete] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
@@ -20,7 +22,8 @@ export default function AadharVerificationPage() {
           const isSuccess = true;
           setVerificationResult(isSuccess ? 'success' : 'failed');
           setVerificationComplete(true);
-          updateVerificationStatus({ aadhaarVerification: isSuccess });
+          
+      updateVerificationStatus({ aadhaarVerification: isSuccess });
           return 100;
         }
       });
