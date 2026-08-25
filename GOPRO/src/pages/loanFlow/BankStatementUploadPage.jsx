@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function BankStatementUploadPage() {
   const navigate = useNavigate();
-  const { updateBankDetails } = useLoanContext();
   const [statements, setStatements] = useState([]);
 
   const handleFileChange = (e) => {
@@ -19,7 +17,6 @@ export default function BankStatementUploadPage() {
       return;
     }
 
-    updateBankDetails({ statements });
     navigate('/loan-flow/document-upload');
   };
 

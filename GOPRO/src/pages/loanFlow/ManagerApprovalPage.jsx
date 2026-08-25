@@ -1,13 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUCARD, AULISTGROUP } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function ManagerApprovalPage() {
+export default function ManagerApprovalPage({ metadata }) {
   const navigate = useNavigate();
-  const { loanApplicationData } = useLoanContext();
+  const [searchParams] = useSearchParams();
   const [approvalStatus, setApprovalStatus] = useState('pending');
   const [approvalDecision, setApprovalDecision] = useState(null);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'MANAGER-APPROVAL-V1-FINAL-APPROVAL-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'FINAL-APPROVAL-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     // Simulate manager approval (95% approval)
@@ -20,20 +29,53 @@ export default function ManagerApprovalPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleNext = () => {
-    if (approvalDecision === 'approved') {
-      navigate('/loan-flow/disbursement');
-    } else {
+  const handleNext = async () => {
+    if (approvalDecision !== 'approved') {
       navigate('/');
+      return;
+    }
+
+    try {
+      const payload = {
+        eventType: 'MANAGER_APPROVAL_SUBMITTED',
+        formData: {
+          approvalStatus,
+          approvalDecision,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/disbursement');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
     }
   };
 
   return (
     <AUCARD className="loan-flow-card">
       <h2>Manager Final Approval</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: MANAGER-APPROVAL-V1-FINAL-APPROVAL-V1</p>
+      <p style={{ color: '#666', marginBottom: '4px' }}>State: {workflowMetadata.componentViewRenderState}</p>
       <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
-        Final sanctioning by loan manager...
+        Metadata: {workflowMetadata.workflowId} | {workflowMetadata.workflowActor} | {workflowMetadata.componentKey}
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function BankDetailsPage() {
   const navigate = useNavigate();
-  const { loanApplicationData, updateBankDetails } = useLoanContext();
-  const [formData, setFormData] = useState(loanApplicationData.bankDetails);
+  const [formData, setFormData] = useState({
+    accountNumber: '',
+    ifscCode: '',
+    bankName: '',
+  });
   const [cancelledCheque, setCancelledCheque] = useState(null);
 
   const handleChange = (e) => {
@@ -26,7 +28,6 @@ export default function BankDetailsPage() {
       return;
     }
 
-    updateBankDetails({ ...formData, cancelledCheque });
     navigate('/loan-flow/bank-statement-upload');
   };
 

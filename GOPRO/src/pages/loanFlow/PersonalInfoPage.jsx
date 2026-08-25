@@ -1,12 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AUBUTTON, AUINPUT, AUSELECT, AUTEXTAREA, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AUBUTTON, AUINPUT, AUSELECT, AUTEXTAREA, AUCARD ,AUDATEPICKER } from 'artiqui/dist/router-engine.es.js';
 import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
- // import { useLoanContext } from '../../context/LoanContext';
 
 export default function PersonalInfoPage({ metadata }) {
   const navigate = useNavigate();
-  //const { loanApplicationData, updatePersonalDetails } = useLoanContext();
+  const [searchParams] = useSearchParams();
+
   const loanApplicationData = {
     personalDetails: {
       fullName: '',
@@ -28,13 +28,12 @@ export default function PersonalInfoPage({ metadata }) {
 
   const workflowMetadata = useMemo(() => {
     return {
-      componentViewRenderState:
-        metadata?.componentViewRenderState ,
-      componentKey: metadata?.componentKey ,
-      workflowId: metadata?.workflowId ,
-      workflowActor: metadata?.workflowActor ,
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-DETAILS-V1-PERSONAL-INFO-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'PERSONAL-INFO-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
     };
-  }, [metadata]);
+  }, [metadata, searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -121,14 +120,15 @@ export default function PersonalInfoPage({ metadata }) {
           placeholder="Enter mother's name"
         />
 
-        <AUINPUT
-          type="date"
+        <AUDATEPICKER
           label="Date of Birth"
           name="dateOfBirth"
           value={formData.dateOfBirth}
           onChange={handleChange}
-          required
+          placeholder="Select date of birth"
+          disableFuture={true}
         />
+
 
         <AUSELECT
           label="Gender"

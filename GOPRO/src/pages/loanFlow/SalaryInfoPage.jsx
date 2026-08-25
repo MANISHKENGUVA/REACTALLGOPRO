@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function SalaryInfoPage() {
   const navigate = useNavigate();
-  const { loanApplicationData, updateSalaryDetails } = useLoanContext();
-  const [formData, setFormData] = useState(loanApplicationData.salaryDetails);
+  const [formData, setFormData] = useState({
+    monthlyIncome: '',
+    companyInfo: '',
+    payslips: [],
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +27,6 @@ export default function SalaryInfoPage() {
     }
 
     const income = parseFloat(formData.monthlyIncome);
-    updateSalaryDetails(formData);
 
     if (income >= 50000) {
       navigate('/loan-flow/bank-details');

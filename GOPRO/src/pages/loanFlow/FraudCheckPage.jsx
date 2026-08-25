@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function FraudCheckPage() {
   const navigate = useNavigate();
-  const { updateVerificationStatus } = useLoanContext();
   const [progress, setProgress] = useState(0);
   const [checkComplete, setCheckComplete] = useState(false);
   const [fraudResult, setFraudResult] = useState(null);
@@ -19,14 +17,13 @@ export default function FraudCheckPage() {
           clearInterval(interval);
           setFraudResult('clean');
           setCheckComplete(true);
-          updateVerificationStatus({ fraudCheck: true });
           return 100;
         }
       });
     }, 320);
 
     return () => clearInterval(interval);
-  }, [updateVerificationStatus]);
+  }, []);
 
   const handleNext = () => {
     navigate('/loan-flow/cibil-check');

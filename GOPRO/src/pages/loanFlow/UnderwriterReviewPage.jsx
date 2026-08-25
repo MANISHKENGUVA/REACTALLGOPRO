@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUCARD, AULISTGROUP } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function UnderwriterReviewPage() {
   const navigate = useNavigate();
-  const { loanApplicationData } = useLoanContext();
   const [reviewStatus, setReviewStatus] = useState('reviewing');
   const [reviewDecision, setReviewDecision] = useState(null);
 
@@ -68,7 +66,7 @@ export default function UnderwriterReviewPage() {
               <div style={{ padding: '10px', borderBottom: '1px solid #eee' }}>
                 <p style={{ margin: 0, fontWeight: '500', fontSize: '14px' }}>Loan Amount Recommended</p>
                 <p style={{ margin: '5px 0 0 0', fontSize: '14px', color: '#666' }}>
-                  ₹{loanApplicationData.personalDetails.loanPurpose ? '5,00,000' : '3,00,000'}
+                  ₹5,00,000
                 </p>
               </div>
               <div style={{ padding: '10px', borderBottom: '1px solid #eee' }}>

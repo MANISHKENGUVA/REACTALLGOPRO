@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function BusinessInfoPage() {
   const navigate = useNavigate();
-  const { loanApplicationData, updateBusinessDetails } = useLoanContext();
-  const [formData, setFormData] = useState(loanApplicationData.businessDetails);
+  const [formData, setFormData] = useState({
+    businessName: '',
+    annualRevenue: '',
+    gstNumber: '',
+    itrDocuments: [],
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +33,6 @@ export default function BusinessInfoPage() {
       return;
     }
 
-    updateBusinessDetails(formData);
     navigate('/loan-flow/bank-details');
   };
 

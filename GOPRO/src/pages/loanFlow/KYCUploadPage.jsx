@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function KYCUploadPage() {
+export default function KYCUploadPage({ metadata }) {
   const navigate = useNavigate();
-  const { updateKYCDocuments } = useLoanContext();
+  const [searchParams] = useSearchParams();
+
   const [files, setFiles] = useState({
     aadhaarFront: null,
     aadhaarBack: null,
     panCard: null
   });
   const [uploading, setUploading] = useState(false);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-KYC-V1-KYC-UPLOAD-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'KYC-UPLOAD-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   const handleFileChange = (e) => {
     const { name, files: fileList } = e.target;
@@ -28,11 +38,37 @@ export default function KYCUploadPage() {
 
     setUploading(true);
     try {
-      // Simulate document upload
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      updateKYCDocuments(files);
-      navigate('/loan-flow/face-verification');
+      const payload = {
+        eventType: 'KYC_UPLOAD_SUBMITTED',
+        formData: {
+          aadhaarFront: files.aadhaarFront?.name || null,
+          aadhaarBack: files.aadhaarBack?.name || null,
+          panCard: files.panCard?.name || null,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/face-verification');
     } catch (error) {
+      console.error('Workflow event submission error:', error);
       alert('Error uploading documents: ' + error.message);
     } finally {
       setUploading(false);

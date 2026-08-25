@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function AadharVerificationPage() {
   const navigate = useNavigate();
-  const { 
-updateVerificationStatus
-   } = useLoanContext();
   const [progress, setProgress] = useState(0);
   const [verificationComplete, setVerificationComplete] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
@@ -22,15 +18,13 @@ updateVerificationStatus
           const isSuccess = true;
           setVerificationResult(isSuccess ? 'success' : 'failed');
           setVerificationComplete(true);
-          
-      updateVerificationStatus({ aadhaarVerification: isSuccess });
           return 100;
         }
       });
     }, 350);
 
     return () => clearInterval(interval);
-  }, [updateVerificationStatus]);
+  }, []);
 
   const handleNext = () => {
     if (verificationResult === 'success') {

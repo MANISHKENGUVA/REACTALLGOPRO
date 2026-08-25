@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function RiskAssessmentPage() {
   const navigate = useNavigate();
-  const { updateVerificationStatus } = useLoanContext();
   const [progress, setProgress] = useState(0);
   const [assessmentComplete, setAssessmentComplete] = useState(false);
   const [riskLevel, setRiskLevel] = useState(null);
@@ -25,14 +23,13 @@ export default function RiskAssessmentPage() {
           
           setRiskLevel(level);
           setAssessmentComplete(true);
-          updateVerificationStatus({ riskAssessment: true });
           return 100;
         }
       });
     }, 310);
 
     return () => clearInterval(interval);
-  }, [updateVerificationStatus]);
+  }, []);
 
   const handleNext = () => {
     if (riskLevel === 'LOW') {

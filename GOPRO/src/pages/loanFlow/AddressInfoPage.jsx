@@ -1,12 +1,35 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUCHECKBOX, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function AddressInfoPage() {
+const initialAddressDetails = {
+  flatNo: '',
+  building: '',
+  street: '',
+  landmark: '',
+  city: '',
+  district: '',
+  state: '',
+  pincode: '',
+  residenceType: '',
+  permanentAddressSameAsCurrent: false,
+};
+
+export default function AddressInfoPage({ metadata }) {
   const navigate = useNavigate();
-  const { loanApplicationData, updateAddressDetails } = useLoanContext();
-  const [formData, setFormData] = useState(loanApplicationData.addressDetails);
+  const [searchParams] = useSearchParams();
+
+  const [formData, setFormData] = useState(initialAddressDetails);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-ADDRESS-V1-ADDRESS-INFO-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'ADDRESS-INFO-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -16,12 +39,41 @@ export default function AddressInfoPage() {
     }));
   };
 
-  const handleNext = () => {
-    if (formData.flatNo && formData.city && formData.pincode && formData.state) {
-      updateAddressDetails(formData);
-      navigate('/loan-flow/kyc-upload');
-    } else {
+  const handleNext = async () => {
+    if (!formData.flatNo || !formData.city || !formData.pincode || !formData.state) {
       alert('Please fill all required fields');
+      return;
+    }
+
+    try {
+      const payload = {
+        eventType: 'ADDRESS_INFO_SUBMITTED',
+        formData,
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/kyc-upload');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
     }
   };
 

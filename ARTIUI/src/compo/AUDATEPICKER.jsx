@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
+// ==========================================
+// Constants & Helper Functions
+// ==========================================
 const MODE_TYPE = {
   date: "date",
   datetime: "datetime-local",
@@ -7,19 +10,10 @@ const MODE_TYPE = {
 };
 
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
 const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
 ];
 
 function toDateKey(date) {
@@ -99,10 +93,13 @@ function getRangeLabel(currentValue) {
   if (currentValue.start && currentValue.end) {
     return `${formatDisplay(currentValue.start)} - ${formatDisplay(currentValue.end)}`;
   }
-  if (currentValue.start) return `${formatDisplay(currentValue.start)} - Select end`;
-  return "Select a start and end date";
+  if (currentValue.start) return `${formatDisplay(currentValue.start)} - Select end date`;
+  return "Select start and end dates";
 }
 
+// ==========================================
+// AUDATEPICKER Component
+// ==========================================
 export default function AUDATEPICKER({
   id,
   label,
@@ -125,11 +122,16 @@ export default function AUDATEPICKER({
   name,
   min,
   max,
+  disableFuture = false,
+  disableFutureDates = false,
+  disablePast = false,
+  disablePastDates = false,
   ...rest
 }) {
   const isRange = range || mode === "range";
   const usesCalendar = isRange || mode === "date";
   const isControlled = value !== undefined || startValue !== undefined || endValue !== undefined;
+  
   const wrapperRef = useRef(null);
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [internalStart, setInternalStart] = useState(defaultStartValue);
@@ -146,6 +148,7 @@ export default function AUDATEPICKER({
 
   const [viewDate, setViewDate] = useState(() => getInitialViewDate(isRange, currentValue));
 
+  // Sync controlled props
   useEffect(() => {
     if (isControlled && !isRange && value !== undefined) {
       setInternalValue(value);
@@ -156,23 +159,62 @@ export default function AUDATEPICKER({
     }
   }, [isControlled, isRange, value, startValue, endValue]);
 
+  // Click outside listener
   useEffect(() => {
     function handleDocumentClick(event) {
       if (!wrapperRef.current?.contains(event.target)) {
         setOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleDocumentClick);
     return () => document.removeEventListener("mousedown", handleDocumentClick);
   }, []);
 
-  const minDate = useMemo(() => parseDateKey(min), [min]);
-  const maxDate = useMemo(() => parseDateKey(max), [max]);
+  // Compute effective min & max limits
+  const shouldDisableFuture = disableFuture || disableFutureDates;
+  const shouldDisablePast = disablePast || disablePastDates;
+
+  const effectiveMax = useMemo(() => {
+    if (shouldDisableFuture) {
+      const todayKey = toDateKey(new Date());
+      if (!max) return todayKey;
+      return max < todayKey ? max : todayKey;
+    }
+    return max;
+  }, [shouldDisableFuture, max]);
+
+  const effectiveMin = useMemo(() => {
+    if (shouldDisablePast) {
+      const todayKey = toDateKey(new Date());
+      if (!min) return todayKey;
+      return min > todayKey ? min : todayKey;
+    }
+    return min;
+  }, [shouldDisablePast, min]);
+
+  const minDate = useMemo(() => parseDateKey(effectiveMin), [effectiveMin]);
+  const maxDate = useMemo(() => parseDateKey(effectiveMax), [effectiveMax]);
+  
   const calendarDays = useMemo(() => getCalendarDays(viewDate), [viewDate]);
+
   const selectedDate = isRange ? null : parseDateKey(currentValue);
   const selectedStart = isRange ? parseDateKey(currentValue.start) : null;
   const selectedEnd = isRange ? parseDateKey(currentValue.end) : null;
+
+  const minYearProp = rest.minYear;
+  const maxYearProp = rest.maxYear;
+
+  const yearsList = useMemo(() => {
+    const currentYr = new Date().getFullYear();
+    const startYr = minDate ? minDate.getFullYear() : (minYearProp || 1920);
+    const endYr = maxDate ? maxDate.getFullYear() : (maxYearProp || currentYr + 10);
+    
+    const list = [];
+    for (let y = endYr; y >= startYr; y--) {
+      list.push(y);
+    }
+    return list;
+  }, [minDate, maxDate, minYearProp, maxYearProp]);
 
   function isDateDisabled(date) {
     if (minDate && date < minDate) return true;
@@ -259,9 +301,7 @@ export default function AUDATEPICKER({
     error && "au-datepicker--error",
     disabled && "au-datepicker--disabled",
     className
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].filter(Boolean).join(" ");
 
   const describedBy = id ? (error ? `${id}-error` : helperText ? `${id}-helper` : undefined) : undefined;
   const inputType = MODE_TYPE[mode] || "date";
@@ -272,11 +312,11 @@ export default function AUDATEPICKER({
 
   return (
     <div className={wrapperClasses} ref={wrapperRef}>
-      {label ? (
+      {label && (
         <label className="au-datepicker__label" htmlFor={id}>
           {label}
         </label>
-      ) : null}
+      )}
 
       {usesCalendar ? (
         <>
@@ -290,7 +330,7 @@ export default function AUDATEPICKER({
             aria-expanded={open}
             onClick={() => {
               setViewDate(getInitialViewDate(isRange, currentValue));
-              setOpen((next) => !next);
+              setOpen((prev) => !prev);
             }}
             {...rest}
           >
@@ -298,7 +338,7 @@ export default function AUDATEPICKER({
               {displayText || (isRange ? `${startPlaceholder} - ${endPlaceholder}` : placeholder)}
             </span>
             <span className="au-datepicker__icon" aria-hidden="true">
-              <span />
+              📅
             </span>
           </button>
 
@@ -311,14 +351,14 @@ export default function AUDATEPICKER({
             <input type="hidden" name={name} value={currentValue} readOnly />
           )}
 
-          {open ? (
+          {open && (
             <div className="au-datepicker__panel" role="dialog" aria-label={label || "Choose date"}>
               <div className="au-datepicker__panel-hero">
-                <span>{isRange ? "Date range" : "Calendar date"}</span>
+                <span>{isRange ? "Date Range" : "Calendar Date"}</span>
                 <strong>{panelTitle}</strong>
               </div>
 
-              {isRange ? (
+              {isRange && (
                 <div className="au-datepicker__range-preview">
                   <button
                     type="button"
@@ -337,18 +377,132 @@ export default function AUDATEPICKER({
                     <strong>{formatDisplay(currentValue.end) || endPlaceholder}</strong>
                   </button>
                 </div>
-              ) : null}
+              )}
 
-              <div className="au-datepicker__panel-header">
-                <button className="au-datepicker__nav-button" type="button" onClick={() => setViewDate((date) => addMonths(date, -1))} aria-label="Previous month">
-                  &lt;
+              <div className="au-datepicker__panel-header" style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '8px 10px',
+                borderBottom: '1px solid #f1f5f9',
+                marginBottom: '10px'
+              }}>
+                <button
+                  type="button"
+                  className="au-datepicker__nav-button"
+                  onClick={() => setViewDate((date) => addMonths(date, -1))}
+                  aria-label="Previous month"
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    border: '1px solid #e2e8f0',
+                    background: '#ffffff',
+                    color: '#475569',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
                 </button>
-                <div className="au-datepicker__month-title">
-                  <strong>{MONTHS[viewDate.getMonth()]}</strong>
-                  <span>{viewDate.getFullYear()}</span>
+
+                <div className="au-datepicker__month-title" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <select
+                    className="au-datepicker__month-select"
+                    value={viewDate.getMonth()}
+                    onChange={(e) => {
+                      const newMonth = Number(e.target.value);
+                      setViewDate(new Date(viewDate.getFullYear(), newMonth, 1));
+                    }}
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      backgroundColor: '#f8fafc',
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 8px center',
+                      padding: '6px 26px 6px 12px',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '6px',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      color: '#1e293b',
+                      cursor: 'pointer',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                      outline: 'none',
+                    }}
+                  >
+                    {MONTHS.map((monthName, idx) => (
+                      <option key={monthName} value={idx}>
+                        {monthName}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    className="au-datepicker__year-select"
+                    value={viewDate.getFullYear()}
+                    onChange={(e) => {
+                      const newYear = Number(e.target.value);
+                      setViewDate(new Date(newYear, viewDate.getMonth(), 1));
+                    }}
+                    style={{
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      backgroundColor: '#f8fafc',
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 8px center',
+                      padding: '6px 26px 6px 12px',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '6px',
+                      fontSize: '13px',
+                      fontWeight: '600',
+                      color: '#1e293b',
+                      cursor: 'pointer',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                      outline: 'none',
+                    }}
+                  >
+                    {yearsList.map((yearNum) => (
+                      <option key={yearNum} value={yearNum}>
+                        {yearNum}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <button className="au-datepicker__nav-button" type="button" onClick={() => setViewDate((date) => addMonths(date, 1))} aria-label="Next month">
-                  &gt;
+
+                <button
+                  type="button"
+                  className="au-datepicker__nav-button"
+                  onClick={() => setViewDate((date) => addMonths(date, 1))}
+                  aria-label="Next month"
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    border: '1px solid #e2e8f0',
+                    background: '#ffffff',
+                    color: '#475569',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
                 </button>
               </div>
 
@@ -401,8 +555,18 @@ export default function AUDATEPICKER({
                 ) : (
                   <>
                     <button type="button" onClick={() => handleSinglePreset(0)}>Today</button>
-                    <button type="button" onClick={() => handleSinglePreset(1)}>Tomorrow</button>
-                    <button type="button" onClick={() => handleSinglePreset(7)}>Next week</button>
+                    {!shouldDisableFuture && (
+                      <>
+                        <button type="button" onClick={() => handleSinglePreset(1)}>Tomorrow</button>
+                        <button type="button" onClick={() => handleSinglePreset(7)}>Next week</button>
+                      </>
+                    )}
+                    {shouldDisableFuture && (
+                      <>
+                        <button type="button" onClick={() => handleSinglePreset(-1)}>Yesterday</button>
+                        <button type="button" onClick={() => handleSinglePreset(-7)}>Last week</button>
+                      </>
+                    )}
                   </>
                 )}
               </div>
@@ -427,7 +591,7 @@ export default function AUDATEPICKER({
                 </button>
               </div>
             </div>
-          ) : null}
+          )}
         </>
       ) : (
         <div className="au-datepicker__native-wrap">
@@ -439,30 +603,30 @@ export default function AUDATEPICKER({
             onChange={handleSingleNativeChange}
             placeholder={placeholder}
             disabled={disabled}
-            min={min}
-            max={max}
+            min={effectiveMin}
+            max={effectiveMax}
             className="au-datepicker__control"
             aria-invalid={error ? "true" : "false"}
             aria-describedby={describedBy}
             {...rest}
           />
           <span className="au-datepicker__icon" aria-hidden="true">
-            <span />
+            📅
           </span>
         </div>
       )}
 
       <div className="au-datepicker__meta">
-        {helperText && !error ? (
+        {helperText && !error && (
           <div id={id ? `${id}-helper` : undefined} className="au-datepicker__helper">
             {helperText}
           </div>
-        ) : null}
-        {error ? (
+        )}
+        {error && (
           <div id={id ? `${id}-error` : undefined} className="au-datepicker__error">
             {error}
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

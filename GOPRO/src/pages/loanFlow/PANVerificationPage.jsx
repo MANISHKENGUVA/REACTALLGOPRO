@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function PANVerificationPage() {
   const navigate = useNavigate();
-  const { loanApplicationData, updateVerificationStatus } = useLoanContext();
   const [progress, setProgress] = useState(0);
   const [verificationComplete, setVerificationComplete] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
@@ -21,14 +19,13 @@ export default function PANVerificationPage() {
           const isSuccess = true; // Assuming PAN is valid
           setVerificationResult(isSuccess ? 'success' : 'failed');
           setVerificationComplete(true);
-          updateVerificationStatus({ panVerification: isSuccess });
           return 100;
         }
       });
     }, 300);
 
     return () => clearInterval(interval);
-  }, [updateVerificationStatus]);
+  }, []);
 
   const handleNext = () => {
     if (verificationResult === 'success') {
@@ -55,10 +52,10 @@ export default function PANVerificationPage() {
 
         <div style={{ padding: '15px', backgroundColor: '#e7f3ff', borderRadius: '8px', borderLeft: '4px solid #0066cc' }}>
           <p style={{ margin: 0, fontSize: '14px' }}>
-            <strong>PAN:</strong> {loanApplicationData.personalDetails.panNumber}
+            <strong>PAN:</strong> ABCDE1234F
           </p>
           <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>
-            <strong>Name:</strong> {loanApplicationData.personalDetails.fullName}
+            <strong>Name:</strong> John Doe
           </p>
         </div>
 

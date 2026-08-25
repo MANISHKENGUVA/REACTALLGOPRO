@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function EmploymentInfoPage() {
   const navigate = useNavigate();
-  const { loanApplicationData, updateEmploymentDetails } = useLoanContext();
-  const [formData, setFormData] = useState(loanApplicationData.employmentDetails);
+  const [formData, setFormData] = useState({
+    companyName: '',
+    designation: '',
+    yearsOfExperience: '',
+    employmentType: 'salaried',
+  });
 
-  const employmentType = loanApplicationData.personalDetails.employmentType;
+  const employmentType = formData.employmentType || 'salaried';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,10 +20,8 @@ export default function EmploymentInfoPage() {
 
   const handleNext = () => {
     if (employmentType === 'salaried') {
-      updateEmploymentDetails(formData);
       navigate('/loan-flow/salary-info');
     } else if (employmentType === 'business') {
-      updateEmploymentDetails(formData);
       navigate('/loan-flow/business-info');
     } else {
       alert('Employment type not supported');

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
 
 export default function CibilCheckPage() {
   const navigate = useNavigate();
-  const { updateVerificationStatus } = useLoanContext();
   const [progress, setProgress] = useState(0);
   const [checkComplete, setCheckComplete] = useState(false);
   const [cibilScore, setCibilScore] = useState(null);
@@ -20,14 +18,13 @@ export default function CibilCheckPage() {
           const score = Math.floor(Math.random() * (900 - 600 + 1)) + 600;
           setCibilScore(score);
           setCheckComplete(true);
-          updateVerificationStatus({ cibilCheck: true });
           return 100;
         }
       });
     }, 280);
 
     return () => clearInterval(interval);
-  }, [updateVerificationStatus]);
+  }, []);
 
   const handleNext = () => {
     navigate('/loan-flow/risk-assessment');

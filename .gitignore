@@ -3,29 +3,28 @@ node_modules/
 **/node_modules/
 
 # Build outputs
-/dist/
-/build/
+dist/
+build/
 **/dist/
 **/build/
 
-# Project-specific generated artifacts
-GOPRO/node_modules/
-GOPRO/dist/
-GOPRO/.vite/
-GOPRO/.env
-GOPRO/.env.*
-GOPRO/package-lock.json
-GOPRO/*.local
+# Vite cache
+.vite/
+.cache/
+**/.vite/
+**/.cache/
 
 # Environment files
 .env
 .env.local
-.env.*.local
+.env.*
 **/.env
 **/.env.local
-**/.env.*.local
+**/.env.*
 
 # Logs
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -35,16 +34,16 @@ pnpm-debug.log*
 **/yarn-error.log*
 **/pnpm-debug.log*
 
-# Cache / temp files
-.cache/
+# Cache & Temp
 .tmp/
 *.tsbuildinfo
 
-# OS files
+# OS Files
 .DS_Store
 Thumbs.db
+**/Thumbs.db
 
-# Editor files
+# Editor Files
 .vscode/
 .idea/
 *.swp

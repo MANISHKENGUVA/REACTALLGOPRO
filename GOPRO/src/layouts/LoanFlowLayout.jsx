@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLoaderData } from 'react-router-dom';
 import { AUSTEPPER, AUCARD } from 'artiqui/dist/router-engine.es.js';
 
 const steps = [
@@ -15,6 +15,9 @@ const steps = [
 ];
 
 export default function LoanFlowLayout() {
+  const loaderData = useLoaderData();
+  const workflowData = loaderData?.workflowData;
+
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5', padding: '20px' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -28,7 +31,7 @@ export default function LoanFlowLayout() {
         </AUCARD>
         
         <div style={{ marginTop: '30px' }}>
-          <Outlet />
+          <Outlet context={{ workflowData }} />
         </div>
       </div>
     </div>

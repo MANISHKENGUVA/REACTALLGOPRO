@@ -1,14 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
-import { useLoanContext } from '../../context/LoanContext';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function FaceVerificationPage() {
+export default function FaceVerificationPage({ metadata }) {
   const navigate = useNavigate();
-  const { updateVerificationStatus } = useLoanContext();
+  const [searchParams] = useSearchParams();
+
   const [progress, setProgress] = useState(0);
   const [verificationComplete, setVerificationComplete] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-KYC-V1-FACE-VERIFICATION-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'FACE-VERIFICATION-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     // Simulate face verification process
@@ -22,21 +32,45 @@ export default function FaceVerificationPage() {
           const isSuccess = Math.random() > 0.2;
           setVerificationResult(isSuccess ? 'success' : 'failed');
           setVerificationComplete(true);
-          updateVerificationStatus({ faceVerification: isSuccess });
           return 100;
         }
       });
     }, 400);
 
     return () => clearInterval(interval);
-  }, [updateVerificationStatus]);
+  }, []);
 
-  const handleNext = () => {
-    if (verificationResult === 'success') {
-      navigate('/loan-flow/pan-verification');
-    } else {
-      // Failed face verification - go to manager approval
-      navigate('/loan-flow/manager-approval');
+  const handleNext = async () => {
+    try {
+      const payload = {
+        eventType: 'FACE_VERIFICATION_SUBMITTED',
+        formData: {
+          verificationResultAsked:true  ,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+      navigate(nextRoute);
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
     }
   };
 
