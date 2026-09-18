@@ -11,6 +11,7 @@ export default function AUINPUT({
   onChange,
   placeholder = "",
   error,
+  errormessage,
   helperText,
   prefixIcon,
   suffixIcon,
@@ -152,6 +153,12 @@ export default function AUINPUT({
       {hasError ? (
         <div id={inputId ? `${inputId}-error` : undefined} className="au-input__error">
           {error}
+        </div>
+      ) : null}
+
+      {errormessage ? (
+        <div id={inputId ? `${inputId}-error` : undefined} className="au-input__error">
+          {errormessage}
         </div>
       ) : null}
     </div>

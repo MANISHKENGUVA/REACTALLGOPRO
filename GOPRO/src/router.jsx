@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 
 // Layouts
 import LoanFlowLayout from './layouts/LoanFlowLayout';
+import NotYourTurnPage from './pages/loanFlow/NotYourTurnPage';
 
 const bootstrapCache = new Map();
 
@@ -107,6 +108,13 @@ const constructRedirectUrl = (viewResult) => {
   if (!payload) {
     console.warn('[workflow-bootstrap] no payload available for redirect resolution');
     return null;
+  }
+
+  // Check for NOT_YOUR_TURN status before component-based routing
+  const workflowStatus = payload.status || payload.data?.status;
+  if (workflowStatus === 'NOT_YOUR_TURN') {
+    console.info('[workflow-bootstrap] NOT_YOUR_TURN status detected, routing to not-your-turn page');
+    return '/loan-flow/not-your-turn';
   }
 
   if (payload.redirectUrl) {
@@ -327,6 +335,7 @@ const router = createBrowserRouter([
       { path: 'guarantor-kyc', element: <GuarantorKYCPage /> },
 
       // Lender & Risk Nodes
+      { path: 'not-your-turn', element: <NotYourTurnPage /> },
       { path: 'credit-check', element: <CreditCheckPage /> },
       { path: 'fraud-check', element: <FraudCheckPage /> },
       { path: 'cibil-check', element: <CibilCheckPage /> },

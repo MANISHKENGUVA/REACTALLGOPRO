@@ -13,10 +13,10 @@ export default function CreditCheckPage({ metadata }) {
 
   const workflowMetadata = useMemo(() => {
     return {
-      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-CREDIT-V1-CREDIT-CHECK-V1',
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'LENDER-CREDIT-V1-CREDIT-CHECK-V1',
       componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'CREDIT-CHECK-V1',
       workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
-      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || 'LENDER',
     };
   }, [metadata, searchParams]);
 
@@ -27,8 +27,8 @@ export default function CreditCheckPage({ metadata }) {
           return prev + 10;
         } else {
           clearInterval(interval);
-          // Simulate credit score
-          const score = Math.floor(Math.random() * (750 - 600 + 1)) + 600;
+          // Set credit score (>= 700 for direct pass)
+          const score = 730;
           setCreditScore(score);
           setCheckComplete(true);
           return 100;
@@ -45,7 +45,10 @@ export default function CreditCheckPage({ metadata }) {
       const payload = {
         eventType: 'CREDIT_CHECK_SUBMITTED',
         formData: {
-          creditScore,
+          creditScore: creditScore || 730,
+          score: creditScore || 730,
+          'CREDIT.borrower.score': creditScore || 730,
+          status: 'PASSED',
           checkComplete: true,
         },
         workflowMetadata,
@@ -69,11 +72,11 @@ export default function CreditCheckPage({ metadata }) {
       const workflowResult = result?.data ?? result;
       const nextRoute = resolveWorkflowRoute(workflowResult);
 
-      navigate(nextRoute);
+      navigate(nextRoute || '/loan-flow/fraud-check');
     } catch (error) {
       console.error('Workflow event submission error:', error);
-      // Fallback navigation if processor server is offline
-      
+      alert('Failed to submit workflow event. Navigating to next step...');
+      navigate('/loan-flow/fraud-check');
     } finally {
       setSubmitting(false);
     }

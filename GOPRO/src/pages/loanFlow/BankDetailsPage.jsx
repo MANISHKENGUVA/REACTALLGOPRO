@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AUBUTTON, AUINPUT, AUSELECT, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import React, { useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AUBUTTON, AUINPUT, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function BankDetailsPage() {
+export default function BankDetailsPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     accountNumber: '',
     ifscCode: '',
     bankName: '',
   });
   const [cancelledCheque, setCancelledCheque] = useState(null);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-BANK-V1-BANK-DETAILS-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'BANK-DETAILS-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,19 +34,56 @@ export default function BankDetailsPage() {
     }
   };
 
-  const handleNext = () => {
-    if (!formData.accountNumber || !formData.ifscCode || !formData.bankName || !cancelledCheque) {
+  const handleNext = async () => {
+    if (!formData.accountNumber || !formData.ifscCode || !formData.bankName) {
       alert('Please fill all required fields');
       return;
     }
 
-    navigate('/loan-flow/bank-statement-upload');
+    setSubmitting(true);
+    try {
+      const payload = {
+        eventType: 'BANK_DETAILS_SUBMITTED',
+        formData: {
+          ...formData,
+          accountValid: true,
+          ifscValid: true,
+          chequeUploaded: !!cancelledCheque,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/bank-statement-upload');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <AUCARD className="loan-flow-card">
       <h2>Bank Details</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: BORROWER-BANK-V1-BANK-DETAILS-V1</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>State: {workflowMetadata.componentViewRenderState}</p>
       <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
         Provide your bank account details for loan disbursement and repayment.
       </p>
@@ -99,8 +148,8 @@ export default function BankDetailsPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-          <AUBUTTON variant="primary" onClick={handleNext}>
-            Next
+          <AUBUTTON variant="primary" onClick={handleNext} disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Next'}
           </AUBUTTON>
           <AUBUTTON variant="outline" onClick={() => navigate(-1)}>
             Back

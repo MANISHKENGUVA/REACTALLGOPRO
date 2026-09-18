@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUCHECKBOX, AUCARD } from 'artiqui/dist/router-engine.es.js';
 import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
+import { z } from "zod";
 
 const initialAddressDetails = {
   flatNo: '',
@@ -16,11 +17,25 @@ const initialAddressDetails = {
   permanentAddressSameAsCurrent: false,
 };
 
+const formSchema = z.object({
+  flatNo: z.string().min(1, "flatNo is required"),
+  building: z.string().min(1, "building is required"),
+  street: z.string().min(1, "street is required"),
+  landmark: z.string().min(1, "landmark is required"),
+  city: z.string().min(1, "city is required"),
+  district: z.string().min(1, "district is required"),
+  state: z.string().min(1, "state is required"),
+  pincode: z.string().min(1, "pincode is required"),
+  residenceType: z.string().min(1, "residenceType is required"),
+  permanentAddressSameAsCurrent: z.boolean().default(false)
+});
+
 export default function AddressInfoPage({ metadata }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [formData, setFormData] = useState(initialAddressDetails);
+  const [errors, setErrors] = useState({});
 
   const workflowMetadata = useMemo(() => {
     return {
@@ -40,6 +55,14 @@ export default function AddressInfoPage({ metadata }) {
   };
 
   const handleNext = async () => {
+     const result = formSchema.safeParse(formData);
+      if (!result.success) {
+    // Validation failed
+    console.log(result.error.flatten());
+    setErrors(result.error.flatten().fieldErrors);
+    return;
+  }
+     
     if (!formData.flatNo || !formData.city || !formData.pincode || !formData.state) {
       alert('Please fill all required fields');
       return;
@@ -90,6 +113,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.flatNo}
           onChange={handleChange}
           placeholder="Enter flat/house number"
+          error={!!errors?.flatNo}
+          errormessage={errors?.flatNo?.[0] || ''}
           required
         />
 
@@ -100,6 +125,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.building}
           onChange={handleChange}
           placeholder="Enter building name"
+          error={!!errors?.building}
+          errormessage={errors?.building?.[0] || ''}
         />
 
         <AUINPUT
@@ -109,6 +136,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.street}
           onChange={handleChange}
           placeholder="Enter street address"
+          error={!!errors?.street}
+          errormessage={errors?.street?.[0] || ''}
         />
 
         <AUINPUT
@@ -118,6 +147,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.landmark}
           onChange={handleChange}
           placeholder="Enter nearby landmark"
+          error={!!errors?.landmark}
+          errormessage={errors?.landmark?.[0] || ''}
         />
 
         <AUINPUT
@@ -127,6 +158,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.city}
           onChange={handleChange}
           placeholder="Enter city"
+          error={!!errors?.city}
+          errormessage={errors?.city?.[0] || ''}
           required
         />
 
@@ -137,6 +170,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.district}
           onChange={handleChange}
           placeholder="Enter district"
+          error={!!errors?.district}
+          errormessage={errors?.district?.[0] || ''}
         />
 
         <AUSELECT
@@ -153,6 +188,8 @@ export default function AddressInfoPage({ metadata }) {
             { label: 'Delhi', value: 'delhi' },
             { label: 'Other', value: 'other' }
           ]}
+          error={!!errors?.state}
+          errormessage={errors?.state?.[0] || ''}
           required
         />
 
@@ -163,6 +200,8 @@ export default function AddressInfoPage({ metadata }) {
           value={formData.pincode}
           onChange={handleChange}
           placeholder="Enter pincode"
+          error={!!errors?.pincode}
+          errormessage={errors?.pincode?.[0] || ''}
           required
         />
 
@@ -177,6 +216,8 @@ export default function AddressInfoPage({ metadata }) {
             { label: 'Rented', value: 'rented' },
             { label: 'With Parents', value: 'with_parents' }
           ]}
+          error={!!errors?.residenceType}
+          errormessage={errors?.residenceType?.[0] || ''}
         />
 
         <div className="address-info-page__checkbox-row">

@@ -1,0 +1,50 @@
+.not-your-turn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  font-family: 'Inter', sans-serif;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 2rem 3rem;
+  text-align: center;
+  color: #fff;
+  max-width: 400px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.card h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.message {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.details {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+}
+
+.refresh-btn {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.refresh-btn:hover {
+  background: #ff5252;
+  transform: scale(1.05);
+}

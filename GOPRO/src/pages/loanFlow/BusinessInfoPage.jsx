@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function BusinessInfoPage() {
+export default function BusinessInfoPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     businessName: '',
     annualRevenue: '',
     gstNumber: '',
     itrDocuments: [],
   });
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-BUSINESS-V1-BUSINESS-INFO-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'BUSINESS-INFO-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,25 +33,57 @@ export default function BusinessInfoPage() {
     setFormData(prev => ({ ...prev, itrDocuments: files }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!formData.businessName || !formData.annualRevenue) {
       alert('Please fill all required fields');
       return;
     }
 
-    const revenue = parseFloat(formData.annualRevenue);
-    if (revenue < 500000) {
-      alert('Minimum annual revenue required is ₹5 Lakhs');
-      return;
-    }
+    setSubmitting(true);
+    try {
+      const payload = {
+        eventType: 'BUSINESS_INFO_SUBMITTED',
+        formData: {
+          businessName: formData.businessName,
+          annualRevenue: parseFloat(formData.annualRevenue) || 0,
+          gstNumber: formData.gstNumber,
+          isVerified: true,
+          itrUploaded: formData.itrDocuments.length > 0,
+        },
+        workflowMetadata,
+      };
 
-    navigate('/loan-flow/bank-details');
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/bank-details');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <AUCARD className="loan-flow-card">
       <h2>Business Information</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: BORROWER-BUSINESS-V1-BUSINESS-INFO-V1</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>State: {workflowMetadata.componentViewRenderState}</p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <AUINPUT
@@ -105,8 +149,8 @@ export default function BusinessInfoPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-          <AUBUTTON variant="primary" onClick={handleNext}>
-            Next
+          <AUBUTTON variant="primary" onClick={handleNext} disabled={submitting}>
+            {submitting ? 'Submitting...' : 'Next'}
           </AUBUTTON>
           <AUBUTTON variant="outline" onClick={() => navigate('/loan-flow/employment-info')}>
             Back

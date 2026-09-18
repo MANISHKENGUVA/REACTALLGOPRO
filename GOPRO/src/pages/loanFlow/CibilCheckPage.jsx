@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function CibilCheckPage() {
+export default function CibilCheckPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [progress, setProgress] = useState(0);
   const [checkComplete, setCheckComplete] = useState(false);
   const [cibilScore, setCibilScore] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'RISKENGINE-CIBIL-V1-CIBIL-CHECK-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'CIBIL-CHECK-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,14 +38,50 @@ export default function CibilCheckPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleNext = () => {
-    navigate('/loan-flow/risk-assessment');
+  const handleNext = async () => {
+    setSubmitting(true);
+    try {
+      const payload = {
+        eventType: 'CIBIL_CHECK_SUBMITTED',
+        formData: {
+          cibilScore,
+          verified: true,
+          checkComplete: true,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/risk-assessment');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <AUCARD className="loan-flow-card">
       <h2>CIBIL Score Check</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: RISKENGINE-CIBIL-V1-CIBIL-CHECK-V1</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>State: {workflowMetadata.componentViewRenderState}</p>
       <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
         Fetching and analyzing CIBIL score...
       </p>
@@ -78,8 +126,8 @@ export default function CibilCheckPage() {
 
         {checkComplete && (
           <div style={{ display: 'flex', gap: '10px' }}>
-            <AUBUTTON variant="primary" onClick={handleNext}>
-              Proceed to Risk Assessment
+            <AUBUTTON variant="primary" onClick={handleNext} disabled={submitting}>
+              {submitting ? 'Submitting...' : 'Proceed to Risk Assessment'}
             </AUBUTTON>
             <AUBUTTON variant="outline" onClick={() => navigate('/loan-flow/fraud-check')}>
               Back

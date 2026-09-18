@@ -1,11 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function DisbursementPage() {
+export default function DisbursementPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [progress, setProgress] = useState(0);
   const [disbursementComplete, setDisbursementComplete] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'DISBURSEMENT-PAYMENT-V1-LOAN-DISBURSEMENT-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'DISBURSEMENT-REQUEST-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,10 +35,49 @@ export default function DisbursementPage() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleDashboard = async () => {
+    setSubmitting(true);
+    try {
+      const payload = {
+        eventType: 'DISBURSEMENT_CONFIRMED',
+        formData: {
+          disbursementComplete: true,
+          amount: 500000,
+          status: 'DISBURSED',
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const workflowResult = result?.data ?? result;
+        const nextRoute = resolveWorkflowRoute(workflowResult);
+        navigate(nextRoute || '/');
+        return;
+      }
+      navigate('/');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      navigate('/');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <AUCARD className="loan-flow-card">
       <h2>Loan Disbursement</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: DISBURSEMENT-PAYMENT-V1-LOAN-DISBURSEMENT-V1</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>State: {workflowMetadata.componentViewRenderState}</p>
       <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
         Processing loan disbursement to your bank account...
       </p>
@@ -91,9 +142,10 @@ export default function DisbursementPage() {
             <div style={{ display: 'flex', gap: '10px' }}>
               <AUBUTTON 
                 variant="primary" 
-                onClick={() => navigate('/')}
+                onClick={handleDashboard}
+                disabled={submitting}
               >
-                Go to Dashboard
+                {submitting ? 'Submitting...' : 'Go to Dashboard'}
               </AUBUTTON>
               <AUBUTTON 
                 variant="outline" 

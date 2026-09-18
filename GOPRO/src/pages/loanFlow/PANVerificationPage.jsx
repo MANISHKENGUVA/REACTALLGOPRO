@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function PANVerificationPage() {
+export default function PANVerificationPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [progress, setProgress] = useState(0);
   const [verificationComplete, setVerificationComplete] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-KYC-V1-PAN-VERIFICATION-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'PAN-VERIFICATION-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,11 +39,49 @@ export default function PANVerificationPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleNext = () => {
-    if (verificationResult === 'success') {
-      navigate('/loan-flow/aadhar-verification');
-    } else {
+  const handleNext = async () => {
+    if (verificationResult !== 'success') {
       navigate('/');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const payload = {
+        eventType: 'PAN_VERIFICATION_COMPLETED',
+        formData: {
+          panNumber: 'ABCDE1234F',
+          panName: 'John Doe',
+          verificationStatus: verificationResult,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/aadhar-verification');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -83,8 +133,8 @@ export default function PANVerificationPage() {
 
         {verificationComplete && (
           <div style={{ display: 'flex', gap: '10px' }}>
-            <AUBUTTON variant="primary" onClick={handleNext}>
-              {verificationResult === 'success' ? 'Proceed to Aadhaar Verification' : 'Back to Home'}
+            <AUBUTTON variant="primary" onClick={handleNext} disabled={submitting}>
+              {submitting ? 'Submitting...' : (verificationResult === 'success' ? 'Proceed to Aadhaar Verification' : 'Back to Home')}
             </AUBUTTON>
             <AUBUTTON variant="outline" onClick={() => navigate('/loan-flow/face-verification')}>
               Back
@@ -95,3 +145,4 @@ export default function PANVerificationPage() {
     </AUCARD>
   );
 }
+

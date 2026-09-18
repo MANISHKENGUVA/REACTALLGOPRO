@@ -219,6 +219,18 @@ export const resolveWorkflowRoute = (workflowResult) => {
   if (!workflowResult) return '/';
 
   const viewData = workflowResult?.componentviewrender || workflowResult?.data || workflowResult;
+
+  // Check for NOT_YOUR_TURN status before component-based routing
+  const workflowStatus = workflowResult?.status || workflowResult?.data?.status || viewData?.status;
+  if (workflowStatus === 'NOT_YOUR_TURN') {
+    const url = new URL('/loan-flow/not-your-turn', window.location.origin);
+    const workflowId = workflowResult?.workflowId || viewData?.workflowId;
+    const workflowActor = workflowResult?.workflowActor || viewData?.workflowActor;
+    if (workflowId) url.searchParams.set('WORKFLOW_ID', workflowId);
+    if (workflowActor) url.searchParams.set('WORKFLOW_ACTOR', workflowActor);
+    return url.pathname + url.search;
+  }
+
   const componentKey = viewData?.componentKey || viewData?.componentviewrender?.componentKey;
   const componentName = viewData?.component || viewData?.componentviewrender?.component;
   const moduleName = viewData?.module || viewData?.componentviewrender?.module;

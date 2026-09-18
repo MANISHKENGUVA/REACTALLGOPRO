@@ -1,0 +1,429 @@
+{
+  "flowId": "LOAN-FLOW-V7",
+  "flowName": "Personal Loan Application Workflow",
+  "version": "7.0.0",
+  "description": "Complete loan application processing workflow with borrower and coborrower verification",
+  "metadata": {
+    "created": "2024-01-15T10:30:00Z",
+    "modified": "2024-01-20T14:45:00Z",
+    "author": "Workflow Team",
+    "tags": ["loan", "personal", "application", "verification"]
+  },
+  "nodes": [
+    {
+      "nodeId": "ND01",
+      "nodeType": "FORM",
+      "component": "LoanApplicationForm",
+      "actor": "BORROWER",
+      "module": "APPLICATION",
+      "version": "2.1.0",
+      "description": "Initial loan application form submission",
+      "position": { "x": 100, "y": 150 },
+      "metadata": {
+        "estimatedTime": "15 min",
+        "requiredFields": 24
+      }
+    },
+    {
+      "nodeId": "ND02",
+      "nodeType": "SYSTEM",
+      "component": "CreditScoreCheck",
+      "actor": "SYSTEM",
+      "module": "CREDIT",
+      "version": "1.5.0",
+      "description": "Automated credit score verification",
+      "position": { "x": 350, "y": 150 },
+      "metadata": {
+        "timeout": 30,
+        "retryCount": 3
+      }
+    },
+    {
+      "nodeId": "ND03",
+      "nodeType": "FORM",
+      "component": "IncomeVerificationForm",
+      "actor": "COBORROWER",
+      "module": "VERIFICATION",
+      "version": "1.8.0",
+      "description": "Coborrower income verification documentation",
+      "position": { "x": 100, "y": 350 },
+      "metadata": {
+        "estimatedTime": "10 min",
+        "requiredFields": 12
+      }
+    },
+    {
+      "nodeId": "ND04",
+      "nodeType": "WAIT",
+      "component": "ManagerApprovalWait",
+      "actor": "MANAGER",
+      "module": "APPROVAL",
+      "version": "1.2.0",
+      "description": "Waiting for manager review and approval",
+      "position": { "x": 350, "y": 350 },
+      "metadata": {
+        "maxWaitHours": 48,
+        "escalationTo": "ND10"
+      }
+    },
+    {
+      "nodeId": "ND05",
+      "nodeType": "SYSTEM",
+      "component": "RiskAssessmentEngine",
+      "actor": "SYSTEM",
+      "module": "RISK",
+      "version": "3.0.0",
+      "description": "Comprehensive risk assessment calculation",
+      "position": { "x": 600, "y": 250 },
+      "metadata": {
+        "modelVersion": "v3.2.1",
+        "factors": ["credit", "income", "assets", "debt"]
+      }
+    },
+    {
+      "nodeId": "ND06",
+      "nodeType": "FORM",
+      "component": "DocumentUploadForm",
+      "actor": "BORROWER",
+      "module": "DOCUMENTS",
+      "version": "2.0.0",
+      "description": "Supporting documents upload",
+      "position": { "x": 100, "y": 550 },
+      "metadata": {
+        "maxFiles": 10,
+        "maxSizeMB": 50
+      }
+    },
+    {
+      "nodeId": "ND07",
+      "nodeType": "SYSTEM",
+      "component": "FraudDetectionCheck",
+      "actor": "SYSTEM",
+      "module": "FRAUD",
+      "version": "2.3.0",
+      "description": "Automated fraud detection analysis",
+      "position": { "x": 600, "y": 450 },
+      "metadata": {
+        "rules": 45,
+        "confidence": 0.95
+      }
+    },
+    {
+      "nodeId": "ND08",
+      "nodeType": "WAIT",
+      "component": "UnderwriterReview",
+      "actor": "LENDER",
+      "module": "UNDERWRITING",
+      "version": "1.4.0",
+      "description": "Manual underwriter review and decision",
+      "position": { "x": 850, "y": 350 },
+      "metadata": {
+        "sla": "24 hours",
+        "escalationTo": "ND10"
+      }
+    },
+    {
+      "nodeId": "ND09",
+      "nodeType": "TERMINAL",
+      "component": "LoanApproved",
+      "actor": "SYSTEM",
+      "module": "COMPLETION",
+      "version": "1.0.0",
+      "description": "Loan application approved",
+      "terminalState": "APPROVED",
+      "position": { "x": 1100, "y": 250 },
+      "metadata": {
+        "notificationChannel": ["email", "sms"]
+      }
+    },
+    {
+      "nodeId": "ND10",
+      "nodeType": "TERMINAL",
+      "component": "LoanRejected",
+      "actor": "SYSTEM",
+      "module": "COMPLETION",
+      "version": "1.0.0",
+      "description": "Loan application rejected",
+      "terminalState": "REJECTED",
+      "position": { "x": 1100, "y": 450 },
+      "metadata": {
+        "notificationChannel": ["email"],
+        "appealAvailable": true
+      }
+    }
+  ],
+  "edges": [
+    {
+      "edgeId": "ED01",
+      "sourceId": "ND01",
+      "targetId": "ND02",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "application.status",
+            "operator": "equals",
+            "value": "SUBMITTED"
+          },
+          {
+            "field": "application.fieldsComplete",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Application submitted successfully"
+      }
+    },
+    {
+      "edgeId": "ED02",
+      "sourceId": "ND01",
+      "targetId": "ND03",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "application.hasCoborrower",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Coborrower present, require income verification"
+      }
+    },
+    {
+      "edgeId": "ED03",
+      "sourceId": "ND02",
+      "targetId": "ND05",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "creditScore",
+            "operator": "greaterThanOrEqual",
+            "value": 680
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Credit score meets minimum requirement"
+      }
+    },
+    {
+      "edgeId": "ED04",
+      "sourceId": "ND02",
+      "targetId": "ND10",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "creditScore",
+            "operator": "lessThan",
+            "value": 680
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Credit score below threshold"
+      }
+    },
+    {
+      "edgeId": "ED05",
+      "sourceId": "ND03",
+      "targetId": "ND04",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "coborrower.documentsUploaded",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Coborrower documents verified"
+      }
+    },
+    {
+      "edgeId": "ED06",
+      "sourceId": "ND04",
+      "targetId": "ND05",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "manager.approval",
+            "operator": "equals",
+            "value": "APPROVED"
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Manager approved the application"
+      }
+    },
+    {
+      "edgeId": "ED07",
+      "sourceId": "ND04",
+      "targetId": "ND10",
+      "ruleEngine": {
+        "type": "OR",
+        "conditions": [
+          {
+            "field": "manager.approval",
+            "operator": "equals",
+            "value": "REJECTED"
+          },
+          {
+            "field": "wait.expired",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Manager rejected or timeout"
+      }
+    },
+    {
+      "edgeId": "ED08",
+      "sourceId": "ND06",
+      "targetId": "ND07",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "documents.validated",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Documents validated successfully"
+      }
+    },
+    {
+      "edgeId": "ED09",
+      "sourceId": "ND05",
+      "targetId": "ND08",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "riskScore",
+            "operator": "lessThan",
+            "value": 70
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Low risk score, proceed to underwriting"
+      }
+    },
+    {
+      "edgeId": "ED10",
+      "sourceId": "ND05",
+      "targetId": "ND10",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "riskScore",
+            "operator": "greaterThanOrEqual",
+            "value": 70
+          }
+        ]
+      },
+      "metadata": {
+        "description": "High risk score, auto-reject"
+      }
+    },
+    {
+      "edgeId": "ED11",
+      "sourceId": "ND07",
+      "targetId": "ND08",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "fraudScore",
+            "operator": "lessThan",
+            "value": 0.3
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Low fraud risk"
+      }
+    },
+    {
+      "edgeId": "ED12",
+      "sourceId": "ND07",
+      "targetId": "ND10",
+      "ruleEngine": {
+        "type": "OR",
+        "conditions": [
+          {
+            "field": "fraudScore",
+            "operator": "greaterThanOrEqual",
+            "value": 0.3
+          },
+          {
+            "field": "fraudFlags",
+            "operator": "greaterThan",
+            "value": 0
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Fraud detected"
+      }
+    },
+    {
+      "edgeId": "ED13",
+      "sourceId": "ND08",
+      "targetId": "ND09",
+      "ruleEngine": {
+        "type": "AND",
+        "conditions": [
+          {
+            "field": "underwriter.decision",
+            "operator": "equals",
+            "value": "APPROVED"
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Underwriter approved"
+      }
+    },
+    {
+      "edgeId": "ED14",
+      "sourceId": "ND08",
+      "targetId": "ND10",
+      "ruleEngine": {
+        "type": "OR",
+        "conditions": [
+          {
+            "field": "underwriter.decision",
+            "operator": "equals",
+            "value": "REJECTED"
+          },
+          {
+            "field": "underwriter.timeout",
+            "operator": "equals",
+            "value": true
+          }
+        ]
+      },
+      "metadata": {
+        "description": "Underwriter rejected or timeout"
+      }
+    }
+  ]
+}

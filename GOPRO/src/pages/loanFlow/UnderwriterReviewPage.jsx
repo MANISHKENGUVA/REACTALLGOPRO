@@ -1,16 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUCARD, AULISTGROUP } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function UnderwriterReviewPage() {
+export default function UnderwriterReviewPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [reviewStatus, setReviewStatus] = useState('reviewing');
   const [reviewDecision, setReviewDecision] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'UNDERWRITER-REVIEW-V1-UNDERWRITER-CHECK-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'UNDERWRITER-REVIEW-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     // Simulate underwriter review (90% approval)
     const timer = setTimeout(() => {
-      const isApproved = Math.random() > 0.1;
+      const isApproved = true;
       setReviewDecision(isApproved ? 'approved' : 'rejected');
       setReviewStatus(isApproved ? 'approved' : 'rejected');
     }, 2000);
@@ -18,18 +30,57 @@ export default function UnderwriterReviewPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleNext = () => {
-    if (reviewDecision === 'approved') {
-      navigate('/loan-flow/manager-approval');
-    } else {
+  const handleNext = async () => {
+    if (reviewDecision !== 'approved') {
       navigate('/');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const payload = {
+        eventType: 'UNDERWRITER_REVIEW_DECISION',
+        formData: {
+          decision: 'APPROVED',
+          reviewDecision,
+          recommendedAmount: 500000,
+          recommendedTenure: 60,
+          recommendedInterestRate: 9.0,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      navigate(nextRoute || '/loan-flow/manager-approval');
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <AUCARD className="loan-flow-card">
       <h2>Underwriter Review</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: UNDERWRITER-REVIEW-V1-UNDERWRITER-CHECK-V1</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>State: {workflowMetadata.componentViewRenderState}</p>
       <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
         Manual review by underwriter team...
       </p>
@@ -107,9 +158,9 @@ export default function UnderwriterReviewPage() {
             <AUBUTTON 
               variant="primary" 
               onClick={handleNext}
-              disabled={reviewStatus === 'rejected'}
+              disabled={reviewStatus === 'rejected' || submitting}
             >
-              {reviewStatus === 'approved' ? 'Proceed to Manager Approval' : 'Back to Home'}
+              {submitting ? 'Submitting...' : (reviewStatus === 'approved' ? 'Proceed to Manager Approval' : 'Back to Home')}
             </AUBUTTON>
             {reviewStatus === 'approved' && (
               <AUBUTTON variant="outline" onClick={() => navigate('/loan-flow/risk-assessment')}>

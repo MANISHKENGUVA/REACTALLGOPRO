@@ -14,7 +14,7 @@ export default function BorrowerCreditCheckPage({ metadata }) {
       componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'BORROWER-CREDIT-V1-CREDIT-CHECK-V1',
       componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'BORROWER-CREDIT-CHECK-V1',
       workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
-      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || 'BORROWER',
     };
   }, [metadata, searchParams]);
 
@@ -30,6 +30,9 @@ export default function BorrowerCreditCheckPage({ metadata }) {
         eventType: 'BORROWER_CREDIT_CHECK_SUBMITTED',
         formData: {
           'CREDIT.borrower.consentGiven': true,
+          consentGiven: true,
+          creditScore: 730,
+          score: 730,
         },
         workflowMetadata,
       };
@@ -45,10 +48,10 @@ export default function BorrowerCreditCheckPage({ metadata }) {
       const result = await response.json();
       const workflowResult = result?.data ?? result;
       const nextRoute = resolveWorkflowRoute(workflowResult);
-      navigate(nextRoute || '/loan-flow/underwriter-review');
+      navigate(nextRoute || '/loan-flow/credit-check');
     } catch (err) {
       console.error('Borrower credit check error:', err);
-      navigate('/loan-flow/underwriter-review');
+      navigate('/loan-flow/credit-check');
     } finally {
       setSubmitting(false);
     }

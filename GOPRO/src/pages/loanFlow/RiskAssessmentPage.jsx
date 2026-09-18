@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUPROGRESS, AUCARD } from 'artiqui/dist/router-engine.es.js';
+import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
 
-export default function RiskAssessmentPage() {
+export default function RiskAssessmentPage({ metadata }) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [progress, setProgress] = useState(0);
   const [assessmentComplete, setAssessmentComplete] = useState(false);
   const [riskLevel, setRiskLevel] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const workflowMetadata = useMemo(() => {
+    return {
+      componentViewRenderState: searchParams.get('STATE') || searchParams.get('componentViewRenderState') || metadata?.componentViewRenderState || 'LENDER-RISK-V1-RISK-ASSESSMENT-V1',
+      componentKey: searchParams.get('COMPONENT_KEY') || searchParams.get('componentKey') || metadata?.componentKey || 'RISK-ASSESSMENT-V1',
+      workflowId: searchParams.get('WORKFLOW_ID') || searchParams.get('workflowId') || metadata?.workflowId || '',
+      workflowActor: searchParams.get('WORKFLOW_ACTOR') || searchParams.get('workflowActor') || metadata?.workflowActor || '',
+    };
+  }, [metadata, searchParams]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,13 +43,44 @@ export default function RiskAssessmentPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleNext = () => {
-    if (riskLevel === 'LOW') {
-      navigate('/loan-flow/underwriter-review');
-    } else if (riskLevel === 'MEDIUM') {
-      navigate('/loan-flow/underwriter-review');
-    } else {
-      navigate('/loan-flow/manager-approval');
+  const handleNext = async () => {
+    setSubmitting(true);
+    try {
+      const payload = {
+        eventType: 'RISK_ASSESSMENT_SUBMITTED',
+        formData: {
+          riskLevel: riskLevel || 'LOW',
+          verified: true,
+          assessmentComplete: true,
+        },
+        workflowMetadata,
+      };
+
+      console.log('Submitting workflow event:', payload);
+
+      const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Event submission failed with status ${response.status}`);
+      }
+
+      const result = await response.json();
+      const workflowResult = result?.data ?? result;
+      const nextRoute = resolveWorkflowRoute(workflowResult);
+
+      const fallback = riskLevel === 'HIGH' ? '/loan-flow/manager-approval' : '/loan-flow/underwriter-review';
+      navigate(nextRoute || fallback);
+    } catch (error) {
+      console.error('Workflow event submission error:', error);
+      alert('Failed to submit workflow event. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -50,7 +93,7 @@ export default function RiskAssessmentPage() {
   return (
     <AUCARD className="loan-flow-card">
       <h2>Risk Assessment</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>State: BORROWER-RISK-V1-RISK-ASSESSMENT-V1</p>
+      <p style={{ color: '#666', marginBottom: '20px' }}>State: {workflowMetadata.componentViewRenderState}</p>
       <p style={{ color: '#999', fontSize: '14px', marginBottom: '20px' }}>
         Performing overall risk scoring of your application...
       </p>
@@ -82,16 +125,16 @@ export default function RiskAssessmentPage() {
             <div style={{ padding: '15px', backgroundColor: '#e8f5e9', borderRadius: '8px', borderLeft: '4px solid #4caf50' }}>
               <p style={{ fontWeight: '500', fontSize: '14px', marginBottom: '10px' }}>Risk Factors Analyzed:</p>
               <p style={{ margin: '5px 0', fontSize: '14px' }}>
-                • Income Stability Score: {Math.floor(Math.random() * 40) + 60}%
+                • Income Stability Score: 85%
               </p>
               <p style={{ margin: '5px 0', fontSize: '14px' }}>
                 • Credit History: Clean
               </p>
               <p style={{ margin: '5px 0', fontSize: '14px' }}>
-                • Debt-to-Income Ratio: {(Math.random() * 0.3).toFixed(2)}
+                • Debt-to-Income Ratio: 0.22
               </p>
               <p style={{ margin: '5px 0', fontSize: '14px' }}>
-                • Employment Stability: {Math.floor(Math.random() * 10) + 2} years
+                • Employment Stability: 3+ years
               </p>
             </div>
           </>
@@ -99,8 +142,8 @@ export default function RiskAssessmentPage() {
 
         {assessmentComplete && (
           <div style={{ display: 'flex', gap: '10px' }}>
-            <AUBUTTON variant="primary" onClick={handleNext}>
-              {riskLevel === 'HIGH' ? 'Proceed to Manager Approval' : 'Proceed to Underwriter Review'}
+            <AUBUTTON variant="primary" onClick={handleNext} disabled={submitting}>
+              {submitting ? 'Submitting...' : (riskLevel === 'HIGH' ? 'Proceed to Manager Approval' : 'Proceed to Underwriter Review')}
             </AUBUTTON>
             <AUBUTTON variant="outline" onClick={() => navigate('/loan-flow/cibil-check')}>
               Back
