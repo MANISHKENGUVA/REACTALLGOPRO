@@ -3,6 +3,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 // Layouts
 import LoanFlowLayout from './layouts/LoanFlowLayout';
 import NotYourTurnPage from './pages/loanFlow/NotYourTurnPage';
+import WorkflowHost from './workflow/components/WorkflowHost';
 
 const bootstrapCache = new Map();
 
@@ -288,6 +289,10 @@ const router = createBrowserRouter([
     element: <AllComponentsPlaygroundPage />,
   },
   {
+    path: '/workflow',
+    element: <WorkflowHost />,
+  },
+  {
     path: '/workflow-navigator',
     loader: workflowBootstrapLoader,
   },
@@ -297,6 +302,10 @@ const router = createBrowserRouter([
     loader: loanFlowWorkflowLoader,
     shouldRevalidate: () => true,
     children: [
+      // Session-aware entry: backend resolves current node (PUBLIC/CAPTCHA/ACTOR/INTERNAL).
+      { path: 'workflow', element: <WorkflowHost /> },
+      { path: 'navigator', element: <WorkflowHost /> },
+      { path: 'navigater', element: <WorkflowHost /> },
       // Borrower Nodes
       { path: 'personal-info', element: <PersonalInfoPage /> },
       { path: 'address-info', element: <AddressInfoPage /> },

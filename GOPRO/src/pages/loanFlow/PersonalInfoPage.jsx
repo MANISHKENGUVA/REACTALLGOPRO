@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AUBUTTON, AUINPUT, AUSELECT, AUTEXTAREA, AUCARD ,AUDATEPICKER } from 'artiqui/dist/router-engine.es.js';
 import { resolveWorkflowRoute } from '../../utils/globalRouterNavigator';
+import { SessionManager } from '../../workflow/SessionManager';
+import { EventPublisher } from '../../workflow/EventPublisher';
 
 export default function PersonalInfoPage({ metadata }) {
   const navigate = useNavigate();
@@ -55,6 +57,25 @@ export default function PersonalInfoPage({ metadata }) {
 
       console.log('Submitting workflow event:', payload);
 
+      // Session-aware path: publish via EventPublisher (sessionId attached when
+      // available, backend re-resolves next node). Falls back to legacy
+      // eventCreaterAndProcesser contract automatically inside WorkflowClient.
+      const sessionId = SessionManager.getSessionId(searchParams);
+      if (sessionId) {
+        const result = await EventPublisher.publish({
+          sessionId,
+          node: workflowMetadata.componentKey,
+          event: 'PERSONAL_INFO_SUBMITTED',
+          eventType: 'PERSONAL_INFO_SUBMITTED',
+          formData,
+          workflowMetadata,
+        });
+        const nextRoute = resolveWorkflowRoute(result?.data ?? result);
+        navigate(nextRoute);
+        return;
+      }
+
+      // Legacy path (no session contract yet): unchanged behavior.
       const response = await fetch('http://localhost:3000/api/workflow/eventCreaterAndProcesser', {
         method: 'POST',
         headers: {
