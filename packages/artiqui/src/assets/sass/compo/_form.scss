@@ -1,0 +1,737 @@
+.au-textarea,
+.au-select,
+.au-checkbox-group,
+.au-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-family: inherit;
+}
+
+.au-textarea__label,
+.au-select__label,
+.au-checkbox-group__label,
+.au-radio-group__label,
+.au-range__label,
+.au-datepicker__label {
+  color: $text-secondary;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.au-textarea__control,
+.au-datepicker__control,
+.au-datepicker__trigger,
+.au-select__control {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-primary;
+  font: inherit;
+  box-shadow: $shadow-sm;
+  transition: border-color $transition-fast, box-shadow $transition-fast, background-color $transition-fast;
+}
+
+.au-textarea__control {
+  min-height: 5rem;
+  padding: 0.75rem 0.85rem;
+  resize: vertical;
+}
+
+.au-textarea__control:hover,
+.au-datepicker__control:hover,
+.au-datepicker__trigger:hover,
+.au-select__control:hover {
+  border-color: $neutral-400;
+}
+
+.au-textarea__control:focus,
+.au-datepicker__control:focus,
+.au-datepicker__trigger:focus-visible,
+.au-select__control:focus-visible,
+.au-select__search-input:focus {
+  outline: none;
+  border-color: $primary-base;
+  box-shadow: 0 0 0 3px $focus-ring;
+}
+
+.au-textarea__meta,
+.au-datepicker__meta,
+.au-range__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: $text-muted;
+  font-size: 0.84rem;
+}
+
+.au-textarea__helper,
+.au-select__helper,
+.au-datepicker__helper,
+.au-range__helper {
+  color: $text-muted;
+}
+
+.au-textarea__error,
+.au-select__error,
+.au-datepicker__error,
+.au-range__error {
+  color: $danger-700;
+}
+
+.au-textarea--error .au-textarea__control,
+.au-select--error .au-select__control,
+.au-datepicker--error .au-datepicker__control,
+.au-datepicker--error .au-datepicker__trigger {
+  border-color: $danger-400;
+  background: $danger-50;
+}
+
+.au-textarea--disabled .au-textarea__control,
+.au-select--disabled .au-select__control,
+.au-datepicker--disabled .au-datepicker__control,
+.au-datepicker--disabled .au-datepicker__trigger {
+  background: $neutral-100;
+  color: $text-disabled;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.au-select__control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.85rem;
+  cursor: pointer;
+}
+
+.au-select__placeholder {
+  color: $text-muted;
+}
+
+.au-select__menu {
+  z-index: 20;
+  margin-top: 0.4rem;
+  overflow: hidden;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  box-shadow: $shadow-lg;
+}
+
+.au-select__search {
+  padding: 0.6rem;
+  border-bottom: 1px solid $border;
+}
+
+.au-select__search-input {
+  width: 100%;
+  padding: 0.62rem 0.7rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-primary;
+  font: inherit;
+}
+
+.au-select__item,
+.au-select__group-label {
+  width: 100%;
+  text-align: left;
+}
+
+.au-select__item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.68rem 0.8rem;
+  border: none;
+  background: transparent;
+  color: $text-secondary;
+  font: inherit;
+  cursor: pointer;
+}
+
+.au-select__item:hover,
+.au-select__item--selected {
+  background: $surface-hover;
+  color: $text-primary;
+}
+
+.au-select__item--active {
+  background: $primary-tint-1;
+  color: $primary-shade-2;
+}
+
+.au-select__item:focus-visible {
+  outline: 2px solid $primary-base;
+  outline-offset: -2px;
+}
+
+.au-required {
+  color: $danger-600;
+}
+
+.au-select__label {
+  display: block;
+}
+
+.au-select__group {
+  border-top: 1px solid $border;
+}
+
+.au-select__group-label {
+  padding: 0.7rem 0.8rem 0.35rem;
+  color: $text-muted;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.au-select__checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid $neutral-300;
+  border-radius: $radius-sm;
+  background: $surface;
+}
+
+.au-select__empty {
+  padding: 0.85rem;
+  color: $text-muted;
+}
+
+.au-checkbox,
+.au-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: $text-secondary;
+  cursor: pointer;
+}
+
+.au-checkbox input,
+.au-radio input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.au-checkbox__box,
+.au-radio__circle {
+  width: 1.08rem;
+  height: 1.08rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid $neutral-400;
+  background: $surface;
+}
+
+.au-checkbox__box {
+  border-radius: $radius-sm;
+}
+
+.au-radio__circle {
+  border-radius: $radius-full;
+}
+
+.au-checkbox__check,
+.au-checkbox__indeterminate,
+.au-radio__dot {
+  color: $primary-base;
+}
+
+.au-radio__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: $radius-full;
+  background: $primary-base;
+}
+
+.au-checkbox__label,
+.au-radio__label {
+  color: $text-secondary;
+}
+
+.au-checkbox--disabled,
+.au-radio--disabled,
+.au-toggle--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.au-checkbox-group__list,
+.au-radio-group__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.au-checkbox-group--horizontal .au-checkbox-group__list,
+.au-radio-group--horizontal .au-radio-group__list {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.au-toggle {
+  display: grid;
+  gap: 0.45rem;
+  font-family: inherit;
+}
+
+.au-toggle__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: $text-secondary;
+  font-size: 0.88rem;
+}
+
+.au-toggle__label {
+  font-weight: 700;
+}
+
+.au-toggle__state {
+  color: $text-muted;
+}
+
+.au-toggle__switch {
+  position: relative;
+  width: 3rem;
+  height: 1.65rem;
+}
+
+.au-toggle__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.au-toggle__slider {
+  position: absolute;
+  inset: 0;
+  border-radius: $radius-full;
+  background: $neutral-300;
+  transition: background-color $transition-fast;
+}
+
+.au-toggle__slider::after {
+  content: "";
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  left: 0.2rem;
+  top: 0.2rem;
+  border-radius: 50%;
+  background: $surface;
+  box-shadow: $shadow-sm;
+  transition: transform $transition-fast;
+}
+
+.au-toggle__input:checked + .au-toggle__slider {
+  background: $primary-base;
+}
+
+.au-toggle__input:checked + .au-toggle__slider::after {
+  transform: translateX(1.35rem);
+}
+
+.au-range {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.au-range__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.au-range__slider-row {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.au-range__input {
+  width: 100%;
+  height: 0.42rem;
+  border-radius: $radius-full;
+  background: $neutral-200;
+  outline: none;
+  appearance: none;
+}
+
+.au-range__input::-webkit-slider-thumb,
+.au-range__input::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid $surface;
+  border-radius: 50%;
+  background: $primary-base;
+  box-shadow: $shadow-sm;
+  cursor: pointer;
+}
+
+.au-range__tooltip {
+  color: $text-secondary;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.au-range--error .au-range__input {
+  background: $danger-100;
+}
+
+.au-range--disabled .au-range__input {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.au-datepicker {
+  position: relative;
+  display: grid;
+  gap: 0.45rem;
+  font-family: inherit;
+}
+
+.au-datepicker__native-wrap {
+  position: relative;
+}
+
+.au-datepicker__trigger,
+.au-datepicker__control {
+  padding: 0.72rem 2.65rem 0.72rem 0.85rem;
+  text-align: left;
+}
+
+.au-datepicker__trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.au-datepicker__value {
+  color: $text-primary;
+  font-weight: 700;
+}
+
+.au-datepicker__placeholder {
+  color: $text-muted;
+}
+
+.au-datepicker__icon {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  width: 1.15rem;
+  height: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.au-datepicker__icon span {
+  position: relative;
+  width: 0.95rem;
+  height: 0.85rem;
+  border: 1.5px solid $text-muted;
+  border-radius: $radius-sm;
+}
+
+.au-datepicker__icon span::before,
+.au-datepicker__icon span::after {
+  content: "";
+  position: absolute;
+  background: $text-muted;
+}
+
+.au-datepicker__icon span::before {
+  left: -1.5px;
+  right: -1.5px;
+  top: 0.22rem;
+  height: 1.5px;
+}
+
+.au-datepicker__icon span::after {
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 50%;
+  left: 0.22rem;
+  bottom: 0.16rem;
+  box-shadow: 0.38rem 0 0 $text-muted;
+}
+
+.au-datepicker__panel {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  z-index: 30;
+  width: min(23rem, calc(100vw - 2rem));
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  background: $surface;
+  box-shadow: $shadow-lg;
+}
+
+.au-datepicker__panel-header {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 2.25rem;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0 0 0.7rem;
+  border-bottom: 1px solid $border;
+}
+
+.au-datepicker__nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid $border;
+  border-radius: $radius-full;
+  background: $surface;
+  color: $text-secondary;
+  cursor: pointer;
+}
+
+.au-datepicker__month-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.au-datepicker__month-select,
+.au-datepicker__year-select {
+  min-width: 0;
+  min-height: 2.35rem;
+  padding: 0.4rem 1.8rem 0.4rem 0.65rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  appearance: auto;
+  background: $surface-secondary;
+  color: $text-primary;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.au-datepicker__month-select {
+  width: 8.5rem;
+}
+
+.au-datepicker__year-select {
+  width: 5.5rem;
+}
+
+.au-datepicker__panel-hero {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface-secondary;
+}
+
+.au-datepicker__panel-hero span {
+  color: $text-muted;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.au-datepicker__panel-hero strong {
+  color: $text-primary;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.au-datepicker__range-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.au-datepicker__range-preview button,
+.au-datepicker__panel-header button,
+.au-datepicker__actions button,
+.au-datepicker__presets button {
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-secondary;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.au-datepicker__range-preview button {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.52rem 0.62rem;
+  text-align: left;
+}
+
+.au-datepicker__range-preview button span {
+  color: $text-muted;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.au-datepicker__range-preview button strong {
+  font-size: 0.85rem;
+}
+
+.au-datepicker__range-preview button.is-active,
+.au-datepicker__panel-header button:hover,
+.au-datepicker__actions button:hover,
+.au-datepicker__presets button:hover {
+  border-color: $primary-tint-4;
+  background: $primary-tint-1;
+  color: $primary-shade-2;
+}
+
+.au-datepicker__panel-header {
+  display: grid;
+  grid-template-columns: 2.15rem 1fr 2.15rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.au-datepicker__panel-header button {
+  width: 2.15rem;
+  height: 2.15rem;
+}
+
+.au-datepicker__month-title {
+  display: grid;
+  text-align: center;
+}
+
+.au-datepicker__month-title strong {
+  color: $text-primary;
+  font-size: 0.98rem;
+}
+
+.au-datepicker__month-title span {
+  color: $text-muted;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.au-datepicker__weekdays,
+.au-datepicker__days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+
+.au-datepicker__weekdays span {
+  color: $text-muted;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.au-datepicker__day {
+  aspect-ratio: 1;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $text-secondary;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.au-datepicker__day:hover {
+  border-color: $border;
+  background: $surface-hover;
+}
+
+.au-datepicker__day.is-muted {
+  color: $text-disabled;
+}
+
+.au-datepicker__day.is-today {
+  border-color: $success-400;
+  color: $success-700;
+}
+
+.au-datepicker__day.is-in-range {
+  background: $primary-tint-1;
+  color: $primary-shade-2;
+}
+
+.au-datepicker__day.is-selected {
+  border-color: $primary-base;
+  background: $primary-base;
+  color: $text-inverse;
+}
+
+.au-datepicker__day:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.au-datepicker__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.au-datepicker__presets button {
+  min-height: 2rem;
+  padding: 0 0.62rem;
+  font-size: 0.8rem;
+}
+
+.au-datepicker__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.15rem;
+  border-top: 1px solid $border;
+}
+
+.au-datepicker__actions button {
+  min-height: 2.1rem;
+  padding: 0 0.7rem;
+}
+
+@media (max-width: 520px) {
+  .au-datepicker__panel {
+    width: min(21rem, calc(100vw - 2rem));
+  }
+
+  .au-datepicker__range-preview {
+    grid-template-columns: 1fr;
+  }
+}

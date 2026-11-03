@@ -1,0 +1,123 @@
+.au-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: inherit;
+}
+
+.au-input__label {
+  display: block;
+  margin: 0;
+  color: $text-secondary;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.au-input__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-primary;
+  box-shadow: $shadow-sm;
+  transition: border-color $transition-fast, box-shadow $transition-fast, background-color $transition-fast;
+}
+
+.au-input__field:hover {
+  border-color: $neutral-400;
+}
+
+.au-input__field:focus-within {
+  border-color: $primary-base;
+  box-shadow: 0 0 0 3px $focus-ring;
+}
+
+.au-input__control {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0.72rem 0.85rem;
+  color: $text-primary;
+  font: inherit;
+  line-height: 1.4;
+}
+
+.au-input__control::placeholder {
+  color: $text-muted;
+}
+
+.au-input__adornment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 2.4rem;
+  height: 100%;
+  padding: 0 0.65rem;
+  color: $text-muted;
+  line-height: 1;
+}
+
+.au-input__adornment--prefix {
+  border-right: 1px solid $border;
+}
+
+.au-input__adornment--suffix {
+  border-left: 1px solid $border;
+}
+
+.au-input__clear,
+.au-input__visibility {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $text-muted;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color $transition-fast, color $transition-fast;
+}
+
+.au-input__clear:hover,
+.au-input__visibility:hover {
+  background: $surface-hover;
+  color: $text-primary;
+}
+
+.au-input__helper,
+.au-input__error {
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.au-input__helper {
+  color: $text-muted;
+}
+
+.au-input__error {
+  color: $danger-700;
+}
+
+.au-input--error .au-input__field {
+  border-color: $danger-400;
+  background: $danger-50;
+}
+
+.au-input--disabled .au-input__field,
+.au-input__control:disabled {
+  background: $neutral-100;
+  color: $text-disabled;
+  cursor: not-allowed;
+}

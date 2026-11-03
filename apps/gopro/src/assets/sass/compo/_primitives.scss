@@ -1,0 +1,796 @@
+// Shared controls used by every GOPRO page. Native elements underneath, so
+// keyboard, screen-reader and mobile behaviour come from the browser.
+
+.gp-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gp-space-6);
+  min-width: 0;
+}
+
+.gp-card {
+  padding: clamp(1.2rem, 1rem + 1vw, 1.9rem);
+  border: 1px solid var(--gp-border);
+  border-radius: var(--gp-radius-lg);
+  background: var(--gp-surface);
+  box-shadow: var(--gp-shadow-sm);
+}
+
+.gp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.gp-field__label {
+  display: block;
+  margin: 0;
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-sm);
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.gp-field__hint {
+  margin: 0;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+  line-height: 1.45;
+}
+
+.gp-field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+  margin: 0;
+  color: var(--gp-danger);
+  font-size: var(--gp-text-xs);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.gp-field__error svg {
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+}
+
+.gp-input-shell {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.8rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--gp-border-strong);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-surface);
+  transition: border-color var(--gp-transition), box-shadow var(--gp-transition);
+}
+
+.gp-input-shell:hover {
+  border-color: var(--gp-text-faint);
+}
+
+.gp-input-shell:focus-within {
+  border-color: var(--gp-primary);
+  box-shadow: var(--gp-ring);
+}
+
+.gp-field--invalid .gp-input-shell {
+  border-color: var(--gp-danger-border);
+  background: var(--gp-danger-soft);
+}
+
+.gp-field--invalid .gp-input-shell:focus-within {
+  border-color: var(--gp-danger);
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.14);
+}
+
+.gp-input-shell--date {
+  padding-left: 0.75rem;
+}
+
+.gp-input-shell__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  color: var(--gp-text-faint);
+}
+
+.gp-input-shell__suffix {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  color: var(--gp-text-faint);
+}
+
+.gp-input-shell__country {
+  flex: 0 0 auto;
+  padding-right: 0.55rem;
+  border-right: 1px solid var(--gp-border);
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-sm);
+  font-weight: 650;
+}
+
+.gp-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.7rem;
+  padding: 0.55rem 0.1rem;
+  border: 1px solid var(--gp-border-strong);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-surface);
+  color: var(--gp-text);
+  font: inherit;
+  font-size: var(--gp-text-base);
+  line-height: 1.4;
+  outline: none;
+  transition: border-color var(--gp-transition), box-shadow var(--gp-transition);
+}
+
+.gp-input-shell .gp-input {
+  min-height: 2.55rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.gp-input::placeholder {
+  color: var(--gp-text-faint);
+  opacity: 1;
+}
+
+.gp-input:hover {
+  border-color: var(--gp-text-faint);
+}
+
+.gp-input:focus,
+.gp-input:focus-visible {
+  border-color: var(--gp-primary);
+  box-shadow: var(--gp-ring);
+  outline: none;
+}
+
+.gp-input:disabled,
+.gp-input[readonly] {
+  background: var(--gp-surface-sunken);
+  color: var(--gp-text-muted);
+  cursor: not-allowed;
+}
+
+.gp-select {
+  appearance: auto;
+  padding-right: 0.5rem;
+  cursor: pointer;
+}
+
+.gp-textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.gp-otp {
+  max-width: 16rem;
+  font-family: var(--gp-font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-align: center;
+}
+
+// Choice controls -------------------------------------------------------------
+
+.gp-choice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: flex-start;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.gp-choice--disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.gp-choice__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gp-choice__box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 1;
+  grid-row: 1;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.1rem;
+  border: 1.5px solid var(--gp-border-strong);
+  border-radius: 5px;
+  background: var(--gp-surface);
+  color: transparent;
+  pointer-events: none;
+  transition: border-color var(--gp-transition), background-color var(--gp-transition);
+}
+
+.gp-choice__box svg {
+  opacity: 0;
+}
+
+.gp-choice__input:checked ~ .gp-choice__box {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary);
+  color: var(--gp-text-inverse);
+}
+
+.gp-choice__input:checked ~ .gp-choice__box svg {
+  opacity: 1;
+}
+
+.gp-choice__input:focus-visible ~ .gp-choice__box {
+  outline: none;
+  border-color: var(--gp-primary);
+  box-shadow: var(--gp-ring);
+}
+
+.gp-field--invalid .gp-choice__box {
+  border-color: var(--gp-danger);
+}
+
+.gp-choice__label {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-sm);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.gp-choice__title {
+  display: block;
+  color: var(--gp-text);
+  font-weight: 600;
+}
+
+.gp-choice__description {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+  line-height: 1.4;
+}
+
+// Radio -----------------------------------------------------------------------
+
+.gp-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gp-radio-group--inline {
+  flex-flow: row wrap;
+  gap: 0.6rem 1.4rem;
+}
+
+.gp-radio-group > legend {
+  padding: 0;
+  margin-bottom: 0.2rem;
+}
+
+.gp-radio-group .gp-choice {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--gp-border);
+  border-radius: 10px;
+  background: var(--gp-surface);
+  transition: border-color var(--gp-transition), background-color var(--gp-transition);
+}
+
+.gp-radio-group .gp-choice:hover {
+  border-color: var(--gp-primary);
+}
+
+.gp-radio-group .gp-choice:has(.gp-choice__input:checked) {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary-soft);
+}
+
+.gp-radio-group--inline .gp-choice {
+  flex: 1 1 12rem;
+}
+
+.gp-choice--radio .gp-choice__box {
+  border-radius: 50%;
+}
+
+.gp-choice--radio .gp-choice__box svg {
+  display: none;
+}
+
+.gp-choice--radio .gp-choice__input:checked ~ .gp-choice__box::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gp-text-inverse);
+}
+
+// Upload ----------------------------------------------------------------------
+
+.gp-upload-field .gp-upload {
+  margin-top: 0.1rem;
+}
+
+.gp-upload--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+// Form layout -----------------------------------------------------------------
+
+.gp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gp-space-4);
+}
+
+.gp-form-grid--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.gp-form-grid__full {
+  grid-column: 1 / -1;
+}
+
+.gp-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gp-space-3);
+  flex-wrap: wrap;
+  margin-top: var(--gp-space-6);
+  padding-top: var(--gp-space-5);
+  border-top: 1px solid var(--gp-border);
+}
+
+.gp-form-actions__primary,
+.gp-form-actions__secondary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gp-space-2);
+}
+
+.gp-form-actions__hint {
+  margin: 0;
+  color: var(--gp-text-faint);
+  font-size: var(--gp-text-xs);
+}
+
+// Buttons ---------------------------------------------------------------------
+
+.gp-button--sm {
+  min-height: 2.15rem;
+  padding: 0.4rem 0.75rem;
+  font-size: var(--gp-text-xs);
+}
+
+.gp-button--lg {
+  min-height: 3rem;
+  padding: 0.8rem 1.35rem;
+  font-size: var(--gp-text-md);
+}
+
+// Error summary ---------------------------------------------------------------
+
+.gp-error-summary {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--gp-danger-border);
+  border-left-width: 4px;
+  border-radius: var(--gp-radius-sm);
+  background: var(--gp-danger-soft);
+}
+
+.gp-error-summary:focus {
+  outline: none;
+  border-color: var(--gp-danger);
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.22);
+}
+
+.gp-error-summary__title {
+  margin: 0 0 0.45rem;
+  color: var(--gp-danger);
+  font-size: var(--gp-text-sm);
+  font-weight: 750;
+}
+
+.gp-error-summary__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gp-error-summary__list a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  color: var(--gp-danger);
+  font-size: var(--gp-text-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.gp-error-summary__label {
+  font-weight: 700;
+}
+
+.gp-error-summary__message {
+  color: var(--gp-text-secondary);
+  font-weight: 500;
+}
+
+// Alerts ----------------------------------------------------------------------
+
+.gp-alert {
+  border-radius: var(--gp-radius-sm);
+}
+
+.gp-alert__icon {
+  width: 22px;
+  height: 22px;
+}
+
+.gp-alert__action {
+  margin-top: 0.55rem;
+}
+
+// Meter -----------------------------------------------------------------------
+
+.gp-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.gp-meter__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.gp-meter__label {
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-xs);
+  font-weight: 700;
+}
+
+.gp-meter__value {
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.gp-meter__track {
+  overflow: hidden;
+  height: 7px;
+  border-radius: var(--gp-radius-pill);
+  background: var(--gp-surface-sunken);
+}
+
+.gp-meter__track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gp-primary) 0%, #2f8b74 100%);
+  transition: width 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gp-meter__track--success > span {
+  background: linear-gradient(90deg, var(--gp-success) 0%, #2f9c6d 100%);
+}
+
+.gp-meter__track--warning > span {
+  background: linear-gradient(90deg, var(--gp-warning) 0%, #c98a38 100%);
+}
+
+.gp-meter__track--danger > span {
+  background: linear-gradient(90deg, var(--gp-danger) 0%, #d2574f 100%);
+}
+
+.gp-meter--indeterminate .gp-meter__track > span {
+  width: 40%;
+  animation: gp-meter-slide 1.35s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes gp-meter-slide {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(340%); }
+}
+
+// Status / loading / empty ----------------------------------------------------
+
+.gp-status-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gp-space-4);
+  padding: clamp(1.35rem, 1rem + 1.4vw, 2.1rem);
+  border: 1px solid var(--gp-border);
+  border-radius: var(--gp-radius-lg);
+  background: var(--gp-surface);
+  box-shadow: var(--gp-shadow-sm);
+}
+
+.gp-status-hero__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--gp-primary-soft);
+  color: var(--gp-primary-strong);
+}
+
+.gp-status-hero--success .gp-status-hero__mark {
+  background: var(--gp-success-soft);
+  color: var(--gp-success);
+}
+
+.gp-status-hero--danger .gp-status-hero__mark {
+  background: var(--gp-danger-soft);
+  color: var(--gp-danger);
+}
+
+.gp-status-hero--warning .gp-status-hero__mark {
+  background: var(--gp-warning-soft);
+  color: var(--gp-warning);
+}
+
+.gp-status-hero__body {
+  min-width: 0;
+}
+
+.gp-status-hero__title {
+  margin: 0;
+  color: var(--gp-text);
+  font-size: clamp(1.35rem, 1.15rem + 0.8vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.gp-status-hero__text {
+  max-width: 64ch;
+  margin-top: 0.45rem;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-base);
+  line-height: 1.6;
+}
+
+.gp-status-hero__text p {
+  margin: 0 0 0.4rem;
+}
+
+.gp-status-hero__text p:last-child {
+  margin-bottom: 0;
+}
+
+.gp-status-hero__meta {
+  margin-top: 0.6rem;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+}
+
+.gp-status-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gp-space-2);
+  margin-top: var(--gp-space-4);
+}
+
+.gp-loading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--gp-border);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-surface);
+}
+
+.gp-loading__spinner {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 0.1rem;
+  border: 2px solid var(--gp-border-strong);
+  border-top-color: var(--gp-primary);
+  border-radius: 50%;
+  animation: gp-spin 0.9s linear infinite;
+}
+
+@keyframes gp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.gp-loading__title {
+  margin: 0;
+  color: var(--gp-text);
+  font-size: var(--gp-text-sm);
+  font-weight: 700;
+}
+
+.gp-loading__text {
+  margin: 0.15rem 0 0;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+  line-height: 1.5;
+}
+
+.gp-loading--inline {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.gp-error-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--gp-danger-border);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-danger-soft);
+}
+
+.gp-error-state__icon {
+  flex: 0 0 auto;
+  color: var(--gp-danger);
+}
+
+.gp-error-state__title {
+  margin: 0;
+  color: var(--gp-danger);
+  font-size: var(--gp-text-sm);
+  font-weight: 750;
+}
+
+.gp-error-state__text {
+  margin: 0.2rem 0 0;
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-sm);
+  line-height: 1.5;
+}
+
+.gp-error-state__actions {
+  margin-top: 0.65rem;
+}
+
+.gp-empty__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 0.35rem;
+  border-radius: 50%;
+  background: var(--gp-surface);
+  color: var(--gp-text-muted);
+  box-shadow: var(--gp-shadow-xs);
+}
+
+.gp-empty__action {
+  margin-top: 0.5rem;
+}
+
+// Dialog ----------------------------------------------------------------------
+
+.gp-dialog {
+  width: min(32rem, calc(100vw - 2rem));
+  padding: 0;
+  border: 1px solid var(--gp-border);
+  border-radius: var(--gp-radius-lg);
+  background: var(--gp-surface);
+  color: var(--gp-text);
+  box-shadow: var(--gp-shadow-lg);
+}
+
+.gp-dialog::backdrop {
+  background: rgba(9, 33, 28, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.gp-dialog__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gp-space-3);
+  padding: clamp(1.2rem, 1rem + 1vw, 1.75rem);
+}
+
+.gp-dialog__title {
+  margin: 0;
+  color: var(--gp-text);
+  font-size: var(--gp-text-xl);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.gp-dialog__body {
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-sm);
+  line-height: 1.55;
+}
+
+.gp-dialog__body p {
+  margin: 0 0 0.4rem;
+}
+
+.gp-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gp-space-2);
+  margin-top: var(--gp-space-2);
+}
+
+// Responsive ------------------------------------------------------------------
+
+@media (max-width: 720px) {
+  .gp-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gp-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gp-form-actions__primary,
+  .gp-form-actions__secondary {
+    width: 100%;
+  }
+
+  .gp-form-actions__primary > .au-button,
+  .gp-form-actions__secondary > .au-button {
+    flex: 1 1 auto;
+  }
+
+  .gp-status-hero {
+    flex-direction: column;
+    gap: var(--gp-space-3);
+  }
+
+  .gp-dialog__actions > .au-button {
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .gp-input-shell {
+    min-height: 2.9rem;
+  }
+}

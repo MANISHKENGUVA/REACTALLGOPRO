@@ -1,0 +1,278 @@
+// Nine-stage loan tracker. Each stage says its state in words; the marker,
+// connector and tint are reinforcement only. Completed stages are never
+// clickable: progress is information, not navigation.
+
+.gp-tracker {
+  min-width: 0;
+}
+
+.gp-tracker__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+}
+
+.gp-tracker__meter {
+  overflow: hidden;
+  height: 6px;
+  border-radius: var(--gp-radius-pill);
+  background: var(--gp-surface-sunken);
+}
+
+.gp-tracker__meter > span {
+  display: block;
+  width: var(--gp-meter-value, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gp-primary) 0%, #2f8b74 100%);
+  transition: width 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gp-tracker__meter--success > span {
+  background: linear-gradient(90deg, var(--gp-success) 0%, #2f9c6d 100%);
+}
+
+.gp-tracker__meter--warning > span {
+  background: linear-gradient(90deg, var(--gp-warning) 0%, #c98a38 100%);
+}
+
+.gp-tracker__meter--danger > span {
+  background: linear-gradient(90deg, var(--gp-danger) 0%, #d2574f 100%);
+}
+
+.gp-tracker__meta {
+  margin: 0;
+  color: var(--gp-text-faint);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+}
+
+.gp-tracker__list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gp-tracker__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 0.65rem;
+  padding: 0.4rem 0;
+}
+
+.gp-tracker__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 33px;
+  bottom: -8px;
+  left: 13px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--gp-border);
+}
+
+.gp-tracker__item--completed:not(:last-child)::after {
+  background: var(--gp-success-border);
+}
+
+.gp-tracker__marker {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--gp-border-strong);
+  border-radius: 50%;
+  background: var(--gp-surface);
+  color: var(--gp-text-faint);
+  line-height: 1;
+}
+
+.gp-tracker__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.gp-tracker__label {
+  color: var(--gp-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.gp-tracker__state {
+  margin-top: 0.1rem;
+  color: var(--gp-text-faint);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+// Completed -------------------------------------------------------------------
+
+.gp-tracker__item--completed .gp-tracker__marker {
+  border-color: var(--gp-success-border);
+  background: var(--gp-success-soft);
+  color: var(--gp-success);
+}
+
+.gp-tracker__item--completed .gp-tracker__label {
+  color: var(--gp-text-secondary);
+}
+
+.gp-tracker__item--completed .gp-tracker__state {
+  color: var(--gp-success);
+}
+
+// Available - a form the borrower can act on now ------------------------------
+
+.gp-tracker__item--available .gp-tracker__marker {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary-soft);
+  color: var(--gp-primary-strong);
+  box-shadow: 0 0 0 4px rgba(20, 101, 84, 0.1);
+}
+
+.gp-tracker__item--available .gp-tracker__label,
+.gp-tracker__item--available .gp-tracker__state {
+  color: var(--gp-primary-strong);
+  font-weight: 750;
+}
+
+// Current - backend is processing this stage ----------------------------------
+
+.gp-tracker__item--current .gp-tracker__marker {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary);
+  color: var(--gp-text-inverse);
+  box-shadow: 0 0 0 4px rgba(20, 101, 84, 0.14);
+}
+
+.gp-tracker__item--current .gp-tracker__label {
+  color: var(--gp-text);
+  font-weight: 750;
+}
+
+.gp-tracker__item--current .gp-tracker__state {
+  color: var(--gp-primary-strong);
+}
+
+// Pending / needs attention ---------------------------------------------------
+
+.gp-tracker__item--pending .gp-tracker__marker,
+.gp-tracker__item--needs-attention .gp-tracker__marker {
+  border-color: var(--gp-warning-border);
+  background: var(--gp-warning-soft);
+  color: var(--gp-warning);
+}
+
+.gp-tracker__item--pending .gp-tracker__label,
+.gp-tracker__item--needs-attention .gp-tracker__label {
+  color: var(--gp-text);
+  font-weight: 700;
+}
+
+.gp-tracker__item--pending .gp-tracker__state,
+.gp-tracker__item--needs-attention .gp-tracker__state {
+  color: var(--gp-warning);
+}
+
+.gp-tracker__item--needs-attention .gp-tracker__marker {
+  box-shadow: 0 0 0 4px rgba(150, 86, 15, 0.1);
+}
+
+// Failed / skipped / locked ---------------------------------------------------
+
+.gp-tracker__item--failed .gp-tracker__marker {
+  border-color: var(--gp-danger-border);
+  background: var(--gp-danger-soft);
+  color: var(--gp-danger);
+}
+
+.gp-tracker__item--failed .gp-tracker__label {
+  color: var(--gp-text);
+  font-weight: 700;
+}
+
+.gp-tracker__item--failed .gp-tracker__state {
+  color: var(--gp-danger);
+}
+
+.gp-tracker__item--skipped .gp-tracker__marker {
+  border-style: dashed;
+  color: var(--gp-text-faint);
+}
+
+.gp-tracker__item--skipped .gp-tracker__label {
+  color: var(--gp-text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.gp-tracker__item--locked .gp-tracker__marker {
+  background: var(--gp-surface-muted);
+  color: var(--gp-text-faint);
+}
+
+.gp-tracker__item--locked .gp-tracker__label {
+  color: var(--gp-text-muted);
+  font-weight: 600;
+}
+
+.gp-tracker__item--locked .gp-tracker__state {
+  color: var(--gp-text-faint);
+}
+
+// Compact (mobile disclosure) -------------------------------------------------
+
+.gp-tracker--compact .gp-tracker__item {
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 0.55rem;
+  padding: 0.3rem 0;
+}
+
+.gp-tracker--compact .gp-tracker__marker {
+  width: 24px;
+  height: 24px;
+}
+
+.gp-tracker--compact .gp-tracker__item:not(:last-child)::after {
+  top: 28px;
+  left: 11px;
+  bottom: -6px;
+}
+
+.gp-tracker--compact .gp-tracker__label {
+  font-size: var(--gp-text-xs);
+}
+
+.gp-tracker--compact .gp-tracker__state {
+  font-size: 0.625rem;
+}
+
+.gp-tracker--compact .gp-tracker__head {
+  margin-bottom: 0.75rem;
+}
+
+.gp-tracker--unknown {
+  padding: 0.9rem 1rem;
+  border: 1px dashed var(--gp-border-strong);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-surface-muted);
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-sm);
+}
+
+.gp-tracker--unknown p {
+  margin: 0;
+}

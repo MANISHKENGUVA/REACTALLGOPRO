@@ -1,0 +1,266 @@
+// Page-level composition. These classes describe repeated page shapes (review
+// panels, processing steps, receipts) and never contain component internals.
+
+.gp-page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gp-space-5);
+  min-width: 0;
+}
+
+.gp-page-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: var(--gp-space-5);
+  align-items: start;
+}
+
+.gp-page-grid--equal {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gp-page-grid__full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 860px) {
+  .gp-page-grid,
+  .gp-page-grid--equal {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.gp-callout {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--gp-border);
+  border-left: 3px solid var(--gp-primary);
+  border-radius: 0 var(--gp-radius-sm) var(--gp-radius-sm) 0;
+  background: var(--gp-primary-soft);
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-sm);
+  line-height: 1.55;
+}
+
+.gp-callout--warning {
+  border-left-color: var(--gp-warning);
+  background: var(--gp-warning-soft);
+}
+
+.gp-callout--danger {
+  border-left-color: var(--gp-danger);
+  background: var(--gp-danger-soft);
+}
+
+.gp-callout p {
+  margin: 0 0 0.35rem;
+}
+
+.gp-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.gp-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+}
+
+.gp-meta-row__id {
+  font-family: var(--gp-font-mono);
+  font-size: 0.6875rem;
+  overflow-wrap: anywhere;
+}
+
+.gp-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gp-review-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gp-space-3);
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--gp-border);
+}
+
+.gp-review-item:last-child {
+  border-bottom: 0;
+}
+
+.gp-review-item__label {
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-sm);
+}
+
+.gp-review-item__value {
+  color: var(--gp-text);
+  font-size: var(--gp-text-sm);
+  font-weight: 650;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.gp-decision-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gp-space-3);
+}
+
+@media (max-width: 620px) {
+  .gp-decision-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.gp-decision {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--gp-border-strong);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-surface);
+  color: var(--gp-text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--gp-transition), background-color var(--gp-transition), box-shadow var(--gp-transition);
+}
+
+.gp-decision:hover {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary-soft);
+}
+
+.gp-decision:focus-visible {
+  outline: none;
+  border-color: var(--gp-primary);
+  box-shadow: var(--gp-ring);
+}
+
+.gp-decision--selected {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary-soft);
+  box-shadow: var(--gp-ring);
+}
+
+.gp-decision--danger:hover,
+.gp-decision--danger.gp-decision--selected {
+  border-color: var(--gp-danger);
+  background: var(--gp-danger-soft);
+}
+
+.gp-decision__title {
+  font-size: var(--gp-text-sm);
+  font-weight: 750;
+}
+
+.gp-decision__text {
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+  line-height: 1.45;
+}
+
+.gp-processing-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gp-processing-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: var(--gp-text-secondary);
+  font-size: var(--gp-text-sm);
+  line-height: 1.5;
+}
+
+.gp-processing-step__marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  margin-top: 0.1rem;
+  border: 1px solid var(--gp-border-strong);
+  border-radius: 50%;
+  background: var(--gp-surface);
+  color: var(--gp-text-faint);
+}
+
+.gp-processing-step--done .gp-processing-step__marker {
+  border-color: var(--gp-success-border);
+  background: var(--gp-success-soft);
+  color: var(--gp-success);
+}
+
+.gp-processing-step--active .gp-processing-step__marker {
+  border-color: var(--gp-primary);
+  background: var(--gp-primary);
+  color: var(--gp-text-inverse);
+}
+
+.gp-receipt {
+  padding: var(--gp-space-5);
+  border: 1px dashed var(--gp-border-strong);
+  border-radius: var(--gp-radius-md);
+  background: var(--gp-surface-muted);
+}
+
+.gp-receipt__amount {
+  margin: 0;
+  color: var(--gp-text);
+  font-size: clamp(1.6rem, 1.3rem + 1vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.gp-receipt__caption {
+  margin: 0.25rem 0 0;
+  color: var(--gp-text-muted);
+  font-size: var(--gp-text-xs);
+}
+
+.gp-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gp-space-4);
+}
+
+.gp-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--gp-primary-strong);
+  font-size: var(--gp-text-sm);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.gp-text-link:hover {
+  text-decoration: underline;
+}
+
+.gp-divider {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--gp-border);
+}

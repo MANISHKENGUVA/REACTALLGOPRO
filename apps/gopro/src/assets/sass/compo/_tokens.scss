@@ -1,0 +1,238 @@
+// GOPRO application tokens.
+//
+// Warm mist canvas, deep spruce brand, muted brass accent. Values are semantic:
+// pages choose intent (surface, text, danger) rather than a raw colour. The
+// ARTIUI theme still supplies component internals; _au-overrides.scss maps its
+// primitives onto the same palette so nothing looks like a different product.
+
+:root {
+  color-scheme: light;
+
+  // Type ---------------------------------------------------------------------
+  --gp-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --gp-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --gp-text-xs: 0.75rem;
+  --gp-text-sm: 0.8125rem;
+  --gp-text-base: 0.9375rem;
+  --gp-text-md: 1rem;
+  --gp-text-lg: 1.125rem;
+  --gp-text-xl: 1.375rem;
+  --gp-text-2xl: 1.75rem;
+  --gp-text-3xl: clamp(1.85rem, 1.5rem + 1.4vw, 2.5rem);
+
+  // Surfaces -----------------------------------------------------------------
+  --gp-bg: #f3f5f4;
+  --gp-bg-soft: #e9eeeb;
+  --gp-surface: #ffffff;
+  --gp-surface-muted: #f7f9f8;
+  --gp-surface-sunken: #eef2f0;
+  --gp-surface-ink: #0b2f27;
+  --gp-surface-ink-soft: #11453a;
+  --gp-border: #dde4e0;
+  --gp-border-strong: #c3cec8;
+  --gp-text: #101c19;
+  --gp-text-secondary: #33443f;
+  --gp-text-muted: #5e6f69;
+  --gp-text-faint: #86958f;
+  --gp-text-inverse: #ffffff;
+
+  // Brand --------------------------------------------------------------------
+  --gp-primary: #146554;
+  --gp-primary-strong: #0d4d40;
+  --gp-primary-ink: #093b31;
+  --gp-primary-soft: #eaf4f0;
+  --gp-primary-soft-strong: #d3e8e1;
+  --gp-accent: #c1934f;
+  --gp-accent-soft: #f7f0e2;
+  --gp-accent-ink: #866231;
+
+  // Status -------------------------------------------------------------------
+  --gp-success: #16794f;
+  --gp-success-soft: #edf7f1;
+  --gp-success-border: #b6ddc8;
+  --gp-warning: #96560f;
+  --gp-warning-soft: #fdf4e6;
+  --gp-warning-border: #ecd2a8;
+  --gp-danger: #b3261e;
+  --gp-danger-soft: #fdf0ef;
+  --gp-danger-border: #f0c2be;
+  --gp-info: #235e75;
+  --gp-info-soft: #edf5f8;
+  --gp-info-border: #bed8e2;
+
+  // Shape and elevation ------------------------------------------------------
+  --gp-radius-sm: 8px;
+  --gp-radius-md: 12px;
+  --gp-radius-lg: 16px;
+  --gp-radius-xl: 22px;
+  --gp-radius-pill: 999px;
+  --gp-shadow-xs: 0 1px 2px rgba(16, 28, 25, 0.05);
+  --gp-shadow-sm: 0 1px 3px rgba(16, 28, 25, 0.07), 0 1px 2px rgba(16, 28, 25, 0.04);
+  --gp-shadow-md: 0 14px 30px -16px rgba(11, 47, 39, 0.28);
+  --gp-shadow-lg: 0 28px 64px -28px rgba(11, 47, 39, 0.38);
+  --gp-ring: 0 0 0 3px rgba(20, 101, 84, 0.22);
+
+  // Space --------------------------------------------------------------------
+  --gp-space-1: 0.25rem;
+  --gp-space-2: 0.5rem;
+  --gp-space-3: 0.75rem;
+  --gp-space-4: 1rem;
+  --gp-space-5: 1.25rem;
+  --gp-space-6: 1.5rem;
+  --gp-space-8: 2rem;
+  --gp-space-10: 2.5rem;
+  --gp-space-12: 3rem;
+
+  // Layout -------------------------------------------------------------------
+  --gp-header-height: 68px;
+  --gp-sidebar-width: 322px;
+  --gp-page-max: 860px;
+  --gp-shell-max: 1240px;
+  --gp-transition: 160ms ease;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--gp-bg);
+  color: var(--gp-text);
+  font-family: var(--gp-font-sans);
+  font-size: var(--gp-text-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+// The canvas is a faint top-lit mist, never a flat grey. It stays behind the
+// content and does not intercept pointer events.
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 380px;
+  background:
+    radial-gradient(64rem 24rem at 8% -10rem, rgba(20, 101, 84, 0.09), transparent 72%),
+    radial-gradient(52rem 20rem at 96% -12rem, rgba(193, 147, 79, 0.08), transparent 72%);
+  pointer-events: none;
+}
+
+::selection {
+  background: var(--gp-primary-soft-strong);
+  color: var(--gp-primary-ink);
+}
+
+a {
+  color: var(--gp-primary-strong);
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  color: var(--gp-primary-ink);
+}
+
+:where(a, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--gp-primary);
+  outline-offset: 2px;
+}
+
+:where(input, select, textarea) {
+  outline: none;
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+// Long words and URLs must never create a horizontal scrollbar.
+p,
+li,
+dd,
+dt,
+label,
+span {
+  overflow-wrap: break-word;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.gp-visually-hidden,
+.au-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.gp-skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  padding: 0.65rem 1rem;
+  border-radius: var(--gp-radius-sm);
+  background: var(--gp-surface-ink);
+  color: var(--gp-text-inverse);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform var(--gp-transition);
+}
+
+.gp-skip-link:focus-visible {
+  transform: translateY(0);
+  outline-color: var(--gp-text-inverse);
+}
+
+.gp-required {
+  color: var(--gp-danger);
+  font-weight: 600;
+}
+
+.gp-text-muted {
+  color: var(--gp-text-muted);
+}
+
+.gp-text-small {
+  font-size: var(--gp-text-sm);
+}
+
+.gp-no-scroll {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

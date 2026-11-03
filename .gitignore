@@ -2,6 +2,9 @@
 node_modules/
 **/node_modules/
 
+# Package manager (pnpm monorepo)
+pnpm-lock.yaml
+
 # Build outputs
 dist/
 build/
@@ -14,13 +17,19 @@ build/
 **/.vite/
 **/.cache/
 
-# Environment files
+# Turbo cache
+.turbo/
+
+# Environment files (real values never committed)
 .env
 .env.local
 .env.*
 **/.env
 **/.env.local
 **/.env.*
+
+# Environment templates are safe to commit (re-included after the ignores above)
+!**/.env.example
 
 # Logs
 logs/
@@ -38,12 +47,12 @@ pnpm-debug.log*
 .tmp/
 *.tsbuildinfo
 
-# OS Files
+# OS files
 .DS_Store
 Thumbs.db
 **/Thumbs.db
 
-# Editor Files
+# Editor files
 .vscode/
 .idea/
 *.swp

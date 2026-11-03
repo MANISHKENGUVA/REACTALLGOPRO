@@ -1,0 +1,26 @@
+{
+  "name": "reactallgopro",
+  "private": true,
+  "version": "1.0.0",
+  "description": "GoPro Loan application with the Artiqui shared UI library, managed as a Turborepo monorepo.",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "development": "node apps/gopro/scripts/run-env.js development",
+    "qa": "node apps/gopro/scripts/run-env.js qa",
+    "test": "node apps/gopro/scripts/run-env.js test",
+    "production": "node apps/gopro/scripts/run-env.js production",
+    "build": "turbo run build",
+    "build:development": "node apps/gopro/scripts/run-env.js build:development",
+    "build:qa": "node apps/gopro/scripts/run-env.js build:qa",
+    "build:test": "node apps/gopro/scripts/run-env.js build:test",
+    "build:production": "node apps/gopro/scripts/run-env.js build:production",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@12.16.1"
+}

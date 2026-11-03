@@ -1,0 +1,10 @@
+# Baseline security headers for static hosts that support the Netlify
+# `_headers` format. Deployment must confirm these are actually served; the
+# frontend source cannot activate or verify edge/proxy headers.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
