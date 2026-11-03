@@ -1,0 +1,32 @@
+// Accessible modal focus and keyboard behavior.
+.au-modal:focus {
+  outline: 2px solid $primary-base;
+  outline-offset: 3px;
+}
+
+.au-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  background: $surface;
+  color: $text-secondary;
+  font: inherit;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    background: $surface-hover;
+    color: $text-primary;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $focus-ring;
+    outline-offset: 2px;
+  }
+}

@@ -1,17 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef } from "react";
 
-const FOCUSABLE_SELECTORS = [
+const FOCUSABLE = [
+  "a[href]",
+  "area[href]",
   "button:not([disabled])",
-  "[href]",
-  "input:not([disabled])",
+  "input:not([disabled]):not([type=hidden])",
   "select:not([disabled])",
   "textarea:not([disabled])",
-  "[tabindex]:not([tabindex='-1'])"
+  "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
 export default function AUMODAL({
   isOpen,
-  onClose,
+  onClose = () => {},
   title,
   children,
   footer,
@@ -23,106 +24,92 @@ export default function AUMODAL({
   className = "",
   ...rest
 }) {
-  const [render, setRender] = useState(isOpen);
-  const modalRef = useRef(null);
-  const lastActiveElement = useRef(null);
+  const dialogRef = useRef(null);
+  const titleId = useId();
 
   useEffect(() => {
-    if (isOpen) {
-      lastActiveElement.current = document.activeElement;
-      setRender(true);
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-      if (lastActiveElement.current instanceof HTMLElement) {
-        lastActiveElement.current.focus();
-      }
-    };
-  }, [isOpen]);
+    if (!isOpen) return undefined;
 
-  useEffect(() => {
-    if (!isOpen && render) {
-      const timeout = setTimeout(() => setRender(false), 240);
-      return () => clearTimeout(timeout);
-    }
-    return undefined;
-  }, [isOpen, render]);
+    const previouslyFocused = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
 
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      const focusable = modalRef.current.querySelectorAll(FOCUSABLE_SELECTORS);
-      if (focusable.length) {
-        focusable[0].focus();
-      } else {
-        modalRef.current.focus();
-      }
-    }
-  }, [isOpen]);
+    const focusInitial = window.requestAnimationFrame(() => {
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = dialog.querySelectorAll(FOCUSABLE);
+      (focusable[0] || dialog).focus();
+    });
 
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (!isOpen) return;
+    const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         event.preventDefault();
         onClose();
+        return;
       }
-      if (event.key === "Tab" && modalRef.current) {
-        const focusable = Array.from(modalRef.current.querySelectorAll(FOCUSABLE_SELECTORS));
-        if (focusable.length === 0) return;
-        const currentIndex = focusable.indexOf(document.activeElement);
-        const nextIndex = event.shiftKey ? currentIndex - 1 : currentIndex + 1;
-        if (nextIndex >= focusable.length) {
-          event.preventDefault();
-          focusable[0].focus();
-        } else if (nextIndex < 0) {
-          event.preventDefault();
-          focusable[focusable.length - 1].focus();
-        }
+
+      if (event.key !== "Tab") return;
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = [...dialog.querySelectorAll(FOCUSABLE)];
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
       }
-    }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
 
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusInitial);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) {
+        previouslyFocused.focus();
+      }
+    };
   }, [isOpen, onClose]);
 
-  if (!render) return null;
+  if (!isOpen) return null;
 
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+  const handleBackdropClick = (event) => {
+    if (event.target === event.currentTarget) onClose();
   };
 
-  const classes = [
-    "au-modal",
-    `au-modal--${size}`,
-    isOpen ? "au-modal--open" : "au-modal--closing",
-    className
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const classes = ["au-modal", `au-modal--${size}`, className].filter(Boolean).join(" ");
 
   return (
-    <div className="au-modal-overlay" onClick={handleBackdropClick} role="presentation" {...rest}>
+    <div className="au-modal-overlay" onClick={handleBackdropClick} {...rest}>
       <div
-        ref={modalRef}
+        ref={dialogRef}
         className={classes}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? "au-modal-title" : undefined}
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={title ? undefined : "Dialog"}
         tabIndex={-1}
       >
         {(title || showCloseButton) && (
           <div className="au-modal__header">
-            {title && <h2 id="au-modal-title" className="au-modal__title">{title}</h2>}
+            {title && <h2 id={titleId} className="au-modal__title">{title}</h2>}
             {showCloseButton && (
               <button
+                type="button"
                 className="au-modal__close"
                 onClick={onClose}
-                aria-label="Close modal"
+                aria-label="Close dialog"
               >
-                ×
+                <span aria-hidden="true">×</span>
               </button>
             )}
           </div>
@@ -134,16 +121,10 @@ export default function AUMODAL({
           <div className="au-modal__footer">
             {footer || (
               <>
-                <button
-                  className="au-button au-button--secondary"
-                  onClick={onClose}
-                >
+                <button type="button" className="au-button au-button--secondary" onClick={onClose}>
                   {cancelText}
                 </button>
-                <button
-                  className="au-button au-button--primary"
-                  onClick={onConfirm}
-                >
+                <button type="button" className="au-button au-button--primary" onClick={onConfirm}>
                   {confirmText}
                 </button>
               </>
