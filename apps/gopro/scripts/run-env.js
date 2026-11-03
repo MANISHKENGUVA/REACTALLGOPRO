@@ -81,10 +81,28 @@ export function resolveCommand(command, environment = process.env) {
 
 export function loadEnvironment(mode, {
   appRoot = APP_ROOT,
+  repoRoot = REPO_ROOT,
   environment = process.env,
   allowPlatformOnly = false,
 } = {}) {
   const envFile = path.resolve(appRoot, 'environments', mode, '.env');
+  const vercelEnvironment = ['development', 'preview', 'production'].includes(
+    environment.VERCEL_ENV,
+  )
+    ? environment.VERCEL_ENV
+    : null;
+  const platformEnvironmentFile = vercelEnvironment
+    ? path.resolve(repoRoot, '.vercel', `.env.${vercelEnvironment}.local`)
+    : null;
+
+  if (platformEnvironmentFile && existsSync(platformEnvironmentFile)) {
+    const platformValues = dotenv.parse(readFileSync(platformEnvironmentFile));
+    for (const [key, value] of Object.entries(platformValues)) {
+      if (!Object.hasOwn(environment, key)) {
+        environment[key] = value;
+      }
+    }
+  }
 
   if (existsSync(envFile)) {
     const fileValues = dotenv.parse(readFileSync(envFile));
@@ -98,6 +116,11 @@ export function loadEnvironment(mode, {
     mode !== 'qa' ||
     !environment.VITE_API_BASE_URL
   ) {
+    if (allowPlatformOnly && mode === 'qa') {
+      throw new Error(
+        'VITE_API_BASE_URL is required for Vercel Preview builds. Configure it in Vercel Preview environment variables.',
+      );
+    }
     throw new Error(`Required environment file not found: ${envFile}`);
   }
 

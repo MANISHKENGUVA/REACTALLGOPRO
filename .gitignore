@@ -17,6 +17,9 @@ build/
 # Turbo cache
 .turbo/
 
+# Vercel project settings and pulled environment variables
+.vercel/
+
 # Environment files (real values never committed)
 .env
 .env.local

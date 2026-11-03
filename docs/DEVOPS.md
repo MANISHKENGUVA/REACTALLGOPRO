@@ -35,7 +35,10 @@ production build using `npm run build:production gopro`. The production API
 URL comes from the selected production environment file, not workflow YAML.
 
 The deploy job pulls Vercel Preview settings, builds with
-`vercel build --target=preview`, and deploys the prebuilt output as a preview.
+`vercel build --environment=preview`, and deploys the prebuilt output as a
+preview. The loader reads Vercel's pulled `.vercel/.env.preview.local` when the
+Preview API variable is not present in the process environment. Keep that
+generated file untracked; it may contain private values.
 The deployment uses GitHub Actions secrets for `VERCEL_TOKEN`,
 `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`. The CI production build is validation
 only; it does not upload its local environment file or artifacts to Vercel.

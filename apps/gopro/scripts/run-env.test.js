@@ -83,10 +83,41 @@ test('production uses its own file and does not fall back when it is missing', (
 });
 
 test('preview may use injected Vercel config when its QA file is absent', (t) => {
-  const appRoot = createEnvironmentRoot(t);
-  const environment = { VITE_API_BASE_URL: 'https://qa-api.example.test' };
-  loadEnvironment('qa', { appRoot, environment, allowPlatformOnly: true });
+  const repoRoot = mkdtempSync(path.join(os.tmpdir(), 'gopro-vercel-'));
+  t.after(() => rmSync(repoRoot, { recursive: true, force: true }));
+  const appRoot = path.join(repoRoot, 'apps', 'gopro');
+  const vercelDirectory = path.join(repoRoot, '.vercel');
+  mkdirSync(path.join(vercelDirectory), { recursive: true });
+  mkdirSync(path.join(appRoot, 'environments', 'qa'), { recursive: true });
+  writeFileSync(
+    path.join(vercelDirectory, '.env.preview.local'),
+    'VITE_API_BASE_URL=https://qa-api.example.test\n',
+  );
+  writeFileSync(
+    path.join(appRoot, 'environments', 'qa', '.env'),
+    'VITE_APP_ENV=qa\nVITE_API_BASE_URL=https://qa-api-from-file.example.test\n',
+  );
+
+  const environment = { VERCEL_ENV: 'preview' };
+  loadEnvironment('qa', { appRoot, repoRoot, environment });
   assert.equal(environment.VITE_APP_ENV, 'qa');
+  assert.equal(environment.VITE_API_BASE_URL, 'https://qa-api.example.test');
+});
+
+test('preview build fails clearly when pulled Vercel config has no API URL', (t) => {
+  const repoRoot = mkdtempSync(path.join(os.tmpdir(), 'gopro-vercel-'));
+  t.after(() => rmSync(repoRoot, { recursive: true, force: true }));
+  const appRoot = path.join(repoRoot, 'apps', 'gopro');
+
+  assert.throws(
+    () => loadEnvironment('qa', {
+      appRoot,
+      repoRoot,
+      environment: { VERCEL_ENV: 'preview' },
+      allowPlatformOnly: true,
+    }),
+    /Configure it in Vercel Preview environment variables/,
+  );
 });
 
 test('VITE_APP_ENV cannot conflict with the selected environment', (t) => {
