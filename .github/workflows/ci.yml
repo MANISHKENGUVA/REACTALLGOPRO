@@ -1,5 +1,5 @@
 
-name: GOPRO CI and Vercel Deployment
+name: GOPRO CI and Vercel Production Deployment
 
 on:
   push:
@@ -40,11 +40,11 @@ jobs:
         run: npm run build:production gopro
 
   deploy:
-    name: Deploy GOPRO to Vercel
+    name: Deploy GOPRO to Vercel Production
     needs: validate
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    environment: preview
+    environment: production
 
     steps:
       - name: Checkout repository
@@ -64,22 +64,22 @@ jobs:
         run: npm install --global vercel
 
       - name: Pull Vercel project settings
-        run: vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
-      - name: Build Vercel deployment
-        run: vercel build --environment=preview --token="$VERCEL_TOKEN"
+      - name: Build Vercel production deployment
+        run: vercel build --environment=production --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_ENV: preview
+          VERCEL_ENV: production
 
-      - name: Deploy preview
-        run: vercel deploy --prebuilt --token="$VERCEL_TOKEN"
+      - name: Deploy to production
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
