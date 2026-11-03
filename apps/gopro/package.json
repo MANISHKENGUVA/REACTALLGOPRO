@@ -15,12 +15,12 @@
     "build:test": "vite build --mode test",
     "build:production": "vite build --mode production",
     "lint": "eslint .",
-    "test": "node --test tests/security.test.mjs tests/routeActors.test.mjs tests/pageMetadata.test.mjs tests/accessHandler.test.mjs tests/workflowResolver.test.mjs tests/sessionRecovery.test.mjs tests/sessionRegistry.test.mjs tests/draftStore.test.mjs tests/recoveryGates.test.mjs tests/recoveryFlow.test.mjs tests/applicationCreation.test.mjs tests/staticHygiene.test.mjs tests/formValidation.test.mjs",
-    "test:security": "node --test tests/security.test.mjs tests/routeActors.test.mjs tests/accessHandler.test.mjs tests/sessionRecovery.test.mjs tests/sessionRegistry.test.mjs tests/draftStore.test.mjs tests/recoveryGates.test.mjs tests/recoveryFlow.test.mjs tests/staticHygiene.test.mjs",
+    "test": "node --test",
+    "test:security": "node --test",
     "preview": "vite preview"
   },
   "dependencies": {
-    "artiqui": "workspace:*",
+    "artiqui": "*",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.18.4",

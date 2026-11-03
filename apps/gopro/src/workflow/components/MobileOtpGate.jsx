@@ -17,7 +17,6 @@ export default function MobileOtpGate({
   challengeId = '',
   issued: issuedProp = false,
   delivery = '',
-  deliveryChannel = '',
   sendsRemaining = null,
   otpLength: digits = 6,
   expiresAt = '',

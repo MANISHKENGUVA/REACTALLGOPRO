@@ -2,9 +2,6 @@
 node_modules/
 **/node_modules/
 
-# Package manager (pnpm monorepo)
-pnpm-lock.yaml
-
 # Build outputs
 dist/
 build/

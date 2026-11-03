@@ -24,10 +24,9 @@
  *
  * Usage:
  *   npm run <command> [<workspace>]
- *   pnpm run <command> [<workspace>]
  */
 
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -38,8 +37,7 @@ if (!command) {
   process.exit(2);
 }
 
-// `npm run test` with no workspace argument preserves the existing behaviour
-// of running the full test suite across all workspaces via turbo.
+// `npm run test` with no workspace argument runs tests across workspaces.
 if (command === 'test' && args.length === 1) {
   execSync('turbo run test', { stdio: 'inherit' });
   process.exit(0);
@@ -60,7 +58,11 @@ const SCRIPT_MAP = {
 const target = SCRIPT_MAP[command] ?? command;
 
 try {
-  execSync(`pnpm --filter ${workspace} run ${target}`, {
+  const npmExecPath = process.env.npm_execpath;
+  if (!npmExecPath) {
+    throw new Error('Run this command through npm so the workspace can be selected.');
+  }
+  execFileSync(process.execPath, [npmExecPath, 'run', target, '--workspace', workspace], {
     stdio: 'inherit',
   });
 } catch (err) {

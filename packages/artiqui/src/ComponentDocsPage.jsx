@@ -23,12 +23,6 @@ import {
   AUSTEPPER,
 } from "./routerEngine";
 
-const timelineItems = [
-  { id: 1, title: "Kickoff", description: "Prototype approved", timestamp: "06/01", status: "completed" },
-  { id: 2, title: "Review", description: "QA pass for variants", timestamp: "06/02", status: "pending", icon: "🧪" },
-  { id: 3, title: "Release", description: "Docs route ready", timestamp: "06/03", status: "pending" },
-];
-
 const listItems = [
   { id: "a", title: "Overview", description: "Summary of the library", icon: "📊", badge: "Docs" },
   { id: "b", title: "States", description: "Disabled, selected, error, loading", icon: "⚙️" },
