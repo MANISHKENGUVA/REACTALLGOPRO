@@ -64,6 +64,13 @@ const VERCEL_TARGETS = {
   production: { mode: 'production', script: 'build:production' },
 };
 
+function shouldPreserveEnvironmentValue(environment, key) {
+  if (!Object.hasOwn(environment, key)) {
+    return false;
+  }
+  return key !== 'VITE_API_BASE_URL' || Boolean(String(environment[key]).trim());
+}
+
 export function resolveCommand(command, environment = process.env) {
   if (command === 'build:vercel') {
     const target = VERCEL_TARGETS[environment.VERCEL_ENV];
@@ -98,7 +105,7 @@ export function loadEnvironment(mode, {
   if (platformEnvironmentFile && existsSync(platformEnvironmentFile)) {
     const platformValues = dotenv.parse(readFileSync(platformEnvironmentFile));
     for (const [key, value] of Object.entries(platformValues)) {
-      if (!Object.hasOwn(environment, key)) {
+      if (!shouldPreserveEnvironmentValue(environment, key)) {
         environment[key] = value;
       }
     }
@@ -107,7 +114,7 @@ export function loadEnvironment(mode, {
   if (existsSync(envFile)) {
     const fileValues = dotenv.parse(readFileSync(envFile));
     for (const [key, value] of Object.entries(fileValues)) {
-      if (!Object.hasOwn(environment, key)) {
+      if (!shouldPreserveEnvironmentValue(environment, key)) {
         environment[key] = value;
       }
     }
@@ -137,6 +144,7 @@ export function loadEnvironment(mode, {
 
 export function main(args = process.argv.slice(2), environment = process.env) {
   const [requestedCommand, requestedWorkspace = 'gopro'] = args;
+  const isVercelBuild = requestedCommand === 'build:vercel';
   if (!requestedCommand) {
     console.error('Usage: run-env.js <command> [<workspace>]');
     return 2;
@@ -158,9 +166,14 @@ export function main(args = process.argv.slice(2), environment = process.env) {
       loadEnvironment(plan.mode, {
         environment,
         allowPlatformOnly:
-          requestedCommand === 'build:vercel' &&
-          environment.VERCEL_ENV === 'preview',
+          isVercelBuild && environment.VERCEL_ENV === 'preview',
       });
+    }
+
+    if (isVercelBuild) {
+      console.info(
+        `[gopro-env] VITE_API_BASE_URL present: ${environment.VITE_API_BASE_URL ? 'yes' : 'no'}`,
+      );
     }
 
     const npmExecPath = environment.npm_execpath;
@@ -175,6 +188,11 @@ export function main(args = process.argv.slice(2), environment = process.env) {
     );
     return 0;
   } catch (error) {
+    if (isVercelBuild) {
+      console.info(
+        `[gopro-env] VITE_API_BASE_URL present: ${environment.VITE_API_BASE_URL ? 'yes' : 'no'}`,
+      );
+    }
     if (typeof error.status === 'number') {
       return error.status;
     }

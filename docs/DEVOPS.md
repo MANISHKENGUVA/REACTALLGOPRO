@@ -17,10 +17,12 @@ ignore or regenerate it without reviewing workspace dependency changes.
 Root commands such as `npm run build:production gopro` select the matching
 `apps/gopro/environments/<mode>/.env` file before launching the workspace Vite
 script. The loader resolves paths from its own location, not the caller's
-working directory. Explicit process environment values take precedence over
-file values. `VITE_APP_ENV` must match the selected Vite mode; a mismatch fails
-the build. The GoPro Vite config reads only its selected mode directory, so an
-application-root or repository-root `.env` cannot override that configuration.
+working directory. Non-empty process environment values take precedence over
+file values; an empty `VITE_API_BASE_URL` is treated as unset so the selected
+environment file can supply it. `VITE_APP_ENV` must match the selected Vite
+mode; a mismatch fails the build. The GoPro Vite config reads only its selected
+mode directory, so an application-root or repository-root `.env` cannot
+override that configuration.
 
 The production `.env` is intentionally versioned because it contains only
 public frontend settings. Vite embeds `VITE_*` values into browser assets; do

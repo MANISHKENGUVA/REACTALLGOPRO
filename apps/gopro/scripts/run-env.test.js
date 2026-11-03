@@ -64,6 +64,54 @@ test('selected environment files load and process variables take precedence', (t
   }
 });
 
+test('external API configuration takes precedence over the Vercel file and QA file', (t) => {
+  const repoRoot = mkdtempSync(path.join(os.tmpdir(), 'gopro-vercel-'));
+  t.after(() => rmSync(repoRoot, { recursive: true, force: true }));
+  const appRoot = path.join(repoRoot, 'apps', 'gopro');
+  const vercelDirectory = path.join(repoRoot, '.vercel');
+  mkdirSync(path.join(vercelDirectory), { recursive: true });
+  mkdirSync(path.join(appRoot, 'environments', 'qa'), { recursive: true });
+  writeFileSync(
+    path.join(vercelDirectory, '.env.preview.local'),
+    'VITE_API_BASE_URL=https://qa-api-from-vercel.example.test\n',
+  );
+  writeFileSync(
+    path.join(appRoot, 'environments', 'qa', '.env'),
+    'VITE_APP_ENV=qa\nVITE_API_BASE_URL=https://qa-api-from-file.example.test\n',
+  );
+
+  const environment = {
+    VERCEL_ENV: 'preview',
+    VITE_API_BASE_URL: 'https://qa-api-from-process.example.test',
+  };
+  loadEnvironment('qa', { appRoot, repoRoot, environment });
+  assert.equal(
+    environment.VITE_API_BASE_URL,
+    'https://qa-api-from-process.example.test',
+  );
+});
+
+test('empty external API configuration falls back to the downloaded Vercel value', (t) => {
+  const repoRoot = mkdtempSync(path.join(os.tmpdir(), 'gopro-vercel-'));
+  t.after(() => rmSync(repoRoot, { recursive: true, force: true }));
+  const appRoot = path.join(repoRoot, 'apps', 'gopro');
+  const vercelDirectory = path.join(repoRoot, '.vercel');
+  mkdirSync(vercelDirectory, { recursive: true });
+  mkdirSync(path.join(appRoot, 'environments', 'qa'), { recursive: true });
+  writeFileSync(
+    path.join(vercelDirectory, '.env.preview.local'),
+    'VITE_API_BASE_URL=https://qa-api-from-vercel.example.test\n',
+  );
+  writeFileSync(
+    path.join(appRoot, 'environments', 'qa', '.env'),
+    'VITE_APP_ENV=qa\n',
+  );
+
+  const environment = { VERCEL_ENV: 'preview', VITE_API_BASE_URL: '' };
+  loadEnvironment('qa', { appRoot, repoRoot, environment });
+  assert.equal(environment.VITE_API_BASE_URL, 'https://qa-api-from-vercel.example.test');
+});
+
 test('production uses its own file and does not fall back when it is missing', (t) => {
   const appRoot = createEnvironmentRoot(t, {
     production: 'VITE_APP_ENV=production\nVITE_API_BASE_URL=https://api.production.test\n',
@@ -80,6 +128,13 @@ test('production uses its own file and does not fall back when it is missing', (
     () => loadEnvironment('production', { appRoot: devOnlyRoot, environment: {} }),
     /Required environment file not found/,
   );
+});
+
+test('checked-in production configuration loads for local production builds', () => {
+  const environment = {};
+  loadEnvironment('production', { environment });
+  assert.equal(environment.VITE_APP_ENV, 'production');
+  assert.equal(environment.VITE_API_BASE_URL, 'https://node-neon-api.vercel.app');
 });
 
 test('preview may use injected Vercel config when its QA file is absent', (t) => {
