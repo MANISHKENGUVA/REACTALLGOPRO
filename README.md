@@ -15,7 +15,7 @@ The application consumes the library through npm workspaces; no `npm link` is re
 REACTALLGOPRO/
 ├── apps/
 │   └── gopro/              # GoPro Loan application
-│       ├── environments/   # per-environment configuration (real .env files are gitignored)
+│       ├── environments/   # per-environment configuration (production public config is versioned)
 │       │   ├── development/.env        (+ .env.example)
 │       │   ├── qa/.env                 (+ .env.example)
 │       │   ├── test/.env               (+ .env.example)
@@ -111,22 +111,25 @@ GoPro dev server: `http://localhost:5173/` (theme controlled by `VITE_APP_THEME`
 ```bash
 # From the repository root
 npm ci
-npm run build
+npm run build:production gopro
 ```
 
 Production output for the GoPro app is written to `apps/gopro/dist/`. Deploy the contents of that folder to any static host (Vercel, Netlify, etc.).
+The production API URL is read from
+`apps/gopro/environments/production/.env`. This file contains public browser
+configuration only; Vite embeds every `VITE_*` value into the bundle.
 
 ---
 
 ## 🎨 Theme Switching
 
-Themes live in `packages/artiqui/src/assets/sass/themes/theme1–theme15`. To change the theme, edit `apps/gopro/.env`:
+Themes live in `packages/artiqui/src/assets/sass/themes/theme1–theme15`. To change the development theme, edit `apps/gopro/environments/development/.env`:
 
 ```env
 VITE_APP_THEME=theme2
 ```
 
-Then restart the dev server or re-run `npm run build`.
+Then restart the dev server or re-run the selected environment build command.
 
 ---
 
@@ -145,9 +148,9 @@ selected environment (check the running page or the built bundle):
 
 ```bash
 npm run development gopro   # VITE_APP_ENV=development, VITE_API_BASE_URL=http://localhost:3000
-npm run qa gopro            # VITE_APP_ENV=qa, VITE_API_BASE_URL=https://qa-api.gopro.example
+npm run qa gopro            # VITE_APP_ENV=qa, uses the QA environment configuration
 npm run test gopro          # VITE_APP_ENV=test
-npm run production gopro    # VITE_APP_ENV=production, VITE_API_BASE_URL=https://api.gopro.example
+npm run production gopro    # VITE_APP_ENV=production, requires a valid production API URL
 ```
 
 Build each environment and confirm the API URL is baked into the correct bundle:

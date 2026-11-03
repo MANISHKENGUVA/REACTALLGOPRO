@@ -25,6 +25,9 @@ build/
 **/.env.local
 **/.env.*
 
+# This public VITE_* configuration is intentionally versioned; never put secrets here.
+!apps/gopro/environments/production/.env
+
 # Environment templates are safe to commit (re-included after the ignores above)
 !**/.env.example
 

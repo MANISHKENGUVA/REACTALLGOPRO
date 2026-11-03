@@ -18,6 +18,7 @@
     "build:qa": "node apps/gopro/scripts/run-env.js build:qa",
     "build:test": "node apps/gopro/scripts/run-env.js build:test",
     "build:production": "node apps/gopro/scripts/run-env.js build:production",
+    "build:vercel": "node apps/gopro/scripts/run-env.js build:vercel",
     "lint": "turbo run lint"
   },
   "devDependencies": {
