@@ -1,0 +1,227 @@
+// Final shared refinements for a consistent, responsive experience across
+// the landing page and every workflow route. Keep application-specific rules
+// here rather than changing the shared Artiqui package.
+
+.gp-page {
+  gap: clamp(1.25rem, 2.6vw, 2rem);
+}
+
+.gp-page-header {
+  padding-top: 0;
+}
+
+.gp-page-header h1 {
+  max-width: 24ch;
+  text-wrap: balance;
+}
+
+.gp-page-header__description {
+  max-width: 64ch;
+}
+
+.gp-page-stack,
+.gp-page-grid,
+.gp-form-grid,
+.gp-stack,
+.gp-stack--tight {
+  min-width: 0;
+}
+
+.gp-home {
+  width: min(100%, 72rem);
+  margin-inline: auto;
+  padding: clamp(1.75rem, 4vw, 3.5rem) clamp(1rem, 4vw, 3rem) 3rem;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.gp-home .gp-page-header {
+  padding-block: 0.5rem 0.35rem;
+}
+
+.gp-home .gp-page-header h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 1.35rem + 2.2vw, 3.25rem);
+  letter-spacing: -0.045em;
+  line-height: 1.06;
+}
+
+.gp-home .gp-page-header__description {
+  max-width: 66ch;
+  margin-top: 0.8rem;
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.125rem);
+  line-height: 1.7;
+}
+
+.gp-home-start {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  padding: clamp(1.5rem, 3.5vw, 2.75rem);
+  border-color: rgba(195, 206, 200, 0.85);
+  border-radius: var(--gp-radius-xl);
+  background:
+    radial-gradient(30rem 18rem at 100% 0%, rgba(20, 101, 84, 0.09), transparent 70%),
+    linear-gradient(135deg, #fff 0%, #fbfdfc 100%);
+  box-shadow: 0 16px 38px -28px rgba(11, 47, 39, 0.3);
+}
+
+.gp-home-start__copy,
+.gp-home-start > .au-button {
+  position: relative;
+  z-index: 1;
+}
+
+.gp-home-start__copy {
+  max-width: 58ch;
+}
+
+.gp-home-start h2 {
+  font-size: clamp(1.3rem, 1.15rem + 0.6vw, 1.7rem);
+  letter-spacing: -0.025em;
+}
+
+.gp-home-start p {
+  max-width: 60ch;
+  line-height: 1.7;
+}
+
+.gp-home-start > .au-button {
+  min-height: 3.25rem;
+  padding-inline: 1.4rem;
+  white-space: nowrap;
+}
+
+.gp-home-preparation {
+  display: block;
+  padding: clamp(1.25rem, 2.5vw, 1.9rem) 0;
+  border-top: 1px solid var(--gp-border);
+  border-bottom: 1px solid var(--gp-border);
+}
+
+.gp-home-preparation__heading h2 {
+  font-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.5rem);
+  letter-spacing: -0.025em;
+}
+
+.gp-home-preparation__heading p {
+  margin-top: 0.4rem;
+  font-size: var(--gp-text-base);
+}
+
+.gp-home-preparation__list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.gp-home-preparation__item {
+  min-height: 100%;
+  padding: 1rem;
+  border: 1px solid var(--gp-border);
+  border-radius: var(--gp-radius-md);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--gp-shadow-xs);
+  font-size: var(--gp-text-sm);
+}
+
+.gp-home-preparation__item strong {
+  font-size: var(--gp-text-sm);
+}
+
+.gp-home-preparation__marker {
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: 0.38rem;
+  box-shadow: 0 0 0 4px var(--gp-accent-soft);
+}
+
+.gp-home-privacy .gp-home-privacy__hero {
+  border: 1px solid var(--gp-info-border);
+  box-shadow: none;
+}
+
+.gp-card,
+.loan-flow-card.au-card,
+.gp-status-hero {
+  min-width: 0;
+}
+
+.gp-section__header {
+  flex-wrap: wrap;
+}
+
+.gp-form-grid > *,
+.gp-page-grid > *,
+.gp-page-grid__full {
+  min-width: 0;
+}
+
+.gp-form-actions__primary,
+.gp-form-actions__secondary {
+  min-width: 0;
+}
+
+:where(button, a, [tabindex]):focus-visible {
+  outline: 2px solid var(--gp-primary);
+  outline-offset: 3px;
+}
+
+:where(input, select, textarea):focus-visible {
+  outline: 2px solid var(--gp-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .gp-home {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .gp-home-start {
+    align-items: flex-start;
+    border-radius: var(--gp-radius-lg);
+  }
+
+  .gp-home-start > .au-button {
+    width: 100%;
+    white-space: normal;
+  }
+
+  .gp-home-preparation__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  .gp-home-preparation__item {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .gp-home {
+    padding-inline: 1rem;
+  }
+
+  .gp-home .gp-page-header h1 {
+    font-size: clamp(1.9rem, 8vw, 2.35rem);
+  }
+
+  .gp-home-start {
+    padding: 1.25rem;
+  }
+
+  .gp-home-start p {
+    font-size: var(--gp-text-sm);
+  }
+
+  .gp-shell {
+    padding-inline: 1rem;
+  }
+
+  .gp-card,
+  .loan-flow-card.au-card {
+    padding: 1.1rem;
+  }
+}
