@@ -9,6 +9,7 @@ import { GateLoading, GateUnavailable } from './GateStates';
 // token. Local completion is proof of nothing — the backend is authoritative.
 const SCRIPT_ID = 'recaptcha-api';
 const SCRIPT_TIMEOUT_MS = 12000;
+const WIDGET_READY_TIMEOUT_MS = 8000;
 let loaderPromise = null;
 
 function loadRecaptcha() {
@@ -32,8 +33,6 @@ function loadRecaptcha() {
       if (settled) return;
       settled = true;
       cleanup();
-      // A failed/late script must not poison the next user retry by leaving a
-      // dead element whose load/error event has already fired.
       if (script?.dataset?.goproRecaptcha !== 'loaded') script?.remove();
       reject(new Error(message));
     };
@@ -50,8 +49,6 @@ function loadRecaptcha() {
     const onError = () => fail('The reCAPTCHA script could not be loaded.');
 
     if (script?.dataset?.goproRecaptcha === 'loaded' && !window.grecaptcha?.render) {
-      // The script element is stale (for example after a browser extension or
-      // navigation interrupted provider initialization); let the retry reload it.
       script.remove();
       script = null;
     }
@@ -70,9 +67,6 @@ function loadRecaptcha() {
     timeout = setTimeout(() => fail('The reCAPTCHA script timed out.'), SCRIPT_TIMEOUT_MS);
 
     if (!script.isConnected) document.head.appendChild(script);
-    // If another loader inserted an already-failed or fully-loaded element,
-    // its events may have fired before our listeners. The bounded timeout above
-    // turns that case into a recoverable error rather than infinite loading.
   }).catch((error) => {
     loaderPromise = null;
     throw error;
@@ -139,19 +133,61 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
       }
       if (widgetIdRef.current !== null) return undefined;
     }
+
     let cancelled = false;
-    loadRecaptcha()
-      .then((grecaptcha) => {
-        if (cancelled || !containerRef.current || widgetIdRef.current !== null) return;
-        widgetIdRef.current = grecaptcha.render(containerRef.current, {
+    let settled = false;
+    let readyTimer;
+    const markUnavailable = () => {
+      if (cancelled || settled) return;
+      settled = true;
+      clearTimeout(readyTimer);
+      setWidgetFailed(true);
+    };
+    const renderWidget = (grecaptcha) => {
+      if (cancelled || settled || !containerRef.current) return;
+      try {
+        const widgetId = grecaptcha.render(containerRef.current, {
           sitekey: siteKey,
           callback: (token) => { setWidgetToken(token); setExpired(false); setError(''); },
           'expired-callback': () => { setWidgetToken(''); setExpired(true); },
           'error-callback': () => { setWidgetToken(''); setWidgetFailed(true); },
         });
+        if (widgetId === undefined || widgetId === null) {
+          throw new Error('reCAPTCHA did not return a widget identifier.');
+        }
+        widgetIdRef.current = widgetId;
+        settled = true;
+        clearTimeout(readyTimer);
+        setWidgetFailed(false);
+      } catch {
+        // Google can expose the API but reject rendering (for example, an
+        // unauthorized site key). Do not leave an empty CAPTCHA area forever.
+        markUnavailable();
+      }
+    };
+
+    loadRecaptcha()
+      .then((grecaptcha) => {
+        if (cancelled) return;
+        readyTimer = setTimeout(markUnavailable, WIDGET_READY_TIMEOUT_MS);
+        try {
+          // Wait for Google's client initialization before rendering. Some
+          // browsers expose `render` before the provider is actually ready.
+          if (typeof grecaptcha.ready === 'function') {
+            grecaptcha.ready(() => renderWidget(grecaptcha));
+          } else {
+            renderWidget(grecaptcha);
+          }
+        } catch {
+          markUnavailable();
+        }
       })
-      .catch(() => { if (!cancelled) setWidgetFailed(true); });
-    return () => { cancelled = true; };
+      .catch(() => { markUnavailable(); });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(readyTimer);
+    };
   }, [config, siteKey, bypassed, supported, widgetEpoch]);
 
   const resetWidget = useCallback(() => {
@@ -256,7 +292,7 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
       <GateUnavailable
         title="Security check unavailable"
         message={siteKey
-          ? 'The security check could not load. Check your connection or browser content blocker, then reload the security check.'
+          ? 'The security check could not initialize. Check that this website is authorized for the site key and that your browser allows Google reCAPTCHA, then reload the security check.'
           : 'The service did not provide a security check key, so this step cannot be completed.'}
         onRetry={reacquire}
         retryLabel="Reload security check"
