@@ -6,36 +6,78 @@ import { captchaVersionSupported } from '../recoveryGates';
 import { GateLoading, GateUnavailable } from './GateStates';
 
 // CaptchaGate: renders the challenge the backend configured and forwards the
-// token. Local completion is proof of nothing — /workflow/captcha/verify is
-// authoritative, and `bypassed` comes from the server, never from the browser.
-// A security check is not identity verification and never promotes a session.
+// token. Local completion is proof of nothing — the backend is authoritative.
 const SCRIPT_ID = 'recaptcha-api';
+const SCRIPT_TIMEOUT_MS = 12000;
 let loaderPromise = null;
 
 function loadRecaptcha() {
-  if (typeof window === 'undefined') return Promise.reject(new Error('no window'));
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    return Promise.reject(new Error('reCAPTCHA is only available in a browser.'));
+  }
   if (window.grecaptcha?.render) return Promise.resolve(window.grecaptcha);
   if (loaderPromise) return loaderPromise;
+
   loaderPromise = new Promise((resolve, reject) => {
-    const ready = () => (window.grecaptcha?.render ? resolve(window.grecaptcha) : reject(new Error('recaptcha unavailable')));
-    const existing = document.getElementById(SCRIPT_ID);
-    if (existing) {
-      existing.addEventListener('load', ready, { once: true });
-      existing.addEventListener('error', () => reject(new Error('recaptcha unavailable')), { once: true });
-      return;
+    let script = document.getElementById(SCRIPT_ID);
+    let timeout;
+    let settled = false;
+
+    const cleanup = () => {
+      clearTimeout(timeout);
+      script?.removeEventListener('load', onLoad);
+      script?.removeEventListener('error', onError);
+    };
+    const fail = (message) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      // A failed/late script must not poison the next user retry by leaving a
+      // dead element whose load/error event has already fired.
+      if (script?.dataset?.goproRecaptcha !== 'loaded') script?.remove();
+      reject(new Error(message));
+    };
+    const onLoad = () => {
+      if (window.grecaptcha?.render) {
+        settled = true;
+        if (script?.dataset) script.dataset.goproRecaptcha = 'loaded';
+        cleanup();
+        resolve(window.grecaptcha);
+      } else {
+        fail('The reCAPTCHA script loaded without its widget API.');
+      }
+    };
+    const onError = () => fail('The reCAPTCHA script could not be loaded.');
+
+    if (script?.dataset?.goproRecaptcha === 'loaded' && !window.grecaptcha?.render) {
+      // The script element is stale (for example after a browser extension or
+      // navigation interrupted provider initialization); let the retry reload it.
+      script.remove();
+      script = null;
     }
-    const script = document.createElement('script');
-    script.id = SCRIPT_ID;
-    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-    script.async = true;
-    script.defer = true;
-    script.onload = ready;
-    script.onerror = () => reject(new Error('recaptcha unavailable'));
-    document.head.appendChild(script);
+
+    if (!script) {
+      script = document.createElement('script');
+      script.id = SCRIPT_ID;
+      script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      if (script.dataset) script.dataset.goproRecaptcha = 'loading';
+    }
+
+    script.addEventListener('load', onLoad, { once: true });
+    script.addEventListener('error', onError, { once: true });
+    timeout = setTimeout(() => fail('The reCAPTCHA script timed out.'), SCRIPT_TIMEOUT_MS);
+
+    if (!script.isConnected) document.head.appendChild(script);
+    // If another loader inserted an already-failed or fully-loaded element,
+    // its events may have fired before our listeners. The bounded timeout above
+    // turns that case into a recoverable error rather than infinite loading.
   }).catch((error) => {
     loaderPromise = null;
     throw error;
   });
+
   return loaderPromise;
 }
 
@@ -74,16 +116,12 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
 
   const bypassed = Boolean(config?.bypassed);
   const siteKey = config?.siteKey || captcha?.siteKey || '';
-  // Only the version the service configured is ever rendered; v2 is the only
-  // explicit-render build supported, so anything else fails closed.
   const version = String(config?.version || captcha?.version || 'v2').toLowerCase();
   const supported = captchaVersionSupported(version);
   const busy = Boolean(verifying || submitting);
 
   useEffect(() => {
     let alive = true;
-    // The probe only decides which widget to render. It never decides whether
-    // the challenge is required — the resolve/recovery payload already did.
     setConfig(undefined);
     WorkflowClient.getCaptchaConfig()
       .then((value) => { if (alive) setConfig(value); })
@@ -93,8 +131,6 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
 
   useEffect(() => {
     if (!supported || !siteKey || bypassed || !containerRef.current) return undefined;
-    // A widget already bound to this container only needs a reset; rendering a
-    // second one into the same node would fail.
     if (widgetIdRef.current !== null && window.grecaptcha?.reset) {
       try {
         window.grecaptcha.reset(widgetIdRef.current);
@@ -118,7 +154,6 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
     return () => { cancelled = true; };
   }, [config, siteKey, bypassed, supported, widgetEpoch]);
 
-  // A token is single-use: every attempt (accepted or not) reacquires one.
   const resetWidget = useCallback(() => {
     setWidgetToken('');
     const id = widgetIdRef.current;
@@ -126,7 +161,7 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
       try {
         window.grecaptcha.reset(id);
       } catch {
-        // The widget is gone (unmounted or provider reloaded) — nothing to reset.
+        // The widget is gone (unmounted or provider reloaded).
       }
     }
   }, []);
@@ -137,8 +172,6 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
     setExpired(false);
     resetWidget();
     setWidgetEpoch((epoch) => epoch + 1);
-    // Re-probe the public config as well: a missing site key or a failed probe
-    // is exactly the case this retry exists for.
     setConfigEpoch((epoch) => epoch + 1);
   };
 
@@ -152,7 +185,6 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
     setError('');
     setSubmitting(true);
     try {
-      // The backend validates with the provider; nothing is verified here.
       await onVerify?.({ token, provider: version });
       resetWidget();
     } catch (e) {
@@ -178,27 +210,17 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
   }
 
   if (config === undefined) {
-    const state = (
-      <GateLoading
-        title="Loading security check"
-        description="Asking the service which check to display."
-      />
-    );
+    const state = <GateLoading title="Loading security check" description="Asking the service which check to display." />;
     if (embedded) return state;
     return <AUCARD className="loan-flow-card"><h2>Security Check</h2>{state}</AUCARD>;
   }
 
   if (bypassed) {
-    // The service explicitly reported that reCAPTCHA is disabled for this
-    // environment. Say so plainly instead of drawing a fake widget: a checkbox
-    // that verifies nothing trains users to trust the wrong signal.
     const handleBypass = async () => {
       if (busy) return;
       setError('');
       setSubmitting(true);
       try {
-        // The server ignores the token while bypass is active; it is sent only
-        // so the request shape stays identical to the verified path.
         await onVerify?.({ token: 'dev-bypass', provider: version });
       } catch (e) {
         setError(captchaErrorMessage(e));
@@ -206,24 +228,14 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
         setSubmitting(false);
       }
     };
-
     const state = (
       <div className="au-gate-stack">
         <p className="au-gate-hint au-gate-hint--warning" role="status">
-          Development mode: the server has disabled the security check for this
-          environment. This bypass is rejected in production.
+          Development mode: the server has disabled the security check for this environment. This bypass is rejected in production.
         </p>
-
         {error ? <p className="au-gate-error" role="alert">{error}</p> : null}
-
         <div className="au-gate-actions">
-          <AUBUTTON
-            variant="primary"
-            onClick={handleBypass}
-            disabled={busy}
-            loading={busy}
-            loadingText="Continuing…"
-          >
+          <AUBUTTON variant="primary" onClick={handleBypass} disabled={busy} loading={busy} loadingText="Continuing…">
             {busy ? 'Continuing…' : 'Continue'}
           </AUBUTTON>
         </div>
@@ -233,9 +245,7 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
     return (
       <AUCARD className="loan-flow-card">
         <h2>Security Check</h2>
-        <p className="au-gate-text">
-          Confirm you are human before proceeding to identity document upload.
-        </p>
+        <p className="au-gate-text">Confirm you are human before proceeding to identity document upload.</p>
         {state}
       </AUCARD>
     );
@@ -246,7 +256,7 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
       <GateUnavailable
         title="Security check unavailable"
         message={siteKey
-          ? 'The security check could not load in this browser. Reload it, or try again later.'
+          ? 'The security check could not load. Check your connection or browser content blocker, then reload the security check.'
           : 'The service did not provide a security check key, so this step cannot be completed.'}
         onRetry={reacquire}
         retryLabel="Reload security check"
@@ -259,40 +269,19 @@ export default function CaptchaGate({ captcha, onVerify, onRetry, verifying, emb
 
   const body = (
     <>
-      <p className="au-gate-text">
-        This step requires a security check. It confirms you are not a bot — it is not identity verification.
-      </p>
-      {expired ? (
-        <p className="au-gate-hint au-gate-hint--warning" role="status">
-          The security check expired. Please complete it again.
-        </p>
-      ) : null}
-
+      <p className="au-gate-text">This step requires a security check. It confirms you are not a bot — it is not identity verification.</p>
+      {expired ? <p className="au-gate-hint au-gate-hint--warning" role="status">The security check expired. Please complete it again.</p> : null}
       <div ref={containerRef} className="au-gate-captcha" />
-
       {error ? <p className="au-gate-error" role="alert">{error}</p> : null}
-
       <div className="au-gate-actions">
-        <AUBUTTON
-          variant="primary"
-          onClick={handleSubmit}
-          disabled={busy || !widgetToken}
-          loading={busy}
-          loadingText="Verifying…"
-        >
+        <AUBUTTON variant="primary" onClick={handleSubmit} disabled={busy || !widgetToken} loading={busy} loadingText="Verifying…">
           Verify security check
         </AUBUTTON>
-        <AUBUTTON variant="ghost" onClick={() => onRetry?.()} disabled={busy}>Check again</AUBUTTON>
+        <AUBUTTON variant="ghost" onClick={reacquire} disabled={busy}>Reload security check</AUBUTTON>
       </div>
     </>
   );
 
   if (embedded) return body;
-
-  return (
-    <AUCARD className="loan-flow-card">
-      <h2>Security Check</h2>
-      {body}
-    </AUCARD>
-  );
+  return <AUCARD className="loan-flow-card"><h2>Security Check</h2>{body}</AUCARD>;
 }
