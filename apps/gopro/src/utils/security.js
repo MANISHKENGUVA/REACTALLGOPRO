@@ -160,11 +160,16 @@ export function normalizeServiceUrl(value, options = {}) {
 
 export function publicErrorMessage(error, fallback = 'Something went wrong. Please try again.') {
   const status = Number(error?.status);
+  if (status === 400) return 'Some of the information could not be accepted. Check your entries and try again.';
   if (status === 401) return 'Your session has expired. Please sign in again.';
   if (status === 403) return 'You are not allowed to perform this action.';
+  if (status === 404) return 'The requested service or application could not be found. Please check your application and try again.';
   if (status === 409) return 'This step is no longer current. We refreshed your application status.';
   if (status === 413) return 'That file is too large. Please choose a smaller file.';
+  if (status === 422) return 'Some information needs correction. Check the highlighted fields and try again.';
   if (status === 429) return 'Too many attempts. Please wait and try again.';
+  if (status === 500) return 'The service encountered a problem. Your information may not have been saved; check your application before retrying.';
+  if (status === 503) return 'The service is temporarily unavailable. Please wait a moment and try again.';
   if (status === 0 || error?.name === 'TypeError') {
     return 'The service could not be reached. Please check your connection and try again.';
   }
