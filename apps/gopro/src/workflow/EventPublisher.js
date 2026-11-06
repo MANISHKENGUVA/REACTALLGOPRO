@@ -12,6 +12,8 @@ import {
 } from '../utils/security';
 
 const pendingEvents = new Map();
+const retryEventIds = new Map();
+const EVENT_ID_PATTERN = /^[A-Za-z0-9._~-]{16,128}$/;
 
 const NAVIGABLE_PATHS = new Set([
   ...Object.values(COMPONENT_ROUTE_MAP),
@@ -20,6 +22,29 @@ const NAVIGABLE_PATHS = new Set([
   '/loan-flow/not-your-turn',
 ]);
 const NAVIGABLE_PARAMS = ['WORKFLOW_ID', 'WORKFLOW_ACTOR'];
+
+function createEventId() {
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID();
+  }
+  if (typeof globalThis.crypto?.getRandomValues === 'function') {
+    const bytes = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+  }
+  throw new Error('A secure request ID could not be generated. Reload the page and try again.');
+}
+
+function eventIdFor(retryKey, requestedEventId) {
+  const provided = typeof requestedEventId === 'string' ? requestedEventId.trim() : '';
+  if (EVENT_ID_PATTERN.test(provided)) return provided;
+
+  const existing = retryEventIds.get(retryKey);
+  if (existing) return existing;
+
+  const eventId = createEventId();
+  retryEventIds.set(retryKey, eventId);
+  return eventId;
+}
 
 function trustedState(stateId) {
   const value = normalizeStateId(stateId);
@@ -122,6 +147,12 @@ function pendingKey(metadata, eventName) {
   return `${metadata.workflowId}:${metadata.workflowActor}:${metadata.componentViewRenderState}:${eventName}`;
 }
 
+function retryKey(key, data, formData) {
+  // Keep the same id for a retry of the same event and payload, but use a fresh
+  // id if the user edits the form before submitting again.
+  return `${key}:${JSON.stringify({ data, formData })}`;
+}
+
 // EventPublisher: publishes node events/data, then caller re-resolves.
 // Never hard-codes transitions — backend response decides next node.
 export const EventPublisher = {
@@ -131,15 +162,20 @@ export const EventPublisher = {
     const eventName = event || eventType;
     const key = pendingKey(metadata, eventName);
     if (pendingEvents.has(key)) return pendingEvents.get(key);
+    const retryIdKey = retryKey(key, data, formData);
+    const requestEventId = eventIdFor(retryIdKey, eventId);
     const request = WorkflowClient.publishEvent({
       sessionId: sanitizeSessionId(sessionId),
       node: metadata.componentViewRenderState,
       event,
       eventType,
-      eventId: typeof eventId === 'string' ? eventId.trim().slice(0, 128) : '',
+      eventId: requestEventId,
       data,
       formData,
       workflowMetadata: metadata,
+    }).then((result) => {
+      retryEventIds.delete(retryIdKey);
+      return result;
     }).finally(() => pendingEvents.delete(key));
     pendingEvents.set(key, request);
     return request;
@@ -151,6 +187,7 @@ export const EventPublisher = {
     sessionId,
     event = '',
     eventType = '',
+    eventId = '',
     data = {},
     formData = {},
     workflowMetadata = {},
@@ -160,12 +197,19 @@ export const EventPublisher = {
     const metadata = validatedMetadata(workflowMetadata);
     const key = `legacy:${pendingKey(metadata, eventName)}`;
     if (pendingEvents.has(key)) return pendingEvents.get(key);
+    const mergedData = { ...formData, ...data };
+    const retryIdKey = retryKey(key, mergedData, {});
+    const requestEventId = eventIdFor(retryIdKey, eventId);
 
     const request = WorkflowClient.publishLegacyEvent({
       sessionId: sanitizeSessionId(sessionId),
       eventType: eventName,
-      formData: { ...formData, ...data },
+      eventId: requestEventId,
+      formData: mergedData,
       workflowMetadata: metadata,
+    }).then((result) => {
+      retryEventIds.delete(retryIdKey);
+      return result;
     }).finally(() => pendingEvents.delete(key));
     pendingEvents.set(key, request);
     return request;
