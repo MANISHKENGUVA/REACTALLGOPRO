@@ -73,6 +73,9 @@ export default function HomePage() {
           >
             Open the component playground (development only) <span aria-hidden="true">→</span>
           </button>
+          <button type="button" className="gp-text-link" onClick={() => navigate('/workflow-builder')}>
+            Open Workflow Studio (local draft mode) <span aria-hidden="true">→</span>
+          </button>
         </p>
       ) : null}
     </div>

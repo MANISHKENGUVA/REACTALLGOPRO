@@ -218,6 +218,7 @@ import CoborrowerRejectedPage from './pages/loanFlow/CoborrowerRejectedPage';
 import GuarantorKYCPage from './pages/loanFlow/GuarantorKYCPage';
 import HomePage from './pages/HomePage';
 import AllComponentsPlaygroundPage from './pages/AllComponentsPlaygroundPage';
+import WorkflowBuilderPage from './pages/WorkflowBuilderPage';
 
 const router = createBrowserRouter([
   {
@@ -228,6 +229,11 @@ const router = createBrowserRouter([
   {
     path: '/display-all-components-with-all-possible-props-and-combinations',
     element: import.meta.env.DEV ? <AllComponentsPlaygroundPage /> : <WorkflowErrorBoundary />,
+  },
+  {
+    path: '/workflow-builder',
+    element: <WorkflowBuilderPage />,
+    errorElement: <WorkflowErrorBoundary />,
   },
   {
     path: '/workflow',
